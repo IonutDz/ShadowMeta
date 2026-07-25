@@ -1,0 +1,959 @@
+/* ============ ShadowLOLClassic — Season 3 Edition ============ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #010a13;
+  --bg-deep: #000509;
+  --bg-panel: #0a1428;
+  --bg-card: #0f1b30;
+  --bg-elevated: #16233c;
+  --border: #1e2d45;
+  --border-gold: #785a28;
+  --gold: #c8aa6e;
+  --gold-bright: #f0e6d2;
+  --gold-glow: rgba(200, 170, 110, .25);
+  --blue: #0ac8b9;
+  --blue-deep: #005a82;
+  --text: #a09b8c;
+  --text-dim: #5b6779;
+  --text-bright: #f0e6d2;
+  --red: #e84057;
+  --green: #1fbf75;
+  --purple: #9d4dc7;
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--border-gold) var(--bg-deep); }
+
+body {
+  background:
+    radial-gradient(1100px 500px at 50% -10%, rgba(0, 90, 130, .18), transparent 65%),
+    radial-gradient(800px 400px at 90% 110%, rgba(120, 90, 40, .10), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection { background: var(--gold); color: var(--bg-deep); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-gold); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ---------- Barra superior ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, #0a1428 0%, #050c18 100%);
+  border-bottom: 1px solid var(--border-gold);
+  box-shadow: 0 1px 0 rgba(200, 170, 110, .15), 0 8px 24px rgba(0, 0, 0, .55);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.logo-gem {
+  width: 34px;
+  height: 34px;
+  color: var(--gold);
+  filter: drop-shadow(0 0 8px var(--gold-glow));
+  flex-shrink: 0;
+}
+.logo-text { display: flex; flex-direction: column; line-height: 1.05; }
+.logo-main {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-shadow: 0 0 24px var(--gold-glow);
+}
+.logo-shadow { color: var(--purple); }
+.logo-lol { color: var(--gold); }
+.logo-classic {
+  font-family: var(--font-body);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  color: var(--blue);
+}
+
+/* ---------- Navegación principal ---------- */
+.main-nav { display: flex; gap: 4px; }
+.nav-btn {
+  padding: 9px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.nav-btn:hover { color: var(--gold-bright); }
+.nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); text-shadow: 0 0 16px var(--gold-glow); }
+
+.searchbox { flex: 1; min-width: 200px; max-width: 420px; position: relative; }
+
+/* ---------- Autocomplete ---------- */
+.autocomplete {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  border-radius: 3px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .7);
+  z-index: 200;
+  display: none;
+  overflow: hidden;
+}
+.autocomplete.open { display: block; }
+
+.ac-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.active { background: var(--bg-elevated); }
+
+.ac-icon { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-gold); font-size: .8rem; }
+.ac-emoji { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.ac-text { flex: 1; min-width: 0; }
+.ac-label { color: var(--text-bright); font-size: .88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-sub { color: var(--text-dim); font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-type {
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--blue);
+  border: 1px solid rgba(10, 200, 185, .3);
+  border-radius: 2px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+.ac-empty { padding: 14px; text-align: center; color: var(--text-dim); font-size: .85rem; font-style: italic; }
+
+.searchbox input {
+  width: 100%;
+  padding: 11px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--text-bright);
+  font-family: var(--font-body);
+  font-size: .95rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.searchbox input:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 18px var(--gold-glow); }
+.searchbox input::placeholder { color: var(--text-dim); }
+
+/* ---------- Filtro de roles ---------- */
+.role-filter {
+  display: flex;
+  gap: 10px;
+  padding: 14px 24px;
+  overflow-x: auto;
+  background: rgba(10, 20, 40, .6);
+  border-bottom: 1px solid var(--border);
+}
+
+.role-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.role-btn:hover { border-color: var(--gold); color: var(--gold-bright); box-shadow: 0 0 14px var(--gold-glow); }
+.role-btn.active {
+  background: linear-gradient(180deg, #1e3a5c, var(--blue-deep));
+  border-color: var(--blue);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(10, 200, 185, .35), inset 0 0 12px rgba(10, 200, 185, .15);
+}
+
+/* ---------- Grid de campeones ---------- */
+main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+.champion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.champ-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-panel));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px 12px 16px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform .18s ease, border-color .2s, box-shadow .25s;
+}
+.champ-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--champ-color, var(--gold)), transparent);
+  opacity: .6;
+}
+.champ-card:hover, .champ-card:active {
+  transform: translateY(-4px);
+  border-color: var(--border-gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .6), 0 0 24px var(--gold-glow);
+}
+
+/* Marco de icono genérico (campeones, objetos, hechizos, runas) */
+.icon-frame {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, var(--champ-color, #24344f), var(--bg-deep) 135%);
+  flex-shrink: 0;
+}
+.icon-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.icon-fb-text {
+  display: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--gold-bright);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .7);
+}
+.icon-frame.icon-fallback .icon-fb-text { display: block; }
+
+.portrait-img {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 2px solid var(--border-gold);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .8), 0 0 20px rgba(0, 0, 0, .5);
+  font-size: 1.5rem;
+  transition: box-shadow .25s, border-color .25s;
+}
+.champ-card:hover .portrait-img { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(0, 0, 0, .8), 0 0 22px var(--gold-glow); }
+
+.champ-portrait { margin-bottom: 12px; }
+
+.champ-name {
+  font-family: var(--font-display);
+  color: var(--gold-bright);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: .5px;
+}
+.champ-title { font-size: .76rem; color: var(--text); margin-top: 3px; font-style: italic; }
+
+.champ-roles { margin-top: 10px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+.role-tag {
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 2px;
+  background: rgba(10, 200, 185, .1);
+  color: var(--blue);
+  border: 1px solid rgba(10, 200, 185, .3);
+}
+
+.no-results { text-align: center; padding: 70px 20px; color: var(--text-dim); font-size: 1.05rem; font-style: italic; }
+
+/* ---------- Detalle de campeón ---------- */
+.hidden { display: none !important; }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  margin-bottom: 18px;
+  background: transparent;
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--gold);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all .2s;
+}
+.back-btn:hover { border-color: var(--gold); box-shadow: 0 0 14px var(--gold-glow); color: var(--gold-bright); }
+
+.detail-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 24px;
+  background: linear-gradient(120deg, var(--bg-panel) 0%, var(--bg-card) 60%, #0d1f38 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.detail-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(500px 180px at 15% 50%, color-mix(in srgb, var(--champ-color, #c8aa6e) 18%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.portrait-img-lg {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  border: 3px solid var(--border-gold);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .8), 0 0 30px var(--gold-glow);
+  font-size: 2rem;
+}
+
+.detail-info { position: relative; }
+.detail-info h1 {
+  font-family: var(--font-display);
+  color: var(--gold-bright);
+  font-size: 2rem;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.detail-info .champ-title { font-size: .95rem; margin-top: 2px; }
+.champ-lema { margin-top: 8px; font-size: .85rem; color: var(--text-dim); font-style: italic; }
+.detail-info .champ-roles { justify-content: flex-start; margin-top: 10px; }
+
+/* Pestañas de builds */
+.build-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0;
+  overflow-x: auto;
+  padding-bottom: 0;
+}
+
+.build-tab {
+  padding: 12px 20px;
+  background: rgba(15, 27, 48, .55);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .88rem;
+  transition: all .2s;
+}
+.build-tab:hover { color: var(--gold-bright); background: var(--bg-card); }
+.build-tab.active {
+  background: var(--bg-panel);
+  border-color: var(--border-gold);
+  color: var(--gold);
+  box-shadow: inset 0 2px 0 var(--gold);
+}
+
+/* Contenido de la build */
+.build-content {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  border-radius: 0 4px 4px 4px;
+  padding: 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .45);
+}
+
+.build-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+
+.meta-chip {
+  padding: 6px 16px;
+  border-radius: 2px;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.chip-role { background: rgba(10, 200, 185, .12); color: var(--blue); border: 1px solid rgba(10, 200, 185, .35); }
+.chip-style { background: rgba(200, 170, 110, .12); color: var(--gold); border: 1px solid rgba(200, 170, 110, .35); }
+.chip-diff { background: rgba(157, 77, 199, .12); color: #c58ae0; border: 1px solid rgba(157, 77, 199, .35); }
+
+.build-resumen {
+  font-size: .95rem;
+  line-height: 1.65;
+  color: var(--text);
+  border-left: 3px solid var(--gold);
+  background: linear-gradient(90deg, rgba(200, 170, 110, .07), transparent 70%);
+  padding: 14px 18px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 24px;
+}
+
+.build-section { margin-bottom: 28px; }
+.build-section:last-child { margin-bottom: 4px; }
+
+.build-section h3 {
+  font-family: var(--font-display);
+  color: var(--gold);
+  font-size: .95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid;
+  border-image: linear-gradient(90deg, var(--border-gold), transparent 65%) 1;
+}
+
+/* Objetos */
+.item-group { margin-bottom: 14px; }
+.item-group:last-child { margin-bottom: 0; }
+.item-group-label {
+  font-size: .72rem;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.item-list { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.item-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 12px 6px 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: .85rem;
+  color: var(--text-bright);
+  transition: border-color .2s, box-shadow .2s;
+}
+.item-pill:hover { border-color: var(--border-gold); box-shadow: 0 0 12px rgba(200, 170, 110, .15); }
+
+.item-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 2px;
+  border: 1px solid var(--border-gold);
+  font-size: .85rem;
+}
+
+.arrow-sep { color: var(--gold); font-size: 1.15rem; font-weight: 700; padding: 0 2px; }
+
+/* Runas clásicas */
+.runes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.rune-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  border-left: 3px solid var(--gold);
+}
+.rune-card.marca { border-left-color: var(--red); }
+.rune-card.sello { border-left-color: var(--gold); }
+.rune-card.glifo { border-left-color: var(--blue); }
+.rune-card.quinta { border-left-color: var(--purple); }
+
+.rune-head { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+
+.rune-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+  background: var(--bg-deep);
+  font-size: .8rem;
+}
+
+.rune-type { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
+.rune-card.marca .rune-type { color: var(--red); }
+.rune-card.sello .rune-type { color: var(--gold); }
+.rune-card.glifo .rune-type { color: var(--blue); }
+.rune-card.quinta .rune-type { color: #c58ae0; }
+
+.rune-name { color: var(--text-bright); font-weight: 600; font-size: .9rem; }
+.rune-detail { font-size: .8rem; line-height: 1.5; color: var(--text); }
+
+/* Maestrías */
+.mastery-summary { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+
+.mastery-dist {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--gold-bright);
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-card));
+  padding: 8px 22px;
+  border-radius: 3px;
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 0 16px rgba(200, 170, 110, .12);
+}
+
+.mastery-key { font-size: .9rem; color: var(--blue); font-weight: 600; }
+
+.mastery-trees { display: flex; flex-direction: column; gap: 10px; }
+
+.mastery-tree-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 16px;
+}
+
+.tree-name {
+  min-width: 104px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .85rem;
+  letter-spacing: .5px;
+  padding-top: 1px;
+}
+.tree-name.ofensa { color: var(--red); }
+.tree-name.defensa { color: var(--green); }
+.tree-name.utilidad { color: var(--blue); }
+
+.tree-points { font-size: .85rem; line-height: 1.55; }
+
+/* Hechizos y habilidades */
+.spells-skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+
+.ss-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+.ss-card .label {
+  font-size: .72rem;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.spell-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.spell-chip { display: inline-flex; align-items: center; gap: 8px; color: var(--text-bright); font-weight: 600; font-size: .92rem; }
+.spell-icon { width: 34px; height: 34px; border-radius: 4px; border: 1px solid var(--border-gold); font-size: .85rem; }
+
+.skill-order { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.skill-key {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-deep));
+  border: 1px solid var(--border-gold);
+  border-radius: 3px;
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: inset 0 1px 0 rgba(240, 230, 210, .1);
+}
+
+/* Plan de partida */
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+
+.plan-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  border-top: 2px solid var(--gold);
+}
+.plan-card.plan-early { border-top-color: var(--green); }
+.plan-card.plan-mid { border-top-color: var(--gold); }
+.plan-card.plan-late { border-top-color: var(--purple); }
+
+.plan-label {
+  font-size: .74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
+.plan-card p { font-size: .84rem; line-height: 1.6; }
+
+/* Consejos */
+.tips-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.tips-list li {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 11px 15px 11px 34px;
+  font-size: .88rem;
+  line-height: 1.55;
+}
+.tips-list li::before {
+  content: '◆';
+  position: absolute;
+  left: 13px;
+  top: 11px;
+  color: var(--gold);
+  font-size: .7rem;
+}
+
+/* ---------- Banner LoL Classic ---------- */
+.classic-banner {
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 12px 24px;
+  width: calc(100% - 48px);
+  background: linear-gradient(90deg, rgba(200, 170, 110, .08), rgba(10, 200, 185, .06));
+  border: 1px solid var(--border-gold);
+  border-radius: 3px;
+  font-size: .84rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.classic-banner strong { color: var(--gold-bright); }
+
+/* ---------- Badge de builds en las cartas ---------- */
+.builds-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+  background: rgba(120, 90, 40, .85);
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  padding: 2px 7px;
+  letter-spacing: .5px;
+}
+
+/* ---------- Sección Próximamente ---------- */
+.soon-divider {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.soon-divider::before, .soon-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+}
+
+.soon-card { opacity: .55; cursor: default; filter: saturate(.4); }
+.soon-card:hover { transform: none; border-color: var(--border); box-shadow: none; }
+.soon-tag { color: var(--text-dim); border-color: var(--border); background: rgba(91, 103, 121, .12); }
+
+/* ---------- Campeón sin builds ---------- */
+.no-builds {
+  background: var(--bg-panel);
+  border: 1px dashed var(--border-gold);
+  border-radius: 4px;
+  padding: 34px 28px;
+  text-align: center;
+  font-size: .95rem;
+  line-height: 1.7;
+}
+.no-builds strong { color: var(--gold-bright); }
+.no-builds-sub { margin-top: 8px; font-size: .82rem; color: var(--text-dim); font-style: italic; }
+
+/* ---------- Etiquetas de season ---------- */
+.season-badge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  vertical-align: 1px;
+}
+.season-badge.s-s1 { background: rgba(31, 191, 117, .15); color: var(--green); border: 1px solid rgba(31, 191, 117, .4); }
+.season-badge.s-s2 { background: rgba(10, 200, 185, .15); color: var(--blue); border: 1px solid rgba(10, 200, 185, .4); }
+.season-badge.s-s3 { background: rgba(200, 170, 110, .15); color: var(--gold); border: 1px solid rgba(200, 170, 110, .4); }
+.season-badge.s-s4, .season-badge.s-s5 { background: rgba(157, 77, 199, .15); color: #c58ae0; border: 1px solid rgba(157, 77, 199, .4); }
+
+.chip-season { background: rgba(232, 64, 87, .1); color: #f28b9b; border: 1px solid rgba(232, 64, 87, .3); }
+.chip-stats { background: rgba(31, 191, 117, .1); color: var(--green); border: 1px solid rgba(31, 191, 117, .3); text-transform: none; letter-spacing: .3px; }
+
+/* ---------- Fuentes ---------- */
+.sources-list { display: flex; flex-direction: column; gap: 6px; }
+.source-link {
+  display: inline-block;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: .85rem;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: border-color .2s, color .2s;
+}
+.source-link:hover { border-color: var(--blue); color: #7fe3da; }
+.sources-note { margin-top: 10px; font-size: .74rem; color: var(--text-dim); font-style: italic; line-height: 1.5; }
+
+/* ---------- Cabeceras de vista ---------- */
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.view-header h2 {
+  font-family: var(--font-display);
+  color: var(--gold-bright);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+.view-desc {
+  font-size: .88rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 22px;
+  max-width: 860px;
+}
+
+/* ---------- Tabs de modo ---------- */
+.mode-tabs { display: flex; gap: 8px; }
+.mode-tab {
+  padding: 8px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+}
+.mode-tab:hover { color: var(--gold-bright); box-shadow: 0 0 14px var(--gold-glow); }
+.mode-tab.active {
+  background: linear-gradient(180deg, #1e3a5c, var(--blue-deep));
+  border-color: var(--blue);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(10, 200, 185, .35);
+}
+
+/* ---------- Tier list ---------- */
+.tier-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+.tier-row {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tier-label {
+  min-width: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #08101d;
+  flex-shrink: 0;
+}
+.tier-splus { background: linear-gradient(180deg, #ffd76e, #e8a33d); }
+.tier-s { background: linear-gradient(180deg, #f0a35e, #d97b3f); }
+.tier-a { background: linear-gradient(180deg, #8fd177, #5aa945); }
+.tier-b { background: linear-gradient(180deg, #6db3d1, #3f83a9); }
+.tier-c { background: linear-gradient(180deg, #9a8fb8, #6f6390); }
+
+.tier-champs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.tier-champ {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 72px;
+  text-align: center;
+}
+.tier-champ.clickable { cursor: pointer; }
+.tier-champ.clickable:hover .tier-icon { border-color: var(--gold); box-shadow: 0 0 14px var(--gold-glow); }
+
+.tier-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--border-gold);
+  font-size: 1rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.tier-champ-name { font-size: .68rem; color: var(--text-bright); line-height: 1.15; }
+
+/* ---------- Seasons ---------- */
+.season-block {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.season-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.season-head h3 {
+  font-family: var(--font-display);
+  color: var(--gold-bright);
+  font-size: 1.15rem;
+  letter-spacing: .5px;
+}
+.season-years { color: var(--text-dim); font-size: .85rem; font-weight: 400; }
+.season-head .season-badge { font-size: .85rem; padding: 4px 10px; }
+
+.season-desc { font-size: .86rem; line-height: 1.6; color: var(--text); margin-bottom: 16px; max-width: 820px; }
+.season-empty { font-size: .84rem; color: var(--text-dim); font-style: italic; }
+
+.season-builds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.season-build-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+.season-build-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-gold);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .5), 0 0 16px var(--gold-glow);
+}
+
+.season-build-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--border-gold);
+  font-size: .95rem;
+}
+.season-build-info { min-width: 0; }
+.season-build-champ { font-family: var(--font-display); font-weight: 700; color: var(--gold-bright); font-size: .95rem; }
+.season-build-name { font-size: .78rem; color: var(--text); margin: 2px 0 6px; }
+.season-build-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.no-builds-sources { margin-top: 14px; align-items: center; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: .76rem;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  background: var(--bg-deep);
+  letter-spacing: .5px;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 600px) {
+  .topbar { padding: 12px 14px; }
+  .logo-gem { width: 28px; height: 28px; }
+  .logo-main { font-size: 1.02rem; }
+  .main-nav { order: 3; width: 100%; justify-content: center; }
+  .nav-btn { padding: 7px 12px; font-size: .76rem; }
+  .searchbox { min-width: 150px; }
+  .classic-banner { width: calc(100% - 28px); font-size: .76rem; padding: 10px 14px; }
+  .tier-label { min-width: 46px; font-size: 1.05rem; }
+  .tier-champ { width: 60px; }
+  .tier-icon { width: 44px; height: 44px; }
+  .mode-tabs { width: 100%; }
+  .season-builds { grid-template-columns: 1fr; }
+  main { padding: 14px; }
+  .champion-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+  .portrait-img { width: 66px; height: 66px; }
+  .champ-title { display: none; }
+  .detail-header { padding: 16px; gap: 14px; }
+  .portrait-img-lg { width: 76px; height: 76px; font-size: 1.4rem; }
+  .detail-info h1 { font-size: 1.4rem; }
+  .build-content { padding: 16px 14px; }
+  .mastery-dist { font-size: 1.15rem; }
+  .item-pill .item-name { font-size: .8rem; }
+  .role-filter { padding: 10px 14px; }
+}
