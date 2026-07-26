@@ -36,10 +36,10 @@ Leyenda: ✅ hecho · 🔨 parcial · ⬜ pendiente
 |---|---|
 | Tier list Grieta Clásica (61/61) | ✅ |
 | Tier list ARAM Clásico (61/61) | ✅ |
+| **Tier list Grieta Actual (61/61)** | ✅ |
 | Filtro por rol en la tier list | ✅ |
-| Tier list de LoL Actual | ⬜ con datos de U.GG |
-| Counters por campeón | ⬜ 61 campeones |
-| Kit de habilidades (P/Q/W/E/R) | ⬜ 61 campeones |
+| **Counters por campeón (61/61)** | ✅ con notas |
+| **Kit de habilidades (61/61)** | ✅ P/Q/W/E/R |
 | Estadísticas reales por build | ⬜ 2 de 148 las tienen |
 
 ---
@@ -54,10 +54,10 @@ Leyenda: ✅ hecho · 🔨 parcial · ⬜ pendiente
 | Enlaces compartibles + botón atrás | ✅ |
 | Botón "copiar enlace" | ✅ |
 | **Favoritos** (se ordenan primero) | ✅ |
+| **Ordenar el roster** (relevancia, A–Z, nº builds, tier) | ✅ |
+| **Copiar build al portapapeles** | ✅ formato para el chat |
+| **Modo claro** | ✅ persistente |
 | Comparador de builds lado a lado | ⬜ |
-| Ordenar el roster (tier, nº de builds) | ⬜ |
-| Copiar build al portapapeles para el chat | ⬜ |
-| Modo claro | ⬜ |
 
 ---
 
@@ -75,7 +75,8 @@ Leyenda: ✅ hecho · 🔨 parcial · ⬜ pendiente
 | Manifest PWA (instalable) | ✅ |
 | **Service worker (offline)** | ✅ |
 | **robots.txt + sitemap.xml** | ✅ |
-| Script que valide IDs contra Data Dragon | ⬜ |
+| **Validador automático** | ✅ `node scripts/validar.js` |
+| **Logo y favicon** | ✅ blasón con gema y escalones |
 
 ---
 
@@ -97,7 +98,26 @@ Leyenda: ✅ hecho · 🔨 parcial · ⬜ pendiente
 3. ✅ Rutas compartibles + accesibilidad + SEO + manifest
 4. ✅ ARAM completo (61/61)
 5. ✅ Favoritos, filtro por rol, service worker, sitemap
-6. 🔨 LoL Actual (21/61) ← siguiente: los 40 restantes
-7. ⬜ Counters y kit de habilidades
-8. ⬜ Segundos roles + archivo S1/S2
-9. ⬜ Comparador, orden del roster, modo claro
+6. ✅ Counters y kit de habilidades de los 61, con capa de datos por defecto + anulaciones
+7. ✅ Tier list Actual, orden del roster, modo claro, copiar build, validador, logo nuevo
+8. 🔨 LoL Actual (21/61) ← siguiente: los 40 restantes
+9. ⬜ Segundos roles + archivo S1/S2 + comparador
+
+---
+
+## 7. Arquitectura de los datos
+
+Los datos que valen para **cualquier era y modo** (kits, counters) viven a nivel de campeón,
+con un valor por defecto y anulaciones opcionales por contexto:
+
+```js
+KITS.taric = {
+  P: ['Fuerza Imbuida', '…'], Q: […], W: […], E: […], R: […],
+  porEra:  { actual: { Q: ['Destello Imbuido', '…'] } },   // opcional
+  porModo: { aram:   { … } }                                // opcional
+}
+```
+
+`kitDe(champ, edicion, modo)` y `countersDe(champ, edicion, modo)` mezclan el valor por
+defecto con la anulación que corresponda. Así se declara una sola vez lo que no cambia
+y solo se detalla lo que sí. Las builds siguen siendo por contexto (`season` + `modo`).

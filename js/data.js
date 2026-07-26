@@ -4534,6 +4534,157 @@ BUILDS.taric.push(actBuild({
   ]
 }));
 
+// ============ CAPA DE DATOS POR CAMPEÓN ============
+// Kits y counters son datos del CAMPEÓN, no de una build: valen para cualquier
+// era y modo. Se declara un valor por defecto y, si algo cambia en una era o
+// modo concretos, se añade una anulación en `porEra` / `porModo`.
+//
+//   KITS.taric   = { P:[...], Q:[...], ..., porEra: { actual: { Q:[...] } } }
+//   COUNTERS.taric = { fuerte:[...], debil:[...], porModo: { aram: {...} } }
+//
+// Los resolvers `kitDe()` y `countersDe()` mezclan por defecto + anulación.
+
+function resolverPorContexto(base, edicion, modo) {
+  if (!base) return null;
+  const { porEra, porModo, ...defecto } = base;
+  return Object.assign({}, defecto,
+    (porEra && porEra[edicion]) || {},
+    (porModo && porModo[modo]) || {});
+}
+
+const kitDe = (champ, edicion, modo) => resolverPorContexto(KITS[champ.id], edicion, modo);
+const countersDe = (champ, edicion, modo) => resolverPorContexto(COUNTERS[champ.id], edicion, modo);
+
+// ---------- Kit de habilidades: [nombre, qué hace] ----------
+const KITS = {
+  ahri: { P: ['Esencia Robada', 'Cada 9 hechizos que impacten la curan.'], Q: ['Orbe del Engaño', 'Proyectil que vuelve haciendo daño verdadero.'], W: ['Fuego Zorruno', 'Tres llamas buscan a los enemigos cercanos.'], E: ['Encanto', 'Besa y atrae al objetivo, obligándole a caminar hacia ella.'], R: ['Ímpetu Espiritual', 'Tres impulsos que dañan a los enemigos cercanos.'] },
+  alistar: { P: ['Triunfo', 'Se cura al participar en la muerte de unidades cercanas.'], Q: ['Aplastar', 'Golpea el suelo, dañando y aturdiendo en área.'], W: ['Cabezazo', 'Embiste al objetivo lanzándolo hacia atrás.'], E: ['Barrido', 'Daño en área que se cura al golpear súbditos.'], R: ['Voluntad Indomable', 'Reduce el daño recibido y limpia ralentizaciones.'] },
+  amumu: { P: ['Maldición de la Momia Triste', 'Sus hechizos reducen la resistencia mágica del objetivo.'], Q: ['Lanzamiento de Vendajes', 'Se lanza hacia el objetivo, aturdiéndolo.'], W: ['Angustia', 'Aura que quema un porcentaje de vida por segundo.'], E: ['Rabieta', 'Daño en área; reduce el daño físico recibido.'], R: ['Maldición del Faraón', 'Daña y enraíza a todos los enemigos cercanos.'] },
+  anivia: { P: ['Renacimiento', 'Al morir se convierte en huevo y revive.'], Q: ['Ráfaga Glacial', 'Proyectil que aturde al detonarlo.'], W: ['Muro de Hielo', 'Crea una pared infranqueable.'], E: ['Escalofrío', 'Daño doble contra objetivos congelados.'], R: ['Tormenta de Escarcha', 'Zona persistente que daña y congela.'] },
+  annie: { P: ['Pirómana', 'Cada 4 hechizos, el siguiente aturde.'], Q: ['Desintegrar', 'Bola de fuego que devuelve maná si mata.'], W: ['Incinerar', 'Cono de fuego en área.'], E: ['Escudo Molten', 'Escudo que quema a quien la ataque.'], R: ['Invocar: Tibbers', 'Invoca un oso que daña en área al aparecer.'] },
+  ashe: { P: ['Enfoque', 'Acumula cargas fuera de combate para un disparo potenciado.'], Q: ['Concentración', 'Ráfaga de flechas rápidas.'], W: ['Volea', 'Cono de flechas que ralentiza.'], E: ['Halcón Vidente', 'Explora una zona del mapa.'], R: ['Flecha de Cristal Encantado', 'Flecha global que aturde según la distancia.'] },
+  blitzcrank: { P: ['Barrera de Maná', 'Se escuda con su maná al bajar de vida.'], Q: ['Agarre de Cohete', 'Atrae al enemigo hacia él.'], W: ['Sobrecarga', 'Se acelera durante unos segundos.'], E: ['Puño de Poder', 'Su siguiente ataque lanza al enemigo por los aires.'], R: ['Campo Estático', 'Silencia y daña en área.'] },
+  brand: { P: ['Explosión', 'Los objetivos con Ceniza explotan al morir.'], Q: ['Sacudida', 'Proyectil que aturde a objetivos con Ceniza.'], W: ['Pilar de Llamas', 'Zona de daño retardado.'], E: ['Conflagración', 'Se propaga a los enemigos cercanos.'], R: ['Pirociclismo', 'Bola de fuego que rebota entre enemigos.'] },
+  chogath: { P: ['Carnívoro', 'Se cura al matar unidades.'], Q: ['Ruptura', 'Pinchos que elevan por los aires.'], W: ['Grito Salvaje', 'Cono que silencia.'], E: ['Púas Vorpales', 'Su siguiente ataque daña en cono.'], R: ['Festín', 'Daño verdadero; suma vida máxima permanente.'] },
+  corki: { P: ['Entrega de Paquetes', 'Recoge paquetes para potenciar sus autos.'], Q: ['Bombardeo Fosfórico', 'Daño en área que revela.'], W: ['Valquiria', 'Vuela dejando un rastro de fuego.'], E: ['Cortina de Gas', 'Ralentiza y reduce armadura.'], R: ['Andanada de Misiles', 'Misiles con cargas; cada tercero es mayor.'] },
+  drmundo: { P: ['Adrenalina', 'Regenera vida constantemente.'], Q: ['Cuchilla Infecciosa', 'Cuesta vida actual; ralentiza.'], W: ['Quemadura', 'Aura de daño mágico.'], E: ['Masoquismo', 'Gana AD según la vida que le falte.'], R: ['Sobredosis', 'Regeneración masiva y velocidad de movimiento.'] },
+  evelynn: { P: ['Sombra Perversa', 'Sigilo fuera de combate.'], Q: ['Odio', 'Golpe rápido que reduce su enfriamiento.'], W: ['Toque Oscuro', 'Chupavidas y velocidad de ataque.'], E: ['Abrazo Rapaz', 'Daño y aceleración al golpear.'], R: ['Puñalada Aguda', 'Daño en área y ralentización.'] },
+  ezreal: { P: ['Ascenso Místico', 'Sus impactos aceleran su ataque.'], Q: ['Disparo Místico', 'Proyectil que aplica efectos de objeto.'], W: ['Cambio Esencial', 'Marca al objetivo para daño extra.'], E: ['Desplazamiento Arcano', 'Parpadea y dispara.'], R: ['Descarga Trascendente', 'Rayo global que atraviesa a todos.'] },
+  fiddlesticks: { P: ['Cosecha Oscura', 'Poder de habilidad extra al pasar el tiempo.'], Q: ['Terror', 'Aterroriza al objetivo, que huye sin control.'], W: ['Drenaje', 'Canaliza para robar vida.'], E: ['Ventisca de Cuervos', 'Silencia y rebota entre enemigos.'], R: ['Tormenta de Cuervos', 'Se teletransporta y daña en área durante segundos.'] },
+  gangplank: { P: ['Cicatrices de Batalla', 'Regenera vida al recibir daño.'], Q: ['Parrrley', 'Dispara a distancia; da oro extra si mata.'], W: ['Quitaescorbuto', 'Cura y limpia todo el control de masas.'], E: ['Moral de Cañón', 'Aumenta la velocidad del equipo.'], R: ['Andanada de Cañón', 'Bombardeo global que ralentiza.'] },
+  garen: { P: ['Perseverancia', 'Regenera mucha vida fuera de combate.'], Q: ['Golpe Decisivo', 'Rompe ralentizaciones, acelera y silencia.'], W: ['Coraje', 'Escudo y resistencias temporales.'], E: ['Juicio', 'Gira haciendo daño en área.'], R: ['Justicia Demaciana', 'Ejecución con daño verdadero.'] },
+  gragas: { P: ['Barril de Cerveza', 'Se cura tras usar habilidades.'], Q: ['Lanzamiento de Barril', 'Barril detonable que ralentiza.'], W: ['Trago de Cerveza', 'Reduce el daño recibido y potencia su golpe.'], E: ['Golpe de Cuerpo', 'Embiste atravesando paredes.'], R: ['Barril Explosivo', 'Empuja a los enemigos en área.'] },
+  heimerdinger: { P: ['Actualización', 'Sus hechizos reparan sus torretas.'], Q: ['Torreta Evolutiva H-28G', 'Coloca torretas que disparan solas.'], W: ['Misiles Hextech Micro', 'Ráfaga de misiles en abanico.'], E: ['Granada Aturdidora CH-2', 'Aturde con impacto directo.'], R: ['ACTUALIZAR!!!', 'Potencia enormemente la siguiente habilidad.'] },
+  janna: { P: ['Brisa Tempestuosa', 'Da velocidad de movimiento a los aliados cercanos.'], Q: ['Vendaval', 'Cargable; lanza por los aires.'], W: ['Ráfaga', 'Ralentiza y daña en línea.'], E: ['Ojo de la Tormenta', 'Escuda y da AD a un aliado.'], R: ['Monzón', 'Empuja a todos y cura mientras canaliza.'] },
+  jarvaniv: { P: ['Marca Marcial', 'Su siguiente ataque hace daño porcentual.'], Q: ['Golpe de Dragón', 'Daño porcentual y reducción de armadura.'], W: ['Escudo Dorado', 'Escudo que crece con enemigos cercanos.'], E: ['Estandarte de Guerra', 'Bandera que da velocidad de ataque.'], R: ['Cataclismo', 'Encierra al objetivo en una arena.'] },
+  jax: { P: ['Golpes Relámpago', 'Cada tercer ataque hace daño mágico extra.'], Q: ['Asalto Fulminante', 'Salta hacia el objetivo.'], W: ['Dominio', 'Potencia su siguiente ataque.'], E: ['Contraataque', 'Esquiva todos los autoataques y aturde.'], R: ['Postura de Gran Maestro de Armas', 'Gana armadura y RM al golpear.'] },
+  karthus: { P: ['Profanación', 'Al morir sigue lanzando hechizos 7 segundos.'], Q: ['Laceración', 'Zona de daño; doble contra objetivos aislados.'], W: ['Muro de Dolor', 'Ralentiza y reduce RM en una línea.'], E: ['Aflicción', 'Aura de daño continuo.'], R: ['Réquiem', 'Daña a todos los enemigos del mapa.'] },
+  kassadin: { P: ['Piedra Vacía', 'Resistencia mágica permanente.'], Q: ['Esfera Nula', 'Daña y escuda contra magia.'], W: ['Pulso Nulo', 'Potencia su siguiente ataque y devuelve maná.'], E: ['Fuerza del Vacío', 'Cono de daño que ralentiza.'], R: ['Paso del Vacío', 'Parpadea; apila daño con cada uso.'] },
+  katarina: { P: ['Voracidad', 'Sus asesinatos reinician todos sus enfriamientos.'], Q: ['Daga Bouncing', 'Daga que rebota y queda en el suelo.'], W: ['Preparación', 'Deja una daga y la acelera.'], E: ['Shunpo', 'Parpadea a una unidad o daga.'], R: ['Muerte de Loto', 'Gira haciendo daño masivo en área.'] },
+  kayle: { P: ['Aura Sagrada', 'Da velocidad y resistencias a los aliados.'], Q: ['Reprensión', 'Ralentiza y reduce resistencias.'], W: ['Bendición Divina', 'Cura y acelera.'], E: ['Reproche Divino', 'Ataca a distancia con daño mágico en área.'], R: ['Intervención', 'Hace invulnerable a un aliado.'] },
+  kogmaw: { P: ['Explosión de Icathia', 'Al morir explota tras unos segundos.'], Q: ['Escupitajo Cáustico', 'Reduce armadura y RM.'], W: ['Cañón Bio-Arcano', 'Más alcance y daño porcentual en los autos.'], E: ['Baba Nociva', 'Charco que ralentiza.'], R: ['Artillería Viva', 'Artillería de largo alcance con cargas.'] },
+  leesin: { P: ['Fluir', 'Sus hechizos le dan velocidad de ataque.'], Q: ['Onda Sónica / Golpe Resonante', 'Proyectil y salto al objetivo.'], W: ['Salvaguardia / Golpe de Hierro', 'Salta a un aliado o ward; chupavidas.'], E: ['Tempestad / Aplastar', 'Revela y ralentiza en área.'], R: ['Patada Explosiva', 'Patea al objetivo, dañando a los que golpee.'] },
+  leona: { P: ['Luz del Amanecer', 'Marca al objetivo; los aliados hacen daño extra.'], Q: ['Espada del Amanecer', 'Aturde con su siguiente ataque.'], W: ['Eclipse', 'Gana armadura y RM, y daña en área.'], E: ['Filo de Zenith', 'Lanza su escudo y se acerca al objetivo.'], R: ['Amanecer Solar', 'Aturde en área a distancia.'] },
+  lulu: { P: ['Pix', 'Un hada acompaña a un aliado disparando.'], Q: ['Explosión Reluciente', 'Proyectil que ralentiza en línea.'], W: ['Ayúdame, Pix!', 'Escuda y da a Pix, o polimorfa al rival.'], E: ['Torbellino', 'Acelera o ralentiza en línea.'], R: ['Crecimiento Salvaje', 'Da vida máxima y lanza por los aires.'] },
+  lux: { P: ['Iluminación', 'Sus hechizos marcan; el siguiente auto detona.'], Q: ['Encadenamiento Lumínico', 'Enraíza hasta a dos enemigos.'], W: ['Singularidad Prismática', 'Escudo en línea a los aliados.'], E: ['Novación Lumínica', 'Zona detonable que ralentiza.'], R: ['Chispa Final', 'Rayo de largo alcance.'] },
+  malphite: { P: ['Escudo Granito', 'Escudo que se recarga fuera de combate.'], Q: ['Golpe Sísmico', 'Roba velocidad de movimiento.'], W: ['Estruendo', 'Daño extra en sus ataques.'], E: ['Onda Expansiva', 'Reduce la velocidad de ataque en área.'], R: ['Fuerza Imparable', 'Carga imparable que eleva por los aires.'] },
+  malzahar: { P: ['Vacío Cambiante', 'Escudo que anula el control periódicamente.'], Q: ['Llamado del Vacío', 'Silencia en línea.'], W: ['Enjambre del Vacío', 'Invoca Vacíolings que atacan solos.'], E: ['Visiones Malignas', 'Se propaga al morir el objetivo.'], R: ['Reino Aterrador', 'Suprime al objetivo y le hace daño masivo.'] },
+  masteryi: { P: ['Doble Golpe', 'Cada pocos ataques golpea dos veces.'], Q: ['Ataque Alfa', 'Se vuelve inobjetivable y golpea a varios.'], W: ['Meditar', 'Canaliza para curarse y reducir daño.'], E: ['Estilo Wuju', 'Daño verdadero extra en sus ataques.'], R: ['Montaraz', 'Velocidad masiva; los asesinatos la extienden.'] },
+  missfortune: { P: ['Amor Golpeador', 'Daño extra al golpear a un objetivo nuevo.'], Q: ['Doble Golpe', 'Bala que rebota con más daño en el segundo.'], W: ['Ritmo Impecable', 'Velocidad de ataque y movimiento.'], E: ['Lluvia de Balas', 'Zona que ralentiza y corta la curación.'], R: ['Tiempo de Bala', 'Canaliza una lluvia de balas en cono.'] },
+  monkeyking: { P: ['Piedra Ágil', 'Armadura y regeneración por enemigos cercanos.'], Q: ['Golpe Aplastante', 'Alcance extra y reduce armadura.'], W: ['Engaño', 'Clon señuelo y sigilo momentáneo.'], E: ['Ataque Nimbus', 'Embiste a varios objetivos.'], R: ['Ciclón', 'Gira lanzando a todos por los aires.'] },
+  morgana: { P: ['Absorción Oscura', 'Se cura con el daño de sus hechizos.'], Q: ['Lazo Oscuro', 'Enraíza en línea recta.'], W: ['Suelo Atormentado', 'Zona de daño creciente.'], E: ['Escudo Negro', 'Bloquea daño mágico y todo el control.'], R: ['Alma Encadenada', 'Aturde a los enemigos cercanos tras unos segundos.'] },
+  nasus: { P: ['Sed de Sangre', 'Chupavidas permanente.'], Q: ['Golpe Devastador', 'Daño permanente acumulable por cada muerte.'], W: ['Marchitar', 'Ralentiza brutalmente al objetivo.'], E: ['Aliento de Fuego Espiritual', 'Zona que reduce armadura.'], R: ['Furia Impía', 'Vida, alcance y enfriamientos masivos.'] },
+  nidalee: { P: ['Instinto de Caza', 'Ve a los aliados y da velocidad.'], Q: ['Lanza Javelina / Zarpazo', 'Daño según la distancia / ejecución.'], W: ['Trampa Salvaje / Pounce', 'Trampa con visión / salto.'], E: ['Curación Primitiva / Golpe', 'Cura al aliado / reduce armadura.'], R: ['Aspecto de la Cazadora', 'Cambia entre forma humana y puma.'] },
+  nunu: { P: ['Visionario', 'Cada pocos hechizos, el siguiente no cuesta maná.'], Q: ['Devorar', 'Daño fijo enorme a monstruos; se cura.'], W: ['Consumir', 'Da velocidad de ataque y movimiento a un aliado.'], E: ['Bola de Nieve', 'Proyectil que aturde a distancia.'], R: ['Cero Absoluto', 'Canaliza un daño masivo en área.'] },
+  olaf: { P: ['Golpes Berserker', 'Velocidad de ataque según la vida que le falte.'], Q: ['Hacha Sedienta', 'Lanza un hacha; recogerla reduce su enfriamiento.'], W: ['Golpes Salvajes', 'Chupavidas y velocidad de ataque.'], E: ['Golpe Despiadado', 'Daño verdadero a cambio de vida.'], R: ['Ragnarok', 'Inmunidad total al control de masas.'] },
+  pantheon: { P: ['Determinación de Aegis', 'Bloquea un autoataque periódicamente.'], Q: ['Lanza Perforante', 'Poke a distancia; crítico a objetivos bajos.'], W: ['Golpe Escudo', 'Salta y aturde al objetivo.'], E: ['Corazón del Coloso', 'Bloquea el daño frontal.'], R: ['Gran Caída del Cielo', 'Aterriza desde el cielo dañando en área.'] },
+  rammus: { P: ['Caparazón Espinoso', 'Convierte armadura en daño de ataque.'], Q: ['Bola Rodante', 'Acelera y aturde al impactar.'], W: ['Postura Defensiva', 'Resistencias y devuelve daño.'], E: ['Provocación', 'Obliga al rival a atacarle.'], R: ['Furia Tectónica', 'Terremoto en área que daña estructuras.'] },
+  ryze: { P: ['Flujo Arcano', 'Escudo tras lanzar varios hechizos.'], Q: ['Sobrecarga', 'Su enfriamiento baja con cada otro hechizo.'], W: ['Runa Prisión', 'Enraíza o ralentiza.'], E: ['Flujo de Hechizos', 'Se propaga entre enemigos cercanos.'], R: ['Reino Espacial', 'Teletransporta al equipo tras canalizar.'] },
+  shaco: { P: ['Puñalada por la Espalda', 'Crítico garantizado por detrás.'], Q: ['Engaño', 'Se vuelve invisible y parpadea.'], W: ['Caja de Sorpresas', 'Cajas que aterrorizan al activarse.'], E: ['Puñal Venenoso', 'Daño a distancia que ejecuta.'], R: ['Alucinar', 'Clon que explota al morir.'] },
+  singed: { P: ['Toxinas Empapadas', 'Sus hechizos envenenan.'], Q: ['Rastro Venenoso', 'Deja veneno por donde camina.'], W: ['Cola Adhesiva', 'Zona que ralentiza mucho.'], E: ['Lanzamiento', 'Lanza al enemigo por encima de él.'], R: ['Locura', 'Estadísticas masivas temporales.'] },
+  sion: { P: ['Enfurecer', 'Suma AD permanente por cada unidad que mate.'], Q: ['Golpe Poderoso', 'Aturde y hace daño extra.'], W: ['Escudo de Fuerza', 'Escudo que explota al terminar.'], E: ['Mirada Enigmática', 'Aturde al objetivo a distancia.'], R: ['Sed de Sangre', 'Chupavidas y velocidad de ataque masivos.'] },
+  sivir: { P: ['Impulso Guerrero', 'Velocidad tras golpear a un campeón.'], Q: ['Cuchilla Bumerán', 'Ida y vuelta atravesando enemigos.'], W: ['Golpe Rebotante', 'Sus autos rebotan entre objetivos.'], E: ['Escudo Mágico', 'Absorbe un hechizo dirigido.'], R: ['Llamada a la Batalla', 'Acelera a todo el equipo.'] },
+  skarner: { P: ['Energía de Cristal', 'Velocidad cerca de los cristales.'], Q: ['Golpe Fracturado', 'Resetea el autoataque; se recarga rápido.'], W: ['Exoesqueleto de Cristal', 'Escudo y velocidad.'], E: ['Fractura', 'Ralentiza a distancia.'], R: ['Empalar', 'Suprime y arrastra al objetivo consigo.'] },
+  sona: { P: ['Acorde de Poder', 'Cada 3 hechizos potencia su siguiente ataque.'], Q: ['Himno del Valor', 'Daña a dos enemigos y da AD.'], W: ['Aria de Perseverancia', 'Cura y da resistencias.'], E: ['Canción de la Celeridad', 'Da velocidad de movimiento.'], R: ['Crescendo', 'Aturde a todos en línea.'] },
+  soraka: { P: ['Salvación', 'Se acelera hacia los aliados heridos.'], Q: ['Llamada Estelar', 'Daña y la cura al impactar.'], W: ['Bendición Astral', 'Cura al aliado a cambio de su propia vida.'], E: ['Ecuanimidad', 'Silencia y enraíza en zona.'], R: ['Deseo', 'Cura a todo el equipo, en cualquier parte del mapa.'] },
+  taric: { P: ['Fuerza Imbuida', 'Sus hechizos potencian su siguiente ataque.'], Q: ['Destello Imbuido', 'Cura en área a los aliados cercanos.'], W: ['Bastión', 'Vincula a un aliado dándole armadura.'], E: ['Deslumbrar', 'Aturde en línea, también desde el aliado vinculado.'], R: ['Radiante Cósmico', 'Hace invulnerable al equipo unos segundos.'] },
+  teemo: { P: ['Camuflaje', 'Sigilo al quedarse quieto.'], Q: ['Dardo Cegador', 'Ciega al objetivo, anulando sus autoataques.'], W: ['Movimiento Rápido', 'Velocidad de movimiento fuera de combate.'], E: ['Dardos Tóxicos', 'Sus ataques envenenan.'], R: ['Trampa Venenosa', 'Setas invisibles que ralentizan y envenenan.'] },
+  tristana: { P: ['Pólvora Explosiva', 'Su alcance crece con cada nivel.'], Q: ['Carga Rápida', 'Velocidad de ataque temporal.'], W: ['Salto de Cohete', 'Salta en área; se reinicia con cada asesinato.'], E: ['Carga Explosiva', 'Marca que explota con los ataques.'], R: ['Bala de Buckshot', 'Empuja al objetivo lejos.'] },
+  tryndamere: { P: ['Sed de Sangre', 'Furia por crítico; la Q cura según la Furia.'], Q: ['Sed de Sangre', 'Cura gastando la Furia acumulada.'], W: ['Grito Mordaz', 'Reduce el AD del rival.'], E: ['Danza Giratoria', 'Salta atravesando enemigos.'], R: ['Furia Incontenible', 'No puede morir durante 5 segundos.'] },
+  twistedfate: { P: ['Cargado', 'Daño mágico extra periódico en sus autos.'], Q: ['Cartas Salvajes', 'Tres cartas en abanico.'], W: ['Selección de Carta', 'Elige carta: azul (maná), roja (área) o dorada (aturde).'], E: ['Baraja Apilada', 'Velocidad de ataque pasiva.'], R: ['Destino', 'Revela a todos y se teletransporta.'] },
+  twitch: { P: ['Veneno Mortal', 'Sus ataques apilan veneno.'], Q: ['Emboscada', 'Sigilo y velocidad al salir.'], W: ['Barril Contaminado', 'Ralentiza y revela en área.'], E: ['Expurgar', 'Detona el veneno acumulado.'], R: ['Pulverizar y Rezar', 'Sus autos atraviesan a todos en línea.'] },
+  urgot: { P: ['Zaun-Touched Bomb', 'Sus hechizos reducen el daño del objetivo.'], Q: ['Cazador Ácido', 'Misil que se autodirige a objetivos marcados.'], W: ['Escudo Terror', 'Escudo; sus autos no fallan.'], E: ['Granada Corrosiva', 'Marca al objetivo y reduce su armadura.'], R: ['Intercambio Hextech', 'Intercambia posiciones con el enemigo.'] },
+  vayne: { P: ['Cazadora Nocturna', 'Velocidad hacia los enemigos.'], Q: ['Voltereta', 'Rueda y potencia su siguiente ataque.'], W: ['Filos de Plata', 'Cada tercer golpe hace daño verdadero porcentual.'], E: ['Condena', 'Empuja; aturde si choca contra un muro.'], R: ['Hora Final', 'AD, sigilo al rodar y más alcance de la pasiva.'] },
+  veigar: { P: ['Malicia Fase', 'Poder de habilidad permanente acumulable.'], Q: ['Materia Oscura Bastón', 'Daña en línea y suma AP permanente.'], W: ['Materia Oscura', 'Meteorito con retardo.'], E: ['Jaula del Terror', 'Muro que aturde a quien lo cruce.'], R: ['Explosión Primordial', 'Daño según el AP del objetivo.'] },
+  warwick: { P: ['Sed de Sangre Eterna', 'Chupavidas permanente.'], Q: ['Mordisco Salvaje', 'Se cura un porcentaje del daño.'], W: ['Ansia de Sangre', 'Velocidad de ataque a él y a los aliados.'], E: ['Aullido Aterrador', 'Reduce el daño de los enemigos cercanos.'], R: ['Represión Infinita', 'Suprime al objetivo durante 5 segundos.'] },
+  zilean: { P: ['Sabiduría del Tiempo', 'Da experiencia extra a un aliado.'], Q: ['Bomba de Tiempo', 'Explota tras unos segundos; dos bombas aturden.'], W: ['Rebobinar', 'Reinicia los enfriamientos de sus otras habilidades.'], E: ['Deformación Temporal', 'Acelera al aliado o ralentiza al rival.'], R: ['Chronoshift', 'Resucita al aliado tras morir.'] }
+};
+
+// ---------- Counters: fuerte contra / débil contra ----------
+const COUNTERS = {
+  ahri: { fuerte: ['veigar', 'karthus', 'annie'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Domina a los magos inmóviles; sufre contra quien la alcance tras gastar la ultimate.' },
+  alistar: { fuerte: ['blitzcrank', 'sona', 'soraka'], debil: ['morgana', 'janna'], nota: 'Su combo ignora a los soportes frágiles; Morgana lo anula con el Escudo Negro.' },
+  amumu: { fuerte: ['masteryi', 'tryndamere', 'katarina'], debil: ['leesin', 'olaf', 'shaco'], nota: 'Castiga a los hipercarries agrupados; su early es débil ante invasiones.' },
+  anivia: { fuerte: ['annie', 'brand', 'veigar'], debil: ['kassadin', 'katarina', 'twistedfate'], nota: 'Muro y control ganan a los magos estáticos; los asesinos móviles la superan.' },
+  annie: { fuerte: ['ryze', 'karthus', 'veigar'], debil: ['kassadin', 'ahri', 'twistedfate'], nota: 'Su aturdimiento resuelve cualquier duelo corto, pero su alcance es limitado.' },
+  ashe: { fuerte: ['vayne', 'kogmaw', 'twitch'], debil: ['tristana', 'corki', 'blitzcrank'], nota: 'Su ralentización domina a los tiradores sin escape; la castiga quien tenga movilidad.' },
+  blitzcrank: { fuerte: ['soraka', 'sona', 'janna'], debil: ['morgana', 'sivir', 'alistar'], nota: 'Un gancho define la línea; Escudo Negro y Escudo Mágico lo neutralizan.' },
+  brand: { fuerte: ['soraka', 'sona', 'nunu'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Devasta a los agrupados; sin escape, cualquier asesino lo castiga.' },
+  chogath: { fuerte: ['tryndamere', 'olaf', 'nasus'], debil: ['teemo', 'kayle', 'singed'], nota: 'Aguanta a los peleadores cuerpo a cuerpo; sufre contra el poke a distancia.' },
+  corki: { fuerte: ['ashe', 'sivir', 'kogmaw'], debil: ['tristana', 'vayne', 'blitzcrank'], nota: 'Su daño mixto atraviesa la armadura; su fase temprana es floja.' },
+  drmundo: { fuerte: ['tryndamere', 'olaf', 'garen'], debil: ['teemo', 'kayle', 'vayne'], nota: 'Imparable ante el daño físico sostenido; el daño porcentual lo derrite.' },
+  evelynn: { fuerte: ['karthus', 'veigar', 'annie'], debil: ['leesin', 'olaf', 'shaco'], nota: 'Sin visión rival es letal; los wards rosas la desactivan por completo.' },
+  ezreal: { fuerte: ['kogmaw', 'twitch', 'urgot'], debil: ['blitzcrank', 'leona', 'alistar'], nota: 'Su movilidad esquiva las habilidades lentas; los enganches lo castigan.' },
+  fiddlesticks: { fuerte: ['masteryi', 'tryndamere', 'katarina'], debil: ['leesin', 'olaf', 'shaco'], nota: 'Su ultimate gana peleas agrupadas; su clear temprano es muy lento.' },
+  gangplank: { fuerte: ['nasus', 'sion', 'singed'], debil: ['jax', 'pantheon', 'garen'], nota: 'Domina a los que necesitan farmear tranquilos; los duelistas lo aplastan.' },
+  garen: { fuerte: ['katarina', 'annie', 'veigar'], debil: ['teemo', 'kayle', 'vayne'], nota: 'Su silencio anula a los magos; el poke a distancia lo desespera.' },
+  gragas: { fuerte: ['annie', 'veigar', 'karthus'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Su sustain gana las líneas de desgaste; los asesinos con movilidad lo superan.' },
+  heimerdinger: { fuerte: ['nasus', 'sion', 'garen'], debil: ['leesin', 'katarina', 'kassadin'], nota: 'Sus torretas hacen la línea intransitable; los ganks lo destrozan.' },
+  janna: { fuerte: ['blitzcrank', 'alistar', 'leona'], debil: ['soraka', 'sona', 'taric'], nota: 'Su peel anula a los iniciadores; pierde las líneas de desgaste puro.' },
+  jarvaniv: { fuerte: ['masteryi', 'tryndamere', 'nasus'], debil: ['shaco', 'olaf', 'leesin'], nota: 'Iniciación fiable contra hipercarries; su early depende del primer gank.' },
+  jax: { fuerte: ['ashe', 'sivir', 'tristana'], debil: ['teemo', 'malphite', 'rammus'], nota: 'Contraataque anula a los tiradores; la armadura y la ceguera lo frenan.' },
+  karthus: { fuerte: ['nasus', 'sion', 'garen'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Su presión global castiga a los inmóviles; muere ante cualquier salto.' },
+  kassadin: { fuerte: ['ahri', 'annie', 'brand'], debil: ['pantheon', 'garen', 'urgot'], nota: 'Anula a los magos con su escudo mágico; los AD lo aplastan antes del 11.' },
+  katarina: { fuerte: ['veigar', 'karthus', 'annie'], debil: ['garen', 'kassadin', 'malzahar'], nota: 'Imparable si el rival no tiene control; un silencio la deja inútil.' },
+  kayle: { fuerte: ['garen', 'nasus', 'olaf'], debil: ['pantheon', 'jax', 'teemo'], nota: 'Su E a distancia gana los intercambios; sufre antes del nivel 6.' },
+  kogmaw: { fuerte: ['chogath', 'drmundo', 'nasus'], debil: ['blitzcrank', 'leona', 'tristana'], nota: 'El daño porcentual derrite tanques; sin escape, cualquier enganche lo mata.' },
+  leesin: { fuerte: ['masteryi', 'warwick', 'nasus'], debil: ['rammus', 'malphite', 'skarner'], nota: 'Domina el early por completo; su impacto cae mucho en el late.' },
+  leona: { fuerte: ['soraka', 'sona', 'janna'], debil: ['morgana', 'sivir', 'janna'], nota: 'Encadena controles sobre los frágiles; Escudo Negro anula su combo.' },
+  lulu: { fuerte: ['masteryi', 'tryndamere', 'jax'], debil: ['blitzcrank', 'leona', 'brand'], nota: 'La polimorfia desactiva a los duelistas; el poke fuerte la supera.' },
+  lux: { fuerte: ['nasus', 'sion', 'garen'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Poke inmenso a distancia; sin escape, muere ante cualquier salto.' },
+  malphite: { fuerte: ['tryndamere', 'jax', 'vayne'], debil: ['teemo', 'kayle', 'singed'], nota: 'La pesadilla de todo AD; el daño mágico y el poke lo superan.' },
+  malzahar: { fuerte: ['katarina', 'masteryi', 'tryndamere'], debil: ['leesin', 'kassadin', 'twistedfate'], nota: 'Su supresión desactiva a los hipercarries; sufre contra la movilidad.' },
+  masteryi: { fuerte: ['nasus', 'sion', 'karthus'], debil: ['malzahar', 'rammus', 'amumu'], nota: 'Imparable si nadie tiene control; cualquier supresión lo borra.' },
+  missfortune: { fuerte: ['sivir', 'ashe', 'kogmaw'], debil: ['blitzcrank', 'leona', 'tristana'], nota: 'Su poke con la Q domina la línea; sin escape es muy vulnerable.' },
+  monkeyking: { fuerte: ['nasus', 'sion', 'karthus'], debil: ['rammus', 'malphite', 'teemo'], nota: 'Su burst borra a los blandos; la armadura y la ceguera lo frenan.' },
+  morgana: { fuerte: ['blitzcrank', 'leona', 'alistar'], debil: ['sona', 'soraka', 'taric'], nota: 'El Escudo Negro anula composiciones enteras de control.' },
+  nasus: { fuerte: ['tryndamere', 'olaf', 'garen'], debil: ['teemo', 'kayle', 'gangplank'], nota: 'Imparable en el late; el poke a distancia le impide apilar.' },
+  nidalee: { fuerte: ['nasus', 'sion', 'garen'], debil: ['pantheon', 'jax', 'kassadin'], nota: 'Su poke domina la línea; en cuerpo a cuerpo es muy frágil.' },
+  nunu: { fuerte: ['leesin', 'shaco', 'evelynn'], debil: ['masteryi', 'olaf', 'jarvaniv'], nota: 'El rey de los objetivos neutrales; su daño en pelea es bajo.' },
+  olaf: { fuerte: ['leesin', 'warwick', 'nasus'], debil: ['rammus', 'malphite', 'teemo'], nota: 'Su inmunidad al control lo hace imparable; la armadura lo frena.' },
+  pantheon: { fuerte: ['kassadin', 'ryze', 'nasus'], debil: ['jax', 'chogath', 'malphite'], nota: 'Domina el early sobre los que escalan; su late es flojo.' },
+  rammus: { fuerte: ['tryndamere', 'masteryi', 'vayne'], debil: ['karthus', 'brand', 'annie'], nota: 'Anula a los AD por completo; el daño mágico lo atraviesa.' },
+  ryze: { fuerte: ['nasus', 'sion', 'garen'], debil: ['pantheon', 'kassadin', 'katarina'], nota: 'Escala enormemente; su early es muy vulnerable a la presión.' },
+  shaco: { fuerte: ['nasus', 'karthus', 'veigar'], debil: ['leesin', 'olaf', 'nunu'], nota: 'Snowball puro desde el early; si no funciona, se apaga muy rápido.' },
+  singed: { fuerte: ['nasus', 'garen', 'olaf'], debil: ['teemo', 'kayle', 'gangplank'], nota: 'Desespera a quien intente perseguirle; el poke a distancia lo frena.' },
+  sion: { fuerte: ['nasus', 'tryndamere', 'olaf'], debil: ['teemo', 'kayle', 'vayne'], nota: 'Apila y aguanta cuerpo a cuerpo; el poke y el daño porcentual lo superan.' },
+  sivir: { fuerte: ['blitzcrank', 'leona', 'ashe'], debil: ['tristana', 'corki', 'vayne'], nota: 'Su escudo anula los enganches; su alcance es corto para el poke.' },
+  skarner: { fuerte: ['masteryi', 'tryndamere', 'katarina'], debil: ['shaco', 'leesin', 'olaf'], nota: 'Su supresión saca a cualquier carry de la pelea; su early es flojo.' },
+  sona: { fuerte: ['soraka', 'taric', 'nunu'], debil: ['blitzcrank', 'leona', 'brand'], nota: 'Gana las líneas de poke sostenido; cualquier enganche la mata.' },
+  soraka: { fuerte: ['sona', 'taric', 'nunu'], debil: ['blitzcrank', 'leona', 'brand'], nota: 'Su curación gana el desgaste; el burst y los enganches la anulan.' },
+  taric: { fuerte: ['garen', 'olaf', 'tryndamere'], debil: ['teemo', 'kayle', 'brand'], nota: 'Su armadura y aturdimiento ganan el cuerpo a cuerpo; el poke lo desgasta.' },
+  teemo: { fuerte: ['tryndamere', 'jax', 'nasus'], debil: ['kayle', 'pantheon', 'gangplank'], nota: 'Su ceguera anula a los AD; los campeones a distancia lo castigan.' },
+  tristana: { fuerte: ['ashe', 'sivir', 'kogmaw'], debil: ['blitzcrank', 'leona', 'vayne'], nota: 'Domina el early y el asedio; el late depende de la protección.' },
+  tryndamere: { fuerte: ['nasus', 'sion', 'karthus'], debil: ['malphite', 'rammus', 'teemo'], nota: 'Split push imparable; la armadura y el control lo frenan.' },
+  twistedfate: { fuerte: ['nasus', 'sion', 'ryze'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Su presión global gana partidas; en duelo directo es muy frágil.' },
+  twitch: { fuerte: ['sivir', 'ashe', 'kogmaw'], debil: ['blitzcrank', 'leona', 'tristana'], nota: 'Su ultimate limpia peleas; su fase de líneas es muy débil.' },
+  urgot: { fuerte: ['kassadin', 'ryze', 'ashe'], debil: ['tristana', 'corki', 'vayne'], nota: 'Su poke automático domina el early; su movilidad es nula.' },
+  vayne: { fuerte: ['chogath', 'drmundo', 'nasus'], debil: ['ashe', 'tristana', 'blitzcrank'], nota: 'Derrite tanques con daño verdadero; su fase de líneas es la peor.' },
+  veigar: { fuerte: ['ryze', 'karthus', 'annie'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Escalado infinito; los asesinos móviles lo castigan antes de despegar.' },
+  warwick: { fuerte: ['nasus', 'tryndamere', 'masteryi'], debil: ['olaf', 'leesin', 'shaco'], nota: 'Sustain enorme y supresión; su daño depende mucho de los objetos.' },
+  zilean: { fuerte: ['nasus', 'sion', 'garen'], debil: ['kassadin', 'katarina', 'leesin'], nota: 'Su resurrección cambia peleas; sin escape es muy vulnerable.' }
+};
+
 // ---------- Metadatos de seasons ----------
 const SEASONS_META = {
   S1: {
@@ -4590,6 +4741,24 @@ const TIERLIST = {
       brand: 'S+: su ultimate rebotando en un carril estrecho es el sueño de todo mago de área.',
       nidalee: 'A: las lanzas a máximo alcance en un carril recto son medio kit sin respuesta.',
       nasus: 'C: sin súbditos que farmear tranquilo, la Q nunca despega.'
+    }
+  },
+  actual: {
+    nombre: 'Grieta Actual',
+    icono: '⚡',
+    desc: 'Los mismos 61 campeones, pero valorados en el League de hoy (parche ' + PATCHES.ACT + '). Muchos kits clásicos han envejecido mal frente a los campeones modernos; otros siguen siendo perfectamente competitivos.',
+    tiers: {
+      'S+': ['vayne', 'jax', 'katarina', 'leesin'],
+      'S': ['ahri', 'malphite', 'amumu', 'gragas', 'jarvaniv', 'lulu', 'morgana', 'nasus'],
+      'A': ['garen', 'lux', 'sona', 'soraka', 'tristana', 'ezreal', 'masteryi', 'olaf', 'twitch', 'veigar', 'blitzcrank', 'taric', 'brand', 'annie', 'malzahar', 'janna'],
+      'B': ['ashe', 'missfortune', 'sivir', 'kogmaw', 'anivia', 'karthus', 'ryze', 'twistedfate', 'leona', 'alistar', 'chogath', 'drmundo', 'monkeyking', 'pantheon', 'shaco', 'singed', 'warwick', 'zilean'],
+      'C': ['corki', 'evelynn', 'fiddlesticks', 'gangplank', 'heimerdinger', 'kassadin', 'kayle', 'nidalee', 'nunu', 'rammus', 'sion', 'skarner', 'teemo', 'tryndamere', 'urgot']
+    },
+    notas: {
+      vayne: 'S+ sostenida: sigue siendo la mejor respuesta contra tanques del juego actual.',
+      nasus: 'S en el parche vivo: mucho más fuerte que en Classic gracias a los objetos de aguante.',
+      sion: 'B con asterisco: el Sion moderno es un tanque totalmente reformado, nada que ver con el clásico.',
+      urgot: 'C aquí porque valoramos el kit clásico; el Urgot moderno reformado sería mucho más alto.'
     }
   }
 };

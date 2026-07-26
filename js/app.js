@@ -57,6 +57,51 @@ function initials(name) {
 // Builds del campeón dentro del contexto seleccionado
 const visibles = c => buildsDe(c, edicion, modo);
 
+// ---------- Tema claro / oscuro ----------
+const themeBtn = document.getElementById('themeBtn');
+let tema = localStorage.getItem('sm_tema') || 'oscuro';
+
+function aplicarTema() {
+  document.documentElement.setAttribute('data-tema', tema);
+  if (themeBtn) themeBtn.textContent = tema === 'claro' ? '☀️' : '🌙';
+  const meta = document.querySelector('meta[name=theme-color]');
+  if (meta) meta.setAttribute('content', tema === 'claro' ? '#f4f1ea' : '#010a13');
+}
+
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    tema = tema === 'claro' ? 'oscuro' : 'claro';
+    localStorage.setItem('sm_tema', tema);
+    aplicarTema();
+    anunciar('Tema ' + tema);
+  });
+}
+aplicarTema();
+
+// ---------- Orden del roster ----------
+let orden = localStorage.getItem('sm_orden') || 'relevancia';
+
+const ORDENES = {
+  relevancia: { etiqueta: 'Relevancia', fn: (a, b) =>
+    (esFavorito(b.id) - esFavorito(a.id)) ||
+    (visibles(b).length > 0) - (visibles(a).length > 0) ||
+    a.name.localeCompare(b.name, 'es') },
+  alfabetico: { etiqueta: 'A–Z', fn: (a, b) => a.name.localeCompare(b.name, 'es') },
+  builds: { etiqueta: 'Nº de builds', fn: (a, b) =>
+    (visibles(b).length - visibles(a).length) || a.name.localeCompare(b.name, 'es') },
+  tier: { etiqueta: 'Tier', fn: (a, b) => tierIndice(a.id) - tierIndice(b.id) || a.name.localeCompare(b.name, 'es') }
+};
+
+// Posición de un campeón en la tier list del modo actual (para ordenar)
+function tierIndice(id) {
+  const lista = TIERLIST[currentTierMode] || TIERLIST.grieta;
+  for (let i = 0; i < TIER_ORDER.length; i++) {
+    const pos = (lista.tiers[TIER_ORDER[i]] || []).indexOf(id);
+    if (pos >= 0) return i * 100 + pos;
+  }
+  return 9999;
+}
+
 // ---------- Favoritos ----------
 let favoritos = new Set(JSON.parse(localStorage.getItem('sm_favs') || '[]'));
 
@@ -167,13 +212,16 @@ function renderGrid() {
     return matchRole && matchSearch;
   });
 
-  // Favoritos primero, luego los que tienen builds, luego alfabético
-  const sorted = [...filtered].sort((a, b) =>
-    (esFavorito(b.id) - esFavorito(a.id)) ||
-    (visibles(b).length > 0) - (visibles(a).length > 0) ||
-    a.name.localeCompare(b.name, 'es'));
+  const sorted = [...filtered].sort((ORDENES[orden] || ORDENES.relevancia).fn);
 
-  let html = sorted.length === 0
+  let html = `
+    <div class="orden-bar">
+      <span class="orden-label">Ordenar por</span>
+      ${Object.entries(ORDENES).map(([k, o]) =>
+        `<button class="role-btn ${k === orden ? 'active' : ''}" data-orden="${k}">${o.etiqueta}</button>`).join('')}
+    </div>`;
+
+  html += sorted.length === 0
     ? '<div class="no-results">Ningún campeón invocado con ese nombre.</div>'
     : sorted.map(champCard).join('');
 
@@ -198,6 +246,14 @@ function renderGrid() {
       e.stopPropagation();            // no abrir la ficha al marcar favorito
       alternarFavorito(btn.dataset.fav);
       renderGrid();
+    });
+  });
+  grid.querySelectorAll('[data-orden]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      orden = btn.dataset.orden;
+      localStorage.setItem('sm_orden', orden);
+      renderGrid();
+      anunciar('Ordenado por ' + ORDENES[orden].etiqueta);
     });
   });
 }
@@ -542,6 +598,60 @@ function skillOrderComponent(prioridad) {
     </div>`;
 }
 
+// --- Kit de habilidades (dato del campeón, con anulaciones por era/modo) ---
+function kitComponent(champ, build) {
+  const kit = kitDe(champ, build.ediciones[0], build.modo);
+  if (!kit) return '';
+  const teclas = [['P', 'Pasiva'], ['Q', 'Q'], ['W', 'W'], ['E', 'E'], ['R', 'Ultimate']];
+  return `
+    <div class="build-section">
+      <h3>Kit de habilidades</h3>
+      <div class="kit-grid">
+        ${teclas.map(([k, etiqueta]) => {
+          const h = kit[k];
+          if (!h) return '';
+          return `
+            <div class="kit-row">
+              <span class="kit-key key-${k}">${k}</span>
+              <div class="kit-info">
+                <div class="kit-name">${h[0]} <span class="kit-slot">${etiqueta}</span></div>
+                <div class="kit-desc">${h[1]}</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+// --- Counters (dato del campeón, con anulaciones por era/modo) ---
+function countersComponent(champ, build) {
+  const c = countersDe(champ, build.ediciones[0], build.modo);
+  if (!c) return '';
+  const lista = (ids, clase) => (ids || []).map(id => {
+    const rival = CHAMPIONS.find(x => x.id === id);
+    if (!rival) return '';
+    return `<div class="counter-champ ${clase}" data-id="${rival.id}" role="button" tabindex="0" title="${rival.name}">
+      ${iconImg(champIconUrl(rival), rival.name, 'counter-icon', initials(rival.name))}
+      <span>${rival.name}</span>
+    </div>`;
+  }).join('');
+  return `
+    <div class="build-section">
+      <h3>Enfrentamientos</h3>
+      <div class="counters-grid">
+        <div class="counter-col fuerte">
+          <div class="counter-label">Fuerte contra</div>
+          <div class="counter-list">${lista(c.fuerte, 'ok')}</div>
+        </div>
+        <div class="counter-col debil">
+          <div class="counter-label">Débil contra</div>
+          <div class="counter-list">${lista(c.debil, 'ko')}</div>
+        </div>
+      </div>
+      ${c.nota ? `<p class="counter-nota">${c.nota}</p>` : ''}
+    </div>`;
+}
+
 function itemPill(pair, ver) {
   const [id, nombre] = pair;
   return `<span class="item-pill" title="${nombre}">
@@ -565,6 +675,7 @@ function renderBuild(build, champ) {
       <span class="meta-chip chip-style">${build.style}</span>
       <span class="meta-chip chip-diff">Dificultad: ${build.difficulty}</span>
       ${build.stats ? `<span class="meta-chip chip-stats">📊 ${build.stats}</span>` : ''}
+      <button class="copy-build-btn" id="copiarBuild" title="Copiar la build como texto">📋 Copiar build</button>
     </div>
 
     ${build.resumen ? `<p class="build-resumen">${build.resumen}</p>` : ''}
@@ -626,7 +737,10 @@ function renderBuild(build, champ) {
       <ul class="tips-list">${build.tips.map(t => `<li>${t}</li>`).join('')}</ul>
     </div>
 
-    <details class="sources-details">
+    ${kitComponent(champ, build)}
+    ${countersComponent(champ, build)}
+
+    <details class="sources-details" id="fuentesDetalle">
       <summary>Fuentes y créditos</summary>
       <div class="sources-list">
         ${(build.fuentes || []).map(([url, label]) =>
@@ -636,6 +750,36 @@ function renderBuild(build, champ) {
       </div>
       <p class="sources-note">Iconos oficiales de Data Dragon (parche ${ver}). Proyecto de fan, sin relación con Riot Games.</p>
     </details>`;
+
+  // Los rivales de la sección de enfrentamientos llevan a su ficha
+  content.querySelectorAll('.counter-champ').forEach(el => {
+    activable(el, () => irACampeon(el.dataset.id, 0, true));
+  });
+
+  // Copiar la build como texto para pegarla en el chat de la partida
+  const copiar = content.querySelector('#copiarBuild');
+  if (copiar) {
+    copiar.addEventListener('click', async () => {
+      const linea = g => g.map(([, n]) => n).join(', ');
+      const texto = [
+        `${champ.name} — ${build.name} (${edLabel}, ${MODOS[build.modo].nombre})`,
+        `Inicio: ${linea(build.items.inicio)}`,
+        `Núcleo: ${linea(build.items.core)}`,
+        `Situacionales: ${linea(build.items.situacionales)}`,
+        `Habilidades: ${build.habilidades.join(' > ')}`,
+        `Hechizos: ${build.hechizos.map(h => h[1]).join(' + ')}`,
+        build.maestrias ? `Maestrías: ${build.maestrias.reparto}` : '',
+        `— ShadowMeta`
+      ].filter(Boolean).join('\n');
+      try {
+        await navigator.clipboard.writeText(texto);
+        copiar.textContent = '✓ Build copiada';
+      } catch {
+        copiar.textContent = 'No se pudo copiar';
+      }
+      setTimeout(() => { copiar.textContent = '📋 Copiar build'; }, 2200);
+    });
+  }
 }
 
 // ---------- Búsqueda con autocomplete ----------

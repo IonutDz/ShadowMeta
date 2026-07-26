@@ -24,6 +24,44 @@
   --font-body: 'Inter', 'Segoe UI', sans-serif;
 }
 
+/* ---------- Tema claro ---------- */
+:root[data-tema="claro"] {
+  --bg: #f4f1ea;
+  --bg-deep: #e8e3d7;
+  --bg-panel: #fffdf8;
+  --bg-card: #ffffff;
+  --bg-elevated: #f7f3ea;
+  --border: #d9d1bf;
+  --border-gold: #b99a58;
+  --gold: #8a6d2f;
+  --gold-bright: #4a3a1a;
+  --gold-glow: rgba(138, 109, 47, .22);
+  --blue: #06736c;
+  --blue-deep: #0a4a63;
+  --text: #4c4638;
+  --text-dim: #7d7666;
+  --text-bright: #1e1a12;
+  --red: #b32639;
+  --green: #14804d;
+  --purple: #6b2f92;
+}
+:root[data-tema="claro"] body {
+  background:
+    radial-gradient(1100px 500px at 50% -10%, rgba(10, 74, 99, .10), transparent 65%),
+    radial-gradient(800px 400px at 90% 110%, rgba(185, 154, 88, .16), transparent 60%),
+    var(--bg);
+}
+:root[data-tema="claro"] .topbar { background: linear-gradient(180deg, #fffdf8, #f2ede1); }
+:root[data-tema="claro"] .footer { background: var(--bg-deep); }
+:root[data-tema="claro"] .icon-frame { background: radial-gradient(circle at 35% 30%, var(--champ-color, #cfc6b2), #b6ab93 135%); }
+:root[data-tema="claro"] .rune-line,
+:root[data-tema="claro"] .mastery-talent,
+:root[data-tema="claro"] .counter-champ,
+:root[data-tema="claro"] .skill-cell { background: var(--bg-elevated); }
+:root[data-tema="claro"] .tier-label { color: #fffdf8; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+:root[data-tema="claro"] .kit-key,
+:root[data-tema="claro"] .skill-cell.on { color: #fffdf8; }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--border-gold) var(--bg-deep); }
@@ -140,11 +178,16 @@ body {
   white-space: nowrap;
 }
 .logo-gem {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   color: var(--gold);
-  filter: drop-shadow(0 0 8px var(--gold-glow));
+  filter: drop-shadow(0 0 10px var(--gold-glow));
   flex-shrink: 0;
+  transition: filter .25s, transform .25s;
+}
+.logo:hover .logo-gem {
+  filter: drop-shadow(0 0 18px var(--gold-glow));
+  transform: translateY(-1px);
 }
 .logo-text { display: flex; flex-direction: column; line-height: 1.05; }
 .logo-main {
@@ -182,6 +225,39 @@ body {
 }
 .nav-btn:hover { color: var(--gold-bright); }
 .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); text-shadow: 0 0 16px var(--gold-glow); }
+
+/* Botón de tema */
+.theme-btn {
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--gold);
+  font-size: 1.05rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: box-shadow .2s, border-color .2s;
+}
+.theme-btn:hover { border-color: var(--gold); box-shadow: 0 0 14px var(--gold-glow); }
+
+/* Selector de orden del roster */
+.orden-bar {
+  grid-column: 1 / -1;      /* ocupa toda la fila del grid de campeones */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+  flex-wrap: wrap;
+}
+.orden-label {
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  font-weight: 700;
+}
+.orden-bar .role-btn { padding: 5px 13px; font-size: .72rem; }
 
 .searchbox { flex: 1; min-width: 200px; max-width: 420px; position: relative; }
 
@@ -1261,6 +1337,126 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 
 .no-builds-sources { margin-top: 14px; align-items: center; }
 
+/* ---------- COMPONENTE: kit de habilidades ---------- */
+.kit-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.kit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 11px 14px;
+}
+
+.kit-key {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: .88rem;
+  color: var(--bg-deep);
+  flex-shrink: 0;
+}
+.kit-key.key-P { background: linear-gradient(180deg, #9a8fb8, #6f6390); }
+.kit-key.key-Q { background: linear-gradient(180deg, #6db3d1, #3f83a9); }
+.kit-key.key-W { background: linear-gradient(180deg, #8fd177, #5aa945); }
+.kit-key.key-E { background: linear-gradient(180deg, #f0a35e, #d97b3f); }
+.kit-key.key-R { background: linear-gradient(180deg, #ffd76e, #e8a33d); }
+
+.kit-info { min-width: 0; }
+.kit-name { color: var(--text-bright); font-weight: 600; font-size: .9rem; }
+.kit-slot {
+  font-size: .62rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+  font-weight: 700;
+  margin-left: 6px;
+}
+.kit-desc { font-size: .82rem; line-height: 1.5; color: var(--text); margin-top: 2px; }
+
+/* ---------- COMPONENTE: enfrentamientos ---------- */
+.counters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.counter-col {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--border);
+  border-radius: 4px;
+  padding: 13px 14px;
+}
+.counter-col.fuerte { border-top-color: var(--green); }
+.counter-col.debil { border-top-color: var(--red); }
+
+.counter-label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.counter-col.fuerte .counter-label { color: var(--green); }
+.counter-col.debil .counter-label { color: var(--red); }
+
+.counter-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.counter-champ {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px 5px 5px;
+  background: rgba(1, 10, 19, .5);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: .8rem;
+  color: var(--text-bright);
+  cursor: pointer;
+  transition: border-color .2s, transform .15s;
+}
+.counter-champ:hover { transform: translateY(-2px); }
+.counter-champ.ok:hover { border-color: var(--green); }
+.counter-champ.ko:hover { border-color: var(--red); }
+
+.counter-icon { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border-gold); font-size: .6rem; }
+
+.counter-nota {
+  margin-top: 10px;
+  font-size: .82rem;
+  line-height: 1.55;
+  color: var(--text);
+  border-left: 3px solid var(--border-gold);
+  padding-left: 12px;
+}
+
+/* ---------- Copiar build ---------- */
+.copy-build-btn {
+  margin-left: auto;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--blue);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  transition: all .2s;
+  min-width: 150px;
+}
+.copy-build-btn:hover { border-color: var(--blue); box-shadow: 0 0 12px rgba(10, 200, 185, .25); }
+
 /* ---------- Favoritos ---------- */
 .fav-btn {
   position: absolute;
@@ -1419,6 +1615,9 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   .mastery-board { grid-template-columns: 1fr; }
   .rune-line { gap: 12px; }
   .rune-slot { width: 26px; height: 26px; }
+  .counters-grid { grid-template-columns: 1fr; }
+  .copy-build-btn { margin-left: 0; width: 100%; }
+  .logo-gem { width: 34px; height: 34px; }
   .tier-label { min-width: 46px; font-size: 1.05rem; }
   .tier-champ { width: 60px; }
   .tier-icon { width: 44px; height: 44px; }
