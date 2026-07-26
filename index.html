@@ -62,11 +62,18 @@
 
     <button class="theme-btn" id="themeBtn" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">🌙</button>
 
+
+  </header>
+
+  <!-- Buscador principal, centrado -->
+  <div class="search-hero">
     <div class="searchbox">
-      <input type="text" id="searchInput" placeholder="Buscar campeón, build, era o modo..." autocomplete="off" spellcheck="false">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input type="text" id="searchInput" placeholder="Busca un campeón, una build, una era o un modo…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
       <div class="autocomplete" id="autocomplete"></div>
     </div>
-  </header>
+  </div>
 
   <!-- Selector global de contexto -->
   <section class="context-bar" id="contextBar">

@@ -519,8 +519,22 @@ function runePageComponent(runas, ver) {
     </div>`;
 }
 
-// --- Runas modernas: keystone + secundario + fragmentos ---
-function modernRunesComponent(rm) {
+// --- Runas modernas: el árbol completo, con las elegidas iluminadas ---
+// Se descarga runesReforged.json del parche para pintar todas las opciones de
+// cada fila, no solo las escogidas: así se ve dónde hay que pulsar.
+const cacheArboles = {};
+
+function cargarArbolesRunas(parche) {
+  if (cacheArboles[parche]) return cacheArboles[parche];
+  return (cacheArboles[parche] = fetch(`${DD_HOST}/${parche}/data/es_ES/runesReforged.json`)
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .catch(() => null));
+}
+
+function modernRunesComponent(rm, parche) {
+  const elegidas = new Set([...rm.principal.runas, ...rm.secundario.runas].map(r => r[0]));
+
+  // Vista inmediata (solo las elegidas); el árbol completo llega al descargarse
   const rama = (r, esPrincipal) => `
     <div class="mr-tree ${esPrincipal ? 'principal' : 'secundario'}">
       <div class="mr-tree-head">
@@ -535,14 +549,53 @@ function modernRunesComponent(rm) {
           </div>`).join('')}
       </div>
     </div>`;
-  return `
-    <div class="modern-runes">
-      ${rama(rm.principal, true)}
-      ${rama(rm.secundario, false)}
+
+  cargarArbolesRunas(parche).then(arboles => {
+    const destino = document.getElementById('runasModernas');
+    if (!arboles || !destino) return;
+    const pinta = (nombreArbol, esPrincipal) => {
+      const a = arboles.find(x => x.name === nombreArbol);
+      if (!a) return '';
+      return `
+        <div class="rtree ${esPrincipal ? 'principal' : 'secundario'}">
+          <div class="rtree__head">
+            ${iconImg(perkIconUrl(a.icon), a.name, 'rtree__icon', a.name[0])}
+            <span>${a.name}</span>
+            <span class="rtree__rol">${esPrincipal ? 'Principal' : 'Secundario'}</span>
+          </div>
+          ${a.slots.map((slot, fila) => `
+            <div class="rtree__fila ${fila === 0 && esPrincipal ? 'keystones' : ''}">
+              ${slot.runes.map(r => `
+                <span class="rcell ${elegidas.has(r.id) ? 'on' : ''}" title="${r.name}">
+                  ${iconImg(perkIconUrl(r.icon), r.name, fila === 0 && esPrincipal ? 'rcell__icon grande' : 'rcell__icon', r.name[0])}
+                  <span class="rcell__nombre">${r.name}</span>
+                </span>`).join('')}
+            </div>`).join('')}
+        </div>`;
+    };
+    destino.innerHTML = `
+      <div class="rtree-board">
+        ${pinta(rm.principal.arbol, true)}
+        ${pinta(rm.secundario.arbol, false)}
+      </div>
       <div class="mr-tree fragmentos">
         <div class="mr-tree-head"><span class="mr-frag-ico">◈</span><span>Fragmentos</span></div>
         <div class="mr-runes">
           ${rm.fragmentos.map(f => `<div class="mr-rune"><span class="mr-frag-dot"></span><span>${f}</span></div>`).join('')}
+        </div>
+      </div>`;
+  });
+
+  return `
+    <div id="runasModernas">
+      <div class="modern-runes">
+        ${rama(rm.principal, true)}
+        ${rama(rm.secundario, false)}
+        <div class="mr-tree fragmentos">
+          <div class="mr-tree-head"><span class="mr-frag-ico">◈</span><span>Fragmentos</span></div>
+          <div class="mr-runes">
+            ${rm.fragmentos.map(f => `<div class="mr-rune"><span class="mr-frag-dot"></span><span>${f}</span></div>`).join('')}
+          </div>
         </div>
       </div>
     </div>`;
@@ -564,6 +617,10 @@ function varianteDe(m, build) {
   return 'ad';
 }
 
+// El id de cada maestría codifica su casilla: 4 · árbol · fila · columna.
+// Con eso se reconstruye la rejilla exacta del cliente clásico (4 col × 6 filas).
+const ARBOL_NUM = { 'Ofensa': '1', 'Defensa': '2', 'Utilidad': '3' };
+
 function masteryComponent(m, ver, build) {
   const clase = { 'Ofensa': 'ofensa', 'Defensa': 'defensa', 'Utilidad': 'utilidad' };
   const variante = varianteDe(m, build);
@@ -575,42 +632,49 @@ function masteryComponent(m, ver, build) {
       <div class="mastery-dist">${m.reparto}</div>
       <div class="mastery-key">${m.clave}</div>
     </div>
+
     <div class="mastery-board">
       ${['Ofensa', 'Defensa', 'Utilidad'].map(nombre => {
         const a = asignados[nombre];
         const pts = a ? a.puntos : 0;
-        if (!pts) {
-          return `<div class="mastery-col ${clase[nombre]} vacio">
-            <div class="mastery-col-head"><span class="mastery-col-name">${nombre}</span><span class="mastery-col-pts">0</span></div>
-            <div class="mastery-empty">Sin puntos en este árbol</div>
-          </div>`;
-        }
-        const talentos = a.talentos || talentosDe(nombre, pts, variante);
-        const cuerpo = talentos
-          ? talentos.map(([id, puntos]) => {
-              const t = TALENTOS[id];
-              if (!t) return '';
-              return `
-                <div class="mastery-talent-row">
-                  ${iconImg(masteryIconUrl(id, ver), t[0], 'mastery-icon', t[0][0])}
-                  <span class="mastery-talent-name">${t[0]}</span>
-                  <span class="mastery-talent-pts">${puntos}<span class="de">/${t[1]}</span></span>
-                </div>`;
-            }).join('')
-          // Sin reparto concreto: al menos se listan los talentos del texto
-          : `<div class="mastery-talents">${a.detalle.replace(/\.$/, '').split(/,\s*/)
-              .map(t => `<span class="mastery-talent">${t}</span>`).join('')}</div>`;
+        const talentos = a ? (a.talentos || talentosDe(nombre, pts, variante) || []) : [];
+        const puestos = Object.fromEntries(talentos);   // idTalento -> puntos a poner
+        const num = ARBOL_NUM[nombre];
+
+        // 6 filas × 4 columnas; las casillas que no existen quedan huecas
+        const filas = Array.from({ length: 6 }, (_, f) =>
+          Array.from({ length: 4 }, (_, c) => {
+            const id = `4${num}${f + 1}${c + 1}`;
+            const t = TALENTOS[id];
+            if (!t) return '<span class="mcell mcell--hueco"></span>';
+            const puntos = puestos[id] || 0;
+            const activa = puntos > 0;
+            return `
+              <span class="mcell ${activa ? 'on' : ''}" title="${t[0]} — ${activa ? puntos + ' de ' + t[1] + ' puntos' : 'sin puntos'}">
+                ${iconImg(masteryIconUrl(id, ver), t[0], 'mcell__icon', t[0][0])}
+                <span class="mcell__pts">${puntos}/${t[1]}</span>
+              </span>`;
+          }).join('')).join('');
+
         return `
-          <div class="mastery-col ${clase[nombre]}">
-            <div class="mastery-col-head">
-              <span class="mastery-col-name">${nombre}</span>
-              <span class="mastery-col-pts">${pts}</span>
+          <div class="mtree ${clase[nombre]} ${pts ? '' : 'vacio'}">
+            <div class="mtree__head">
+              <span class="mtree__name">${nombre}</span>
+              <span class="mtree__pts">${pts}</span>
             </div>
-            <div class="mastery-list">${cuerpo}</div>
+            <div class="mtree__grid">${filas}</div>
+            ${pts ? `
+              <ol class="mtree__orden">
+                ${talentos.map(([id, puntos]) => {
+                  const t = TALENTOS[id];
+                  return t ? `<li><b>${puntos}</b> en ${t[0]}</li>` : '';
+                }).join('')}
+              </ol>` : '<p class="mtree__vacio">Sin puntos en este árbol</p>'}
           </div>`;
       }).join('')}
     </div>
-    <p class="mastery-nota">Pon los puntos en el orden de arriba abajo: cada fila del árbol pide 4 puntos invertidos en la anterior.</p>`;
+
+    <p class="mastery-nota">Las casillas iluminadas son las que hay que subir. Sigue el orden numerado de cada árbol: cada fila pide 4 puntos invertidos en la anterior para desbloquearse.</p>`;
 }
 
 // --- Tabla de subida de habilidades por nivel (1-18) ---
@@ -648,26 +712,63 @@ function skillOrderComponent(prioridad) {
     </div>`;
 }
 
-// --- Kit de habilidades (dato del campeón, con anulaciones por era/modo) ---
+// --- Kit de habilidades ---
+// Nombres, descripciones e iconos reales de Riot, del parche de la build: así
+// el kit clásico es el clásico de verdad y el actual es el actual. Si no hay
+// conexión se usa el resumen propio de KITS como respaldo.
+const cacheKits = {};
+
+function cargarKitReal(dd, parche) {
+  const clave = `${parche}/${dd}`;
+  if (cacheKits[clave]) return cacheKits[clave];
+  return (cacheKits[clave] = fetch(`${DD_HOST}/${parche}/data/es_ES/champion/${dd}.json`)
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(j => {
+      const c = j.data[dd];
+      const limpiar = t => (t || '').replace(/<[^>]+>/g, '').trim();
+      return [
+        { k: 'P', etiqueta: 'Pasiva', nombre: c.passive.name, desc: limpiar(c.passive.description),
+          icono: `${DD_HOST}/${parche}/img/passive/${c.passive.image.full}` },
+        ...c.spells.map((s, i) => ({
+          k: ['Q', 'W', 'E', 'R'][i], etiqueta: ['Q', 'W', 'E', 'Ultimate'][i],
+          nombre: s.name, desc: limpiar(s.description),
+          icono: `${DD_HOST}/${parche}/img/spell/${s.image.full}`
+        }))
+      ];
+    })
+    .catch(() => null));
+}
+
+function filaKit(k, etiqueta, nombre, desc, icono) {
+  return `
+    <div class="kit-row">
+      <span class="kit-key key-${k}">${k}</span>
+      ${icono ? iconImg(icono, nombre, 'kit-icon', nombre[0]) : ''}
+      <div class="kit-info">
+        <div class="kit-name">${nombre} <span class="kit-slot">${etiqueta}</span></div>
+        <div class="kit-desc">${desc}</div>
+      </div>
+    </div>`;
+}
+
 function kitComponent(champ, build) {
   const kit = kitDe(champ, build.ediciones[0], build.modo);
-  if (!kit) return '';
   const teclas = [['P', 'Pasiva'], ['Q', 'Q'], ['W', 'W'], ['E', 'E'], ['R', 'Ultimate']];
-  return panel('Kit de habilidades', `
-    <div class="kit-grid">
-      ${teclas.map(([k, etiqueta]) => {
-        const h = kit[k];
-        if (!h) return '';
-        return `
-          <div class="kit-row">
-            <span class="kit-key key-${k}">${k}</span>
-            <div class="kit-info">
-              <div class="kit-name">${h[0]} <span class="kit-slot">${etiqueta}</span></div>
-              <div class="kit-desc">${h[1]}</div>
-            </div>
-          </div>`;
-      }).join('')}
-    </div>`);
+  // Se pinta el resumen propio y, cuando llegan los datos de Riot, se sustituye
+  const respaldo = kit
+    ? teclas.map(([k, etq]) => kit[k] ? filaKit(k, etq, kit[k][0], kit[k][1], null) : '').join('')
+    : '<p class="kit-cargando">Cargando habilidades…</p>';
+
+  cargarKitReal(champ.dd, build.parche).then(real => {
+    const destino = document.getElementById('kitGrid');
+    if (!real || !destino) return;
+    destino.innerHTML = real.map(h => filaKit(h.k, h.etiqueta, h.nombre, h.desc, h.icono)).join('');
+    const pie = document.getElementById('kitFuente');
+    if (pie) pie.textContent = `Habilidades del parche ${build.parche}, tal cual las publica Riot.`;
+  });
+
+  return panel('Kit de habilidades', `<div class="kit-grid" id="kitGrid">${respaldo}</div>`,
+    { nota: '<span id="kitFuente">Resumen propio; cargando las habilidades oficiales…</span>' });
 }
 
 // --- Counters (dato del campeón, con anulaciones por era/modo) ---
@@ -739,8 +840,9 @@ function renderBuild(build, champ) {
             <div class="item-list">${build.items.situacionales.map(p => itemPill(p, ver)).join('')}</div>
           </div>`)}
 
-        ${panel(esModerna ? 'Runas' : 'Página de runas',
-          esModerna ? modernRunesComponent(build.runasModernas) : runePageComponent(build.runas, ver))}
+        ${panel(esModerna ? 'Árbol de runas' : 'Página de runas',
+          esModerna ? modernRunesComponent(build.runasModernas, ver) : runePageComponent(build.runas, ver),
+          esModerna ? { nota: 'Las runas iluminadas son las que hay que elegir; el resto son las demás opciones de cada fila.' } : {})}
 
         ${build.maestrias ? panel('Maestrías', masteryComponent(build.maestrias, ver, build)) : ''}
 
@@ -951,6 +1053,16 @@ logoHome.addEventListener('click', () => {
   searchInput.value = '';
   currentSearch = '';
   switchView('champions');
+});
+
+// "/" enfoca el buscador desde cualquier parte, como en GitHub
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchInput &&
+      !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
 });
 
 // ============ RUTAS COMPARTIBLES ============

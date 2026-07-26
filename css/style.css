@@ -259,7 +259,47 @@ body {
 }
 .orden-bar .role-btn { padding: 5px 13px; font-size: .72rem; }
 
-.searchbox { flex: 1; min-width: 200px; max-width: 420px; position: relative; }
+/* ---------- Buscador principal, centrado ---------- */
+.search-hero {
+  display: flex;
+  justify-content: center;
+  padding: 26px 24px 20px;
+  background:
+    radial-gradient(620px 130px at 50% 0%, rgba(200, 170, 110, .09), transparent 70%),
+    linear-gradient(180deg, rgba(10, 20, 40, .5), transparent);
+}
+
+.searchbox {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  font-size: 1.35rem;
+  color: var(--gold);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.search-kbd {
+  position: absolute;
+  right: 14px;
+  padding: 3px 9px;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.searchbox input:focus ~ .search-kbd { opacity: 0; }
 
 /* ---------- Autocomplete ---------- */
 .autocomplete {
@@ -309,17 +349,21 @@ body {
 
 .searchbox input {
   width: 100%;
-  padding: 11px 16px;
-  background: var(--bg-card);
+  padding: 15px 52px 15px 46px;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-panel));
   border: 1px solid var(--border-gold);
-  border-radius: 2px;
+  border-radius: 3px;
   color: var(--text-bright);
   font-family: var(--font-body);
-  font-size: .95rem;
+  font-size: 1.02rem;
   outline: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .4);
   transition: border-color .2s, box-shadow .2s;
 }
-.searchbox input:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 18px var(--gold-glow); }
+.searchbox input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 26px var(--gold-glow), 0 6px 24px rgba(0, 0, 0, .5);
+}
 .searchbox input::placeholder { color: var(--text-dim); }
 
 /* ---------- Filtro de roles ---------- */
@@ -964,44 +1008,182 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 
 .mastery-empty { font-size: .76rem; color: var(--text-dim); font-style: italic; }
 
-/* Lista de talentos con icono y puntos exactos */
-.mastery-list { display: flex; flex-direction: column; gap: 5px; }
+/* ---------- Árbol de maestrías: la rejilla original 4×6 ---------- */
+.mtree {
+  background: linear-gradient(180deg, rgba(1, 10, 19, .55), rgba(1, 10, 19, .25));
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+}
+.mtree.ofensa { border-top-color: var(--red); }
+.mtree.defensa { border-top-color: var(--green); }
+.mtree.utilidad { border-top-color: var(--blue); }
+.mtree.vacio { opacity: .45; }
 
-.mastery-talent-row {
+.mtree__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.mtree__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: 1.2px;
+}
+.mtree.ofensa .mtree__name { color: var(--red); }
+.mtree.defensa .mtree__name { color: var(--green); }
+.mtree.utilidad .mtree__name { color: var(--blue); }
+
+.mtree__pts {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--gold-bright);
+}
+
+.mtree__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.mcell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px 3px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+.mcell--hueco { visibility: hidden; }
+
+.mcell__icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  font-size: .6rem;
+  filter: grayscale(1) brightness(.45);
+  transition: filter .2s, border-color .2s;
+}
+.mcell__pts {
+  font-size: .58rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: .3px;
+}
+
+/* Casilla elegida: se ilumina */
+.mcell.on { background: rgba(200, 170, 110, .1); border-color: var(--border-gold); }
+.mcell.on .mcell__icon {
+  filter: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+.mcell.on .mcell__pts { color: var(--gold-bright); }
+
+/* Orden numerado de subida */
+.mtree__orden {
+  list-style: decimal inside;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: .74rem;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  padding-top: 9px;
+}
+.mtree__orden b { color: var(--gold-bright); font-weight: 700; }
+.mtree__vacio { font-size: .74rem; color: var(--text-dim); font-style: italic; }
+
+/* ---------- Árbol de runas modernas ---------- */
+.rtree-board { display: flex; flex-direction: column; gap: 12px; }
+
+.rtree {
+  background: linear-gradient(180deg, rgba(1, 10, 19, .5), rgba(1, 10, 19, .2));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+}
+.rtree.principal { border-color: var(--border-gold); }
+
+.rtree__head {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 5px 8px;
-  background: rgba(1, 10, 19, .45);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-}
-
-.mastery-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
-  border: 1px solid var(--border-gold);
-  font-size: .62rem;
-  flex-shrink: 0;
-}
-
-.mastery-talent-name {
-  flex: 1;
-  min-width: 0;
-  font-size: .78rem;
-  color: var(--text-bright);
-  line-height: 1.25;
-}
-
-.mastery-talent-pts {
+  padding-bottom: 9px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: .88rem;
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: 1.2px;
   color: var(--gold-bright);
+}
+.rtree__icon { width: 26px; height: 26px; }
+.rtree__rol {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: .6rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.rtree__fila {
+  display: flex;
+  justify-content: space-around;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, .05);
+}
+.rtree__fila:last-child { border-bottom: none; }
+
+.rcell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 74px;
+  text-align: center;
+}
+.rcell__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-deep);
+  font-size: .6rem;
+  filter: grayscale(1) brightness(.5);
+  transition: filter .2s, border-color .2s, box-shadow .2s;
+}
+.rcell__icon.grande { width: 44px; height: 44px; }
+.rcell__nombre { font-size: .58rem; line-height: 1.15; color: var(--text-dim); }
+
+.rcell.on .rcell__icon {
+  filter: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+.rcell.on .rcell__nombre { color: var(--gold-bright); font-weight: 600; }
+
+/* Icono de habilidad en el kit */
+.kit-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 4px;
+  border: 1px solid var(--border-gold);
+  font-size: .7rem;
   flex-shrink: 0;
 }
-.mastery-talent-pts .de { color: var(--text-dim); font-size: .7rem; font-weight: 400; }
+.kit-cargando { font-size: .82rem; color: var(--text-dim); font-style: italic; }
 
 .mastery-nota {
   margin-top: 12px;
