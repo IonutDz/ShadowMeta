@@ -2850,34 +2850,43 @@ const SEASONS_META = {
 };
 
 // ---------- Tier list por modos ----------
-// Curada para el lanzamiento de LoL Classic a partir del meta clásico S3 y las
-// primeras estadísticas del modo (MetaSRC Classic 26.15). Verificado: Taric Support B.
+// Los 61 campeones del roster clasificados en cada modo. Curada a partir del meta
+// clásico S3 y las primeras estadísticas del modo (MetaSRC Classic 26.15).
 const TIERLIST = {
   grieta: {
     nombre: 'Grieta Clásica',
     icono: '⚔️',
-    desc: 'Tier list curada para el 5v5 de LoL Classic (parche 26.15): kits pre-rework sobre itemización Season 3. Contrasta siempre con las fuentes en vivo — el meta del modo evoluciona cada semana con El Consejo.',
+    desc: 'Los 61 campeones de LoL Classic clasificados para el 5v5 (parche 26.15): kits pre-rework sobre itemización Season 3. Contrasta siempre con las fuentes en vivo — el meta del modo evoluciona cada semana con El Consejo.',
     tiers: {
       'S+': ['leesin', 'jax', 'vayne', 'blitzcrank', 'kassadin'],
       'S': ['ahri', 'katarina', 'malphite', 'amumu', 'sona', 'tristana', 'ezreal', 'garen'],
-      'A': ['ashe', 'lux', 'masteryi', 'soraka', 'annie', 'morgana', 'gragas', 'olaf', 'sivir', 'nasus', 'jarvaniv', 'twistedfate'],
-      'B': ['taric', 'karthus', 'anivia', 'ryze', 'veigar', 'missfortune', 'corki', 'janna', 'leona', 'alistar', 'monkeyking', 'tryndamere', 'drmundo', 'warwick'],
-      'C': ['heimerdinger', 'urgot', 'sion', 'teemo', 'kayle', 'zilean', 'skarner', 'evelynn', 'fiddlesticks', 'singed']
+      'A': ['ashe', 'lux', 'masteryi', 'soraka', 'annie', 'morgana', 'gragas', 'olaf', 'sivir', 'nasus', 'jarvaniv', 'twistedfate', 'chogath', 'pantheon', 'lulu'],
+      'B': ['taric', 'karthus', 'anivia', 'ryze', 'veigar', 'missfortune', 'corki', 'janna', 'leona', 'alistar', 'monkeyking', 'tryndamere', 'drmundo', 'warwick', 'shaco', 'nunu', 'rammus', 'gangplank', 'brand', 'malzahar', 'twitch'],
+      'C': ['heimerdinger', 'urgot', 'sion', 'teemo', 'kayle', 'zilean', 'skarner', 'evelynn', 'fiddlesticks', 'singed', 'kogmaw', 'nidalee']
     },
-    notas: { taric: 'B verificado: 50.49% WR como support en Classic 26.15 (MetaSRC).' }
+    notas: {
+      taric: 'B verificado: 50.49% WR como support en Classic 26.15 (MetaSRC).',
+      kogmaw: 'C en solitario: sube a A con una composición dedicada a protegerlo.',
+      rammus: 'B de media: contra 4+ AD es directamente S.',
+      nunu: 'B en pelea, S+ robando objetivos: su valor depende de tu jungla rival.'
+    }
   },
   aram: {
     nombre: 'ARAM Clásico',
     icono: '❄️',
-    desc: 'Si el modo incorpora ARAM con reglas clásicas, este es el orden natural: poke, área y sostenimiento mandan en el carril único. Lista curada por arquetipos — sin datos en vivo todavía.',
+    desc: 'Los 61 campeones clasificados para el carril único con reglas clásicas: poke, daño en área y sostenimiento mandan; los asesinos cuerpo a cuerpo sufren. Lista curada por arquetipos — sin datos en vivo todavía.',
     tiers: {
-      'S+': ['lux', 'sona', 'karthus', 'ashe'],
-      'S': ['morgana', 'veigar', 'missfortune', 'ahri', 'soraka', 'anivia'],
-      'A': ['annie', 'ryze', 'gragas', 'kogmaw', 'janna', 'taric', 'amumu'],
-      'B': ['garen', 'malphite', 'leona', 'sivir', 'tristana', 'corki'],
-      'C': ['masteryi', 'leesin', 'evelynn', 'shaco', 'singed']
+      'S+': ['lux', 'sona', 'karthus', 'ashe', 'brand'],
+      'S': ['morgana', 'veigar', 'missfortune', 'ahri', 'soraka', 'anivia', 'heimerdinger', 'fiddlesticks', 'zilean', 'ezreal', 'malzahar'],
+      'A': ['annie', 'ryze', 'gragas', 'kogmaw', 'janna', 'taric', 'amumu', 'nidalee', 'twistedfate', 'gangplank', 'chogath'],
+      'B': ['garen', 'malphite', 'leona', 'sivir', 'tristana', 'corki', 'jarvaniv', 'pantheon', 'alistar', 'blitzcrank', 'lulu', 'urgot', 'twitch', 'nunu', 'kayle', 'teemo'],
+      'C': ['masteryi', 'leesin', 'evelynn', 'shaco', 'singed', 'jax', 'kassadin', 'katarina', 'drmundo', 'nasus', 'olaf', 'rammus', 'sion', 'skarner', 'tryndamere', 'warwick', 'monkeyking', 'vayne']
     },
-    notas: {}
+    notas: {
+      brand: 'S+: su ultimate rebotando en un carril estrecho es el sueño de todo mago de área.',
+      nidalee: 'A: las lanzas a máximo alcance en un carril recto son medio kit sin respuesta.',
+      nasus: 'C: sin súbditos que farmear tranquilo, la Q nunca despega.'
+    }
   }
 };
 
