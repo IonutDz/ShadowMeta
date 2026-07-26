@@ -57,6 +57,50 @@ function initials(name) {
 // Builds del campeón dentro del contexto seleccionado
 const visibles = c => buildsDe(c, edicion, modo);
 
+// ---------- Roster dinámico ----------
+// El roster curado son los 61 de LoL Classic. Para la era actual se descarga
+// el roster completo del parche vivo (173 campeones y subiendo), de modo que
+// están TODOS aunque todavía no tengan build escrita.
+let rosterActual = null;     // se rellena al vuelo
+let cargandoRoster = false;
+
+function cargarRosterActual() {
+  if (rosterActual || cargandoRoster) return Promise.resolve(rosterActual);
+  cargandoRoster = true;
+  // Primero el backend propio (cacheado en la red); si falla, Data Dragon directo
+  return fetch('/api/ddragon?recurso=campeones')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .catch(() => fetch(`${DD_HOST}/${PATCHES.ACT}/data/es_ES/champion.json`)
+      .then(r => r.json())
+      .then(j => ({
+        version: PATCHES.ACT,
+        campeones: Object.values(j.data).map(c => ({
+          dd: c.id, nombre: c.name, titulo: c.title, tags: c.tags,
+          roles: [...new Set(c.tags.map(t => ({
+            Fighter: 'Top', Tank: 'Top', Mage: 'Mid', Assassin: 'Mid',
+            Marksman: 'ADC', Support: 'Support'
+          })[t]).filter(Boolean))]
+        }))
+      })))
+    .then(datos => {
+      const curados = new Map(CHAMPIONS.map(c => [c.dd, c]));
+      rosterActual = datos.campeones.map(c => curados.get(c.dd) || {
+        id: c.dd.toLowerCase(), dd: c.dd, name: c.nombre, title: c.titulo,
+        roles: c.roles.length ? c.roles : ['Mid'],
+        color: autoColor(c.dd), lema: '', builds: [], soloActual: true
+      }).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+      cargandoRoster = false;
+      return rosterActual;
+    })
+    .catch(() => { cargandoRoster = false; return null; });
+}
+
+// El roster que toca según la era elegida
+function rosterVisible() {
+  if (edicion === 'actual' && rosterActual) return rosterActual;
+  return CHAMPIONS;
+}
+
 // ---------- Tema claro / oscuro ----------
 const themeBtn = document.getElementById('themeBtn');
 let tema = localStorage.getItem('sm_tema') || 'oscuro';
@@ -143,10 +187,14 @@ function initContextBar() {
 function updateContextDesc() {
   const e = EDICIONES[edicion];
   const m = MODOS[modo];
-  const total = CHAMPIONS.reduce((n, c) => n + visibles(c).length, 0);
-  const champs = CHAMPIONS.filter(c => visibles(c).length).length;
+  const lista = rosterVisible();
+  const total = lista.reduce((n, c) => n + visibles(c).length, 0);
+  const conBuild = lista.filter(c => visibles(c).length).length;
   contextDesc.innerHTML = `
-    <span class="ctx-count"><strong>${total}</strong> build${total === 1 ? '' : 's'} · <strong>${champs}</strong> campe${champs === 1 ? 'ón' : 'ones'}</span>
+    <span class="ctx-count">
+      <strong>${total}</strong> build${total === 1 ? '' : 's'} ·
+      <strong>${conBuild}</strong> de <strong>${lista.length}</strong> campeones
+    </span>
     <span class="ctx-text">${e ? e.desc : 'Todas las eras del juego, de la Season 1 al parche actual.'}${m ? ' · ' + m.desc : ''}</span>`;
 }
 
@@ -205,8 +253,13 @@ function activable(el, fn) {
 }
 
 function renderGrid() {
+  // En la era actual hacen falta los 173 campeones, no solo los 61 clásicos
+  if (edicion === 'actual' && !rosterActual) {
+    cargarRosterActual().then(r => { if (r) { renderGrid(); updateContextDesc(); } });
+  }
+
   const term = currentSearch.trim().toLowerCase();
-  const filtered = CHAMPIONS.filter(c => {
+  const filtered = rosterVisible().filter(c => {
     const matchRole = currentRole === 'all' || c.roles.includes(currentRole);
     const matchSearch = !term || c.name.toLowerCase().includes(term) || c.title.toLowerCase().includes(term);
     return matchRole && matchSearch;
@@ -386,7 +439,8 @@ function renderSeasons() {
 
 // ---------- Detalle de campeón ----------
 function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
-  const champ = CHAMPIONS.find(c => c.id === id);
+  const champ = rosterVisible().find(c => c.id === id) || CHAMPIONS.find(c => c.id === id)
+    || (rosterActual || []).find(c => c.id === id);
   if (!champ) return;
 
   grid.classList.add('hidden');
@@ -410,7 +464,9 @@ function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
       <button class="back-btn" id="backBtn">← Volver</button>
       <button class="share-btn" id="shareBtn" title="Copiar enlace a este campeón">🔗 Copiar enlace</button>
     </div>
-    <div class="detail-header" style="--champ-color:${champ.color}">
+    <div class="detail-header con-arte" style="--champ-color:${champ.color}">
+      <div class="detail-arte" aria-hidden="true"
+           style="background-image:url('${DD_HOST.replace('/cdn', '')}/cdn/img/champion/splash/${champ.dd}_0.jpg')"></div>
       <div class="detail-portrait">${iconImg(champIconUrl(champ), champ.name, 'portrait-img-lg', initials(champ.name))}</div>
       <div class="detail-info">
         <h1>${champ.name}</h1>
