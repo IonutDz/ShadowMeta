@@ -470,6 +470,25 @@ function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
   }
 }
 
+// ============ LAYOUT BASE ============
+// Todas las secciones se construyen con la misma envoltura: un panel con
+// cabecera y cuerpo. Lo específico de cada sección va dentro del cuerpo, así
+// el aspecto y el espaciado son idénticos en toda la app.
+//
+//   panel('Título', '<html>')                       → panel normal
+//   panel('Título', '<html>', {ancho: true})        → ocupa las dos columnas
+//   panel('Título', '<html>', {nota: 'aclaración'}) → con nota al pie
+
+function panel(titulo, cuerpo, opciones = {}) {
+  const { ancho = false, nota = '', clase = '' } = opciones;
+  return `
+    <section class="sm-panel ${ancho ? 'ancho' : ''} ${clase}">
+      <h3 class="sm-panel__head">${titulo}</h3>
+      <div class="sm-panel__body">${cuerpo}</div>
+      ${nota ? `<p class="sm-panel__nota">${nota}</p>` : ''}
+    </section>`;
+}
+
 // ============ COMPONENTES VISUALES ============
 
 // --- Página de runas clásica: 9 marcas, 9 sellos, 9 glifos, 3 quintaesencias ---
@@ -529,8 +548,10 @@ function modernRunesComponent(rm) {
     </div>`;
 }
 
-// --- Árboles de maestrías con reparto visual de puntos ---
-function masteryComponent(m) {
+// --- Árboles de maestrías: qué talento y cuántos puntos, con iconos reales ---
+const masteryIconUrl = (id, ver) => `${DD_HOST}/${ver || DD_VER}/img/mastery/${id}.png`;
+
+function masteryComponent(m, ver) {
   const clase = { 'Ofensa': 'ofensa', 'Defensa': 'defensa', 'Utilidad': 'utilidad' };
   const asignados = {};
   m.arboles.forEach(a => { asignados[a.arbol] = a; });
@@ -544,23 +565,38 @@ function masteryComponent(m) {
       ${['Ofensa', 'Defensa', 'Utilidad'].map(nombre => {
         const a = asignados[nombre];
         const pts = a ? a.puntos : 0;
-        const talentos = a ? a.detalle.replace(/\.$/, '').split(/,\s*/) : [];
+        if (!pts) {
+          return `<div class="mastery-col ${clase[nombre]} vacio">
+            <div class="mastery-col-head"><span class="mastery-col-name">${nombre}</span><span class="mastery-col-pts">0</span></div>
+            <div class="mastery-empty">Sin puntos en este árbol</div>
+          </div>`;
+        }
+        const talentos = a.talentos || talentosDe(nombre, pts, m.variante);
+        const cuerpo = talentos
+          ? talentos.map(([id, puntos]) => {
+              const t = TALENTOS[id];
+              if (!t) return '';
+              return `
+                <div class="mastery-talent-row">
+                  ${iconImg(masteryIconUrl(id, ver), t[0], 'mastery-icon', t[0][0])}
+                  <span class="mastery-talent-name">${t[0]}</span>
+                  <span class="mastery-talent-pts">${puntos}<span class="de">/${t[1]}</span></span>
+                </div>`;
+            }).join('')
+          // Sin reparto concreto: al menos se listan los talentos del texto
+          : `<div class="mastery-talents">${a.detalle.replace(/\.$/, '').split(/,\s*/)
+              .map(t => `<span class="mastery-talent">${t}</span>`).join('')}</div>`;
         return `
-          <div class="mastery-col ${clase[nombre]} ${pts ? '' : 'vacio'}">
+          <div class="mastery-col ${clase[nombre]}">
             <div class="mastery-col-head">
               <span class="mastery-col-name">${nombre}</span>
               <span class="mastery-col-pts">${pts}</span>
             </div>
-            <div class="mastery-bar">
-              ${Array.from({ length: 21 }, (_, i) =>
-                `<span class="mastery-pip ${i < pts ? 'on' : ''}"></span>`).join('')}
-            </div>
-            ${pts
-              ? `<div class="mastery-talents">${talentos.map(t => `<span class="mastery-talent">${t}</span>`).join('')}</div>`
-              : '<div class="mastery-empty">Sin puntos</div>'}
+            <div class="mastery-list">${cuerpo}</div>
           </div>`;
       }).join('')}
-    </div>`;
+    </div>
+    <p class="mastery-nota">Pon los puntos en el orden de arriba abajo: cada fila del árbol pide 4 puntos invertidos en la anterior.</p>`;
 }
 
 // --- Tabla de subida de habilidades por nivel (1-18) ---
@@ -603,24 +639,21 @@ function kitComponent(champ, build) {
   const kit = kitDe(champ, build.ediciones[0], build.modo);
   if (!kit) return '';
   const teclas = [['P', 'Pasiva'], ['Q', 'Q'], ['W', 'W'], ['E', 'E'], ['R', 'Ultimate']];
-  return `
-    <div class="build-section">
-      <h3>Kit de habilidades</h3>
-      <div class="kit-grid">
-        ${teclas.map(([k, etiqueta]) => {
-          const h = kit[k];
-          if (!h) return '';
-          return `
-            <div class="kit-row">
-              <span class="kit-key key-${k}">${k}</span>
-              <div class="kit-info">
-                <div class="kit-name">${h[0]} <span class="kit-slot">${etiqueta}</span></div>
-                <div class="kit-desc">${h[1]}</div>
-              </div>
-            </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+  return panel('Kit de habilidades', `
+    <div class="kit-grid">
+      ${teclas.map(([k, etiqueta]) => {
+        const h = kit[k];
+        if (!h) return '';
+        return `
+          <div class="kit-row">
+            <span class="kit-key key-${k}">${k}</span>
+            <div class="kit-info">
+              <div class="kit-name">${h[0]} <span class="kit-slot">${etiqueta}</span></div>
+              <div class="kit-desc">${h[1]}</div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`);
 }
 
 // --- Counters (dato del campeón, con anulaciones por era/modo) ---
@@ -635,21 +668,17 @@ function countersComponent(champ, build) {
       <span>${rival.name}</span>
     </div>`;
   }).join('');
-  return `
-    <div class="build-section">
-      <h3>Enfrentamientos</h3>
-      <div class="counters-grid">
-        <div class="counter-col fuerte">
-          <div class="counter-label">Fuerte contra</div>
-          <div class="counter-list">${lista(c.fuerte, 'ok')}</div>
-        </div>
-        <div class="counter-col debil">
-          <div class="counter-label">Débil contra</div>
-          <div class="counter-list">${lista(c.debil, 'ko')}</div>
-        </div>
+  return panel('Enfrentamientos', `
+    <div class="counters-grid">
+      <div class="counter-col fuerte">
+        <div class="counter-label">Fuerte contra</div>
+        <div class="counter-list">${lista(c.fuerte, 'ok')}</div>
       </div>
-      ${c.nota ? `<p class="counter-nota">${c.nota}</p>` : ''}
-    </div>`;
+      <div class="counter-col debil">
+        <div class="counter-label">Débil contra</div>
+        <div class="counter-list">${lista(c.debil, 'ko')}</div>
+      </div>
+    </div>`, { nota: c.nota });
 }
 
 function itemPill(pair, ver) {
@@ -680,65 +709,54 @@ function renderBuild(build, champ) {
 
     ${build.resumen ? `<p class="build-resumen">${build.resumen}</p>` : ''}
 
-    <div class="build-section">
-      <h3>Build de objetos</h3>
-      <div class="item-group">
-        <div class="item-group-label">Inicio</div>
-        <div class="item-list">${build.items.inicio.map(p => itemPill(p, ver)).join('')}</div>
+    <div class="build-layout">
+      <div class="build-col build-col--principal">
+        ${panel('Build de objetos', `
+          <div class="item-group">
+            <div class="item-group-label">Inicio</div>
+            <div class="item-list">${build.items.inicio.map(p => itemPill(p, ver)).join('')}</div>
+          </div>
+          <div class="item-group">
+            <div class="item-group-label">Núcleo — en orden de compra</div>
+            <div class="item-list">${build.items.core.map(p => itemPill(p, ver)).join('<span class="arrow-sep">›</span>')}</div>
+          </div>
+          <div class="item-group">
+            <div class="item-group-label">Situacionales</div>
+            <div class="item-list">${build.items.situacionales.map(p => itemPill(p, ver)).join('')}</div>
+          </div>`)}
+
+        ${panel(esModerna ? 'Runas' : 'Página de runas',
+          esModerna ? modernRunesComponent(build.runasModernas) : runePageComponent(build.runas, ver))}
+
+        ${build.maestrias ? panel('Maestrías', masteryComponent(build.maestrias, ver)) : ''}
+
+        ${panel('Hechizos y habilidades', `
+          <div class="ss-card spell-card">
+            <div class="label">Hechizos de invocador</div>
+            <div class="spell-row">
+              ${build.hechizos.map(([sid, sn]) =>
+                `<span class="spell-chip">${iconImg(spellIconUrl(sid, ver), sn, 'spell-icon', sn[0])}<span>${sn}</span></span>`).join('')}
+            </div>
+          </div>
+          ${skillOrderComponent(build.habilidades)}`)}
       </div>
-      <div class="item-group">
-        <div class="item-group-label">Núcleo — en orden de compra</div>
-        <div class="item-list">${build.items.core.map(p => itemPill(p, ver)).join('<span class="arrow-sep">›</span>')}</div>
-      </div>
-      <div class="item-group">
-        <div class="item-group-label">Situacionales</div>
-        <div class="item-list">${build.items.situacionales.map(p => itemPill(p, ver)).join('')}</div>
+
+      <div class="build-col build-col--lateral">
+        ${build.plan ? panel('Plan de partida', `
+          <div class="plan-grid">
+            ${[{ k: 'early', l: 'Early game', i: '🌅' }, { k: 'mid', l: 'Mid game', i: '⚔️' }, { k: 'late', l: 'Late game', i: '👑' }]
+              .map(p => `
+                <div class="plan-card plan-${p.k}">
+                  <div class="plan-label">${p.i} ${p.l}</div>
+                  <p>${build.plan[p.k]}</p>
+                </div>`).join('')}
+          </div>`) : ''}
+
+        ${kitComponent(champ, build)}
+        ${countersComponent(champ, build)}
+        ${panel('Consejos', `<ul class="tips-list">${build.tips.map(t => `<li>${t}</li>`).join('')}</ul>`)}
       </div>
     </div>
-
-    <div class="build-section">
-      <h3>${esModerna ? 'Runas' : 'Página de runas'}</h3>
-      ${esModerna ? modernRunesComponent(build.runasModernas) : runePageComponent(build.runas, ver)}
-    </div>
-
-    ${build.maestrias ? `
-    <div class="build-section">
-      <h3>Maestrías</h3>
-      ${masteryComponent(build.maestrias)}
-    </div>` : ''}
-
-    <div class="build-section">
-      <h3>Hechizos y habilidades</h3>
-      <div class="ss-card spell-card">
-        <div class="label">Hechizos de invocador</div>
-        <div class="spell-row">
-          ${build.hechizos.map(([sid, sn]) =>
-            `<span class="spell-chip">${iconImg(spellIconUrl(sid, ver), sn, 'spell-icon', sn[0])}<span>${sn}</span></span>`).join('')}
-        </div>
-      </div>
-      ${skillOrderComponent(build.habilidades)}
-    </div>
-
-    ${build.plan ? `
-    <div class="build-section">
-      <h3>Plan de partida</h3>
-      <div class="plan-grid">
-        ${[{ k: 'early', l: 'Early game', i: '🌅' }, { k: 'mid', l: 'Mid game', i: '⚔️' }, { k: 'late', l: 'Late game', i: '👑' }]
-          .map(p => `
-            <div class="plan-card plan-${p.k}">
-              <div class="plan-label">${p.i} ${p.l}</div>
-              <p>${build.plan[p.k]}</p>
-            </div>`).join('')}
-      </div>
-    </div>` : ''}
-
-    <div class="build-section">
-      <h3>Consejos</h3>
-      <ul class="tips-list">${build.tips.map(t => `<li>${t}</li>`).join('')}</ul>
-    </div>
-
-    ${kitComponent(champ, build)}
-    ${countersComponent(champ, build)}
 
     <details class="sources-details" id="fuentesDetalle">
       <summary>Fuentes y créditos</summary>

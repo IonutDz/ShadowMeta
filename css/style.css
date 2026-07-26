@@ -589,6 +589,61 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   margin-bottom: 24px;
 }
 
+/* ============ LAYOUT BASE ============
+   Toda sección es un .sm-panel con la misma cabecera, cuerpo y nota.
+   El detalle se reparte en dos columnas: la build a la izquierda,
+   cómo jugarla a la derecha. En móvil se apila. */
+
+.build-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.build-col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+.sm-panel {
+  background: linear-gradient(180deg, rgba(22, 35, 60, .35), transparent 60%);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 18px 18px;
+  min-width: 0;
+}
+.sm-panel.ancho { grid-column: 1 / -1; }
+
+.sm-panel__head {
+  font-family: var(--font-display);
+  color: var(--gold);
+  font-size: .88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.4px;
+  padding-bottom: 9px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid;
+  border-image: linear-gradient(90deg, var(--border-gold), transparent 70%) 1;
+}
+.sm-panel__head::before {
+  content: '◆';
+  margin-right: 9px;
+  font-size: .6rem;
+  color: var(--border-gold);
+  vertical-align: 1px;
+}
+
+.sm-panel__body { min-width: 0; }
+
+.sm-panel__nota {
+  margin-top: 12px;
+  font-size: .8rem;
+  line-height: 1.55;
+  color: var(--text);
+  border-left: 3px solid var(--border-gold);
+  padding-left: 12px;
+}
+
+/* Compatibilidad con las secciones que aún no usan el panel base */
 .build-section { margin-bottom: 28px; }
 .build-section:last-child { margin-bottom: 4px; }
 
@@ -908,6 +963,52 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 }
 
 .mastery-empty { font-size: .76rem; color: var(--text-dim); font-style: italic; }
+
+/* Lista de talentos con icono y puntos exactos */
+.mastery-list { display: flex; flex-direction: column; gap: 5px; }
+
+.mastery-talent-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px;
+  background: rgba(1, 10, 19, .45);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.mastery-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  border: 1px solid var(--border-gold);
+  font-size: .62rem;
+  flex-shrink: 0;
+}
+
+.mastery-talent-name {
+  flex: 1;
+  min-width: 0;
+  font-size: .78rem;
+  color: var(--text-bright);
+  line-height: 1.25;
+}
+
+.mastery-talent-pts {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: .88rem;
+  color: var(--gold-bright);
+  flex-shrink: 0;
+}
+.mastery-talent-pts .de { color: var(--text-dim); font-size: .7rem; font-weight: 400; }
+
+.mastery-nota {
+  margin-top: 12px;
+  font-size: .78rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
 
 /* Hechizos y habilidades */
 .spells-skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
@@ -1618,6 +1719,15 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   .counters-grid { grid-template-columns: 1fr; }
   .copy-build-btn { margin-left: 0; width: 100%; }
   .logo-gem { width: 34px; height: 34px; }
+  .build-layout { grid-template-columns: 1fr; gap: 14px; }
+  .build-col { gap: 14px; }
+  .sm-panel { padding: 14px; }
+}
+
+/* En pantallas medianas el detalle vuelve a una sola columna */
+@media (max-width: 1000px) {
+  .build-layout { grid-template-columns: 1fr; }
+  .mastery-board { grid-template-columns: 1fr; }
   .tier-label { min-width: 46px; font-size: 1.05rem; }
   .tier-champ { width: 60px; }
   .tier-icon { width: 44px; height: 44px; }

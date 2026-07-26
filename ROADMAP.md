@@ -105,7 +105,43 @@ Leyenda: ✅ hecho · 🔨 parcial · ⬜ pendiente
 
 ---
 
-## 7. Arquitectura de los datos
+## 7. De dónde salen los datos
+
+| Dato | Origen | Verificado |
+|---|---|---|
+| Iconos de campeones, objetos, hechizos, runas y **maestrías** | **Data Dragon**, el CDN oficial de Riot | ✅ `scripts/validar.js` |
+| Nombres e IDs de objetos | `cdn/<parche>/data/es_ES/item.json` | ✅ contra el parche de cada build |
+| Catálogo de maestrías clásicas (57 talentos, rangos e iconos) | `cdn/3.15.5/data/es_ES/mastery.json` | ✅ |
+| Runas modernas (árboles, piedras angulares, iconos) | `cdn/<parche>/data/es_ES/runesReforged.json` | ✅ |
+| Roster de LoL Classic | Cobertura del lanzamiento (3DJuegos, Movistar eSports) | ✅ contrastado entre fuentes |
+| **Repartos de puntos, builds, tier lists, counters y consejos** | Criterio propio sobre el meta documentado de cada era, contrastado con MetaSRC/U.GG donde hay datos | ⚠️ interpretación, no dato oficial |
+
+Es decir: **todo lo numérico y visual sale de Riot**; lo editorial (qué comprar, en qué orden,
+qué tier) es criterio propio y así se marca. Las builds enlazan sus fuentes en vivo al pie.
+
+---
+
+## 8. Arquitectura de componentes
+
+Todas las secciones se construyen con la misma envoltura, `panel(titulo, cuerpo, opciones)`:
+
+```js
+panel('Maestrías', masteryComponent(build.maestrias, ver))
+panel('Enfrentamientos', html, { nota: 'aclaración' })
+panel('Objetos', html, { ancho: true })   // ocupa las dos columnas
+```
+
+Encima del panel se montan los componentes concretos: `runePageComponent`,
+`modernRunesComponent`, `masteryComponent`, `skillOrderComponent`, `kitComponent`,
+`countersComponent`. Añadir una sección nueva es escribir su cuerpo y envolverlo en `panel()`.
+
+El detalle de campeón usa un **layout de dos columnas**: a la izquierda *la build*
+(objetos, runas, maestrías, habilidades), a la derecha *cómo jugarla* (plan, kit,
+enfrentamientos, consejos). Por debajo de 1000px se apila en una sola columna.
+
+---
+
+## 9. Arquitectura de los datos
 
 Los datos que valen para **cualquier era y modo** (kits, counters) viven a nivel de campeón,
 con un valor por defecto y anulaciones opcionales por contexto:

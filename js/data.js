@@ -243,17 +243,61 @@ const R = {
   }
 };
 
+// ---------- Maestrías clásicas: catálogo real ----------
+// Los 57 talentos del parche 3.15.5, tal cual los publica Riot en Data Dragon
+// (cdn/3.15.5/data/es_ES/mastery.json). El icono de cada uno está en
+// cdn/3.15.5/img/mastery/<id>.png. Formato: id: [nombre, rangos máximos].
+const TALENTOS = {
+  // Ofensa
+  4111: ['Espada de Doble Filo', 1], 4112: ['Furia', 4], 4113: ['Brujería', 4], 4114: ['Carnicero', 1],
+  4121: ['Ataque al Punto Débil', 1], 4122: ['Fuerza Bruta', 3], 4123: ['Fuerza Mental', 3], 4124: ['Festín', 1],
+  4131: ['Hechizos Encadenados', 1], 4132: ['Maestría Marcial', 1], 4133: ['Maestría Arcana', 1], 4134: ['Ejecutor', 3],
+  4141: ['Espadazos Encadenados', 1], 4142: ['Señor de la Guerra', 3], 4143: ['Archimago', 3], 4144: ['Juego Peligroso', 1],
+  4151: ['Frenesí', 1], 4152: ['Golpes Devastadores', 3], 4154: ['Cuchilla Arcana', 1], 4162: ['Estragos', 1],
+  // Defensa
+  4211: ['Bloquear', 2], 4212: ['Recuperación', 2], 4213: ['Armadura Encantada', 2], 4214: ['Piel Dura', 2],
+  4221: ['Indoblegable', 1], 4222: ['Cicatrices de Veterano', 3], 4224: ['Armadura con Cuchillas', 1],
+  4231: ['Opresión', 1], 4232: ['Bestia de Derribo', 1], 4233: ['Dureza', 3], 4234: ['Resistencia', 3],
+  4241: ['Perseverancia', 3], 4242: ['Rapidez', 1], 4243: ['Armadura Reforzada', 1], 4244: ['Evasivo', 1],
+  4251: ['Fuerzas Renovadas', 1], 4252: ['Guardián Legendario', 4], 4253: ['Escudo Rúnico', 1], 4262: ['Tenaz', 1],
+  // Utilidad
+  4311: ['Viajero Interdimensional', 1], 4312: ['Mil Pies', 3], 4313: ['Meditación', 3], 4314: ['Vigilante', 1],
+  4322: ['Perspicacia del Invocador', 3], 4323: ['Fortaleza de Espíritu', 1], 4324: ['Alquimista', 1],
+  4331: ['Codicia', 3], 4332: ['Afinidad Rúnica', 1], 4333: ['Vampirismo', 3], 4334: ['Maestro Culinario', 1],
+  4341: ['Carroñero', 1], 4342: ['Riqueza', 1], 4343: ['Mente Abierta', 3], 4344: ['Inspiración', 2],
+  4352: ['Bandido', 1], 4353: ['Inteligencia', 3], 4362: ['Trotamundos', 1]
+};
+
+// Repartos concretos: [idTalento, puntosQuePoner]. Respetan los requisitos de
+// fila del árbol clásico (4 puntos en el árbol para desbloquear la fila siguiente).
+const REPARTOS = {
+  'Ofensa-21-ad': [[4112, 4], [4111, 1], [4122, 3], [4124, 1], [4132, 1], [4134, 3], [4142, 3], [4152, 3], [4151, 1], [4162, 1]],
+  'Ofensa-21-ap': [[4113, 4], [4111, 1], [4123, 3], [4124, 1], [4133, 1], [4134, 3], [4143, 3], [4152, 3], [4154, 1], [4162, 1]],
+  'Ofensa-9-ad': [[4112, 4], [4111, 1], [4122, 3], [4121, 1]],
+  'Ofensa-9-ap': [[4113, 4], [4111, 1], [4123, 3], [4124, 1]],
+  'Defensa-21': [[4212, 2], [4214, 2], [4222, 3], [4221, 1], [4233, 3], [4231, 1], [4241, 3], [4243, 1], [4252, 4], [4262, 1]],
+  'Defensa-9': [[4211, 2], [4212, 2], [4222, 3], [4233, 2]],
+  'Utilidad-21': [[4312, 3], [4313, 1], [4322, 3], [4323, 1], [4331, 3], [4332, 1], [4343, 3], [4342, 1], [4353, 3], [4352, 1], [4362, 1]],
+  'Utilidad-9': [[4312, 3], [4313, 1], [4322, 3], [4331, 2]]
+};
+
+// Devuelve los talentos concretos de un árbol: los declarados en la build o,
+// si no hay, el reparto estándar para ese árbol, esos puntos y esa variante.
+function talentosDe(arbol, puntos, variante) {
+  return REPARTOS[`${arbol}-${puntos}-${variante || 'ad'}`] || REPARTOS[`${arbol}-${puntos}`] || null;
+}
+
 // ---------- Presets de maestrías clásicas (30 puntos) ----------
 const M = {
   ap: {
-    reparto: '21/0/9', clave: 'Ofensa arcana con utilidad',
+    reparto: '21/0/9', clave: 'Ofensa arcana con utilidad', variante: 'ap',
     arboles: [
       { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
       { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
     ]
   },
   apDef: {
-    reparto: '21/9/0', clave: 'Ofensa arcana con colchón',
+    reparto: '21/9/0', clave: 'Ofensa arcana con colchón', variante: 'ap',
     arboles: [
       { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
       { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' }
