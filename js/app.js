@@ -551,8 +551,22 @@ function modernRunesComponent(rm) {
 // --- Árboles de maestrías: qué talento y cuántos puntos, con iconos reales ---
 const masteryIconUrl = (id, ver) => `${DD_HOST}/${ver || DD_VER}/img/mastery/${id}.png`;
 
-function masteryComponent(m, ver) {
+// Un mago necesita el reparto de Brujería, no el de Furia. Si la build no lo
+// declara, se deduce de sus runas y de su estilo.
+function varianteDe(m, build) {
+  if (m.variante) return m.variante;
+  const r = build.runas;
+  if (r) {
+    const texto = [r.marca, r.glifo, r.quinta].map(x => x && x.nombre).join(' ');
+    if (/Penetración Mágica|Poder de Habilidad/i.test(texto)) return 'ap';
+  }
+  if (/mág|maga|mago|AP\b|arcan/i.test(`${build.style} ${build.name}`)) return 'ap';
+  return 'ad';
+}
+
+function masteryComponent(m, ver, build) {
   const clase = { 'Ofensa': 'ofensa', 'Defensa': 'defensa', 'Utilidad': 'utilidad' };
+  const variante = varianteDe(m, build);
   const asignados = {};
   m.arboles.forEach(a => { asignados[a.arbol] = a; });
 
@@ -571,7 +585,7 @@ function masteryComponent(m, ver) {
             <div class="mastery-empty">Sin puntos en este árbol</div>
           </div>`;
         }
-        const talentos = a.talentos || talentosDe(nombre, pts, m.variante);
+        const talentos = a.talentos || talentosDe(nombre, pts, variante);
         const cuerpo = talentos
           ? talentos.map(([id, puntos]) => {
               const t = TALENTOS[id];
@@ -728,7 +742,7 @@ function renderBuild(build, champ) {
         ${panel(esModerna ? 'Runas' : 'Página de runas',
           esModerna ? modernRunesComponent(build.runasModernas) : runePageComponent(build.runas, ver))}
 
-        ${build.maestrias ? panel('Maestrías', masteryComponent(build.maestrias, ver)) : ''}
+        ${build.maestrias ? panel('Maestrías', masteryComponent(build.maestrias, ver, build)) : ''}
 
         ${panel('Hechizos y habilidades', `
           <div class="ss-card spell-card">
