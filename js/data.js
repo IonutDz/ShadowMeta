@@ -2830,6 +2830,346 @@ Object.assign(BUILDS, {
   }]
 });
 
+// ---------- ARAM: tanda 1 (tiers S+ y S) ----------
+// En ARAM no hay retorno a base ni objetos de oro: el inicio es distinto, los
+// hechizos cambian (Claridad manda) y el plan gira en torno al desgaste continuo.
+const ARAM_INICIO_AP = [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida']];
+const ARAM_INICIO_AD = [[1055, 'Espada de Doran'], [2003, 'Poción de Vida']];
+
+function aramBuild(o) {
+  return Object.assign({ season: 'S3', modo: 'aram', difficulty: 'Media' }, o);
+}
+
+BUILDS.brand.push(aramBuild({
+  name: 'ARAM — Incendio en cadena', role: 'Mid', style: 'Mago de área',
+  resumen: 'Brand es el rey indiscutible del carril único: su ultimate rebota entre cinco rivales apretados multiplicando el daño, y su Ceniza convierte cada hechizo en un aturdimiento. En ARAM no hay dónde esconderse de él.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Pilar de Llamas (W) sobre la oleada y sobre quien esté detrás: el daño en área es constante y gratuito. Cada punto de vida quitado es permanente.',
+    mid: 'Con Liandry, tu quemadura hace daño porcentual: los tanques se derriten igual que los magos. Aplica Ceniza con la E y aturde con la Q.',
+    late: 'Guarda la ultimate para el choque: con cinco rivales agrupados rebota sin parar y puede hacer un pentakill sola. Nunca la uses contra uno aislado.'
+  },
+  tips: [
+    'La R rebota más veces cuanto más agrupado esté el equipo rival: el carril de ARAM es su escenario perfecto.',
+    'Claridad resuelve tu único límite: con maná infinito, tu poke no para nunca.',
+    'La Q solo aturde a objetivos con Ceniza: aplica siempre primero con la W o la E.',
+    'Liandry se combina con tu quemadura pasiva: es el objeto que multiplica todo tu kit.'
+  ]
+}));
+
+BUILDS.morgana.push(aramBuild({
+  name: 'ARAM — Lazo y escudo', role: 'Mid', style: 'Maga / Control', difficulty: 'Baja',
+  resumen: 'En un carril recto y estrecho, el Lazo Oscuro de Morgana casi no se puede esquivar. Y su Escudo Negro anula el control de masas del equipo rival entero, que en ARAM es lo que decide las peleas.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'El Suelo Atormentado (W) sobre la oleada es farmeo y desgaste a la vez. El lazo en un carril estrecho acierta casi siempre.',
+    mid: 'Escudo Negro sobre el aliado que vayan a enganchar: en ARAM el CC lo es todo, y anularlo gana el choque.',
+    late: 'Zhonya + ultimate en medio de su equipo: aturdes a los cinco y sobrevives. Es la jugada que cierra las partidas.'
+  },
+  tips: [
+    'El Escudo Negro bloquea todo el CC mágico: ponlo ANTES del choque, no cuando ya hayan enganchado.',
+    'El lazo dura 3 segundos al máximo rango: es una eternidad en una pelea de ARAM.',
+    'Tu W hace daño creciente a quien se quede dentro: colócalo en el punto de paso obligatorio.',
+    'La ultimate te cura por cada rival cercano: entrar puede ser más seguro de lo que parece.'
+  ]
+}));
+
+BUILDS.veigar.push(aramBuild({
+  name: 'ARAM — Jaula y AP infinito', role: 'Mid', style: 'Mago / Escalado',
+  resumen: 'Veigar apila poder de habilidad sin techo, y en ARAM tiene oleadas infinitas que farmear sin riesgo. Su Jaula del Terror cierra el carril entero y su ultimate ejecuta a cualquier mago rival de un solo botón.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3070, 'Lágrima de la Diosa'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3151, 'Tormento de Liandry']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Apila con la Q sobre cada súbdito que puedas rematar: en ARAM las oleadas no paran, así que tu AP tampoco.',
+    mid: 'La Jaula (E) en un carril estrecho atrapa a medio equipo. Combo: E → W → Q → R sobre el objetivo más peligroso.',
+    late: 'Con 700+ de AP eres una torreta de un disparo. Colócate detrás de todo y ejecuta a quien se acerque; tu R escala con el AP del rival.'
+  },
+  tips: [
+    'La Jaula aturde solo a quien la cruce de dentro hacia fuera: colócala DETRÁS del grupo enemigo.',
+    'Claridad te permite farmear con la Q sin parar: cada carga cuenta para el resto de la partida.',
+    'La Materia Oscura (W) tarda en caer: úsala sobre rivales ya atrapados por la jaula.',
+    'Contra el mago rival tu ultimate es una ejecución: cuanto más AP tenga él, más daño hace ella.'
+  ]
+}));
+
+BUILDS.missfortune.push(aramBuild({
+  name: 'ARAM — Lluvia de balas', role: 'ADC', style: 'Tiradora / Área', difficulty: 'Baja',
+  resumen: 'El Tiempo de Bala en un carril donde nadie puede dispersarse es sencillamente devastador. Y hasta el nivel 6, su Bala Rebotada pokea a través de los súbditos sin coste ni riesgo.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3031, 'Filo Infinito'], [3006, 'Grebas de Berserker'], [3087, 'Puñal de Statikk']],
+    situacionales: [[3072, 'La Sanguinaria'], [3046, 'Bailarín Espectral'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'La Q rebota del súbdito al campeón que esté detrás: es poke gratis y constante en la línea de ARAM.',
+    mid: 'Statikk acelera tu limpieza de oleadas. Tu pasiva hace daño extra al cambiar de objetivo: reparte los autos, no te fijes en uno.',
+    late: 'El Tiempo de Bala desde detrás de tu frontline sobre los cinco: pon antes la E para que no salgan del cono.'
+  },
+  tips: [
+    'La ultimate se cancela con cualquier CC: espera a que gasten sus aturdimientos.',
+    'La E ralentiza y corta la regeneración: colócala en su zona de retirada, no encima de ellos.',
+    'Tu Q hace más daño al SEGUNDO objetivo: apunta al súbdito con el rival justo detrás.',
+    'Sin escapes: en ARAM tu posicionamiento detrás de la frontline es toda tu supervivencia.'
+  ]
+}));
+
+BUILDS.ahri.push(aramBuild({
+  name: 'ARAM — Encanto y movilidad', role: 'Mid', style: 'Maga / Asesina',
+  resumen: 'El Encanto es casi imposible de esquivar en un carril estrecho, y los tres dashes de la ultimate dan a Ahri algo que casi nadie tiene en ARAM: la capacidad de entrar, ejecutar y salir viva.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3128, 'Tenaza de Muerte Ígnea']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'La Q atraviesa el carril entero y su vuelta hace daño verdadero: es el mejor poke sostenido del early en ARAM.',
+    mid: 'Encanto acertado es media pelea: E → Q → W borra a cualquier objetivo blando. Athene te da maná para no parar nunca.',
+    late: 'Usa dos dashes para entrar y ejecutar, y guarda SIEMPRE el tercero para salir. La avaricia es la única forma de morir con Ahri.'
+  },
+  tips: [
+    'El daño verdadero de la vuelta de la Q ignora toda resistencia: acierta con las dos direcciones.',
+    'En ARAM tu curación por daño de la pasiva sostiene el carril entero: pokea sin miedo.',
+    'El Encanto interrumpe dashes en curso: es tu botón anti-iniciación.',
+    'Nunca entres sin Encanto disponible: es tu apertura y tu seguro.'
+  ]
+}));
+
+BUILDS.soraka.push(aramBuild({
+  name: 'ARAM — Curación infinita', role: 'Support', style: 'Enchanter / Sostenimiento', difficulty: 'Baja',
+  resumen: 'En un modo sin retorno a base, la que cura gana. Soraka mantiene a cinco aliados en pie indefinidamente mientras pokea con Llamada Estelar, y su Deseo global cura al equipo entero en el momento crítico.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3117, 'Botas de Movilidad'], [3190, 'Medallón Solari de Hierro']],
+    situacionales: [[3222, 'Crisol de Mikael'], [3116, 'Cetro de Cristal de Rylai'], [3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.supportAP, maestrias: M.support, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Llamada Estelar (Q) sobre el grupo enemigo: te cura a ti y les desgasta a ellos. Es sostenimiento y poke en un solo botón.',
+    mid: 'Tu W cuesta vida propia: por eso el orden es Q primero (para recuperar) y luego curar. Con Athene, el maná deja de existir.',
+    late: 'El Deseo (R) cura a los cinco a la vez: en un choque de ARAM equivale a revivir a medio equipo. Guárdalo para el momento exacto.'
+  },
+  tips: [
+    'Cada Q que impacta te devuelve vida: pokea antes de curar, siempre en ese orden.',
+    'El silencio de la E corta canalizaciones e iniciaciones: úsalo sobre el mago rival.',
+    'La Q apila reducción de resistencia mágica: tus magos aliados pegan más con cada impacto tuyo.',
+    'En ARAM eres el objetivo prioritario del rival: quédate detrás de la frontline aunque tu rango de curación sea corto.'
+  ]
+}));
+
+BUILDS.anivia.push(aramBuild({
+  name: 'ARAM — Muro en el carril', role: 'Mid', style: 'Maga / Control', difficulty: 'Alta',
+  resumen: 'El Muro de Hielo en un carril de un solo camino es directamente injusto: parte al equipo rival en dos y les impide avanzar o retirarse. Sumado al combo Q-R-E, Anivia controla el ritmo entero de la partida.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3151, 'Tormento de Liandry'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Farmea con la E y mantén la tormenta (R) sobre la oleada: desgaste continuo sin exponerte. Tu huevo te da un margen de error enorme.',
+    mid: 'El combo es Q (detonar para aturdir) → R → E: la E hace DOBLE daño contra congelados. Vara de las Edades te da el cuerpo para aguantar.',
+    late: 'El muro decide los choques: parte su equipo por la mitad y quédate con los tres que hayan pasado. Es la habilidad más decisiva de ARAM.'
+  },
+  tips: [
+    'La E hace el doble contra objetivos congelados por tu Q o tu R: ese es todo tu daño.',
+    'El muro puede encerrar a un rival contra la pared del carril: es una sentencia de muerte.',
+    'Mantén la ultimate activa mientras pokeas: ralentiza y prepara el doble daño de la E.',
+    'Tu huevo es una segunda vida en cada pelea: úsalo para posicionarte más agresivo de lo normal.'
+  ]
+}));
+
+BUILDS.heimerdinger.push(aramBuild({
+  name: 'ARAM — Torretas en el carril', role: 'Mid', style: 'Zonificación', difficulty: 'Baja',
+  resumen: 'Tres torretas en un carril de un solo camino son un muro que el equipo rival simplemente no puede cruzar. Heimerdinger convierte ARAM en un asedio permanente en el que él siempre defiende.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3151, 'Tormento de Liandry'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.barrier], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Coloca las tres torretas en el punto estrecho del carril y quédate detrás. Guarda una carga para reponer la que caiga.',
+    mid: 'Los misiles (W) pokean a través de la oleada. La granada (E) aturde con impacto directo: es tu único CC, no lo desperdicies.',
+    late: 'Tu ultimate potencia la siguiente habilidad: R + Q pone una torreta gigante que sola gana el choque. R + E es una granada enorme en área.'
+  },
+  tips: [
+    'R + Q crea una torreta enorme con daño de área: es tu jugada de teamfight en ARAM.',
+    'Las torretas heredan tu AP: cada objeto las hace más peligrosas.',
+    'La granada aturde solo con impacto directo; indirecta solo ralentiza. Apunta con cuidado.',
+    'Defender es tu fuerte: deja que se estrellen contra tus torretas y contraataca después.'
+  ]
+}));
+
+BUILDS.fiddlesticks.push(aramBuild({
+  name: 'ARAM — Tormenta en el choque', role: 'Mid', style: 'Mago de área / Emboscada',
+  resumen: 'La Tormenta de Cuervos sobre cinco rivales agrupados en un carril estrecho es de las jugadas más rentables del modo. Y su Terror deja fuera de la pelea al campeón más peligroso durante segundos eternos.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3157, 'Reloj de Arena de Zhonya']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3151, 'Tormento de Liandry'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.apDef, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'E', 'Q'],
+  plan: {
+    early: 'El Drenaje (W) sobre la oleada te mantiene arriba sin volver a base. El Silencio (E) rebota entre objetivos: es tu poke de área.',
+    mid: 'Athene te da maná infinito. Usa el Terror sobre el que más daño haga en cada choque: dos segundos sin control es media pelea.',
+    late: 'Destello + Tormenta de Cuervos en medio de su formación, y Zhonya inmediatamente después. Sobrevives la canalización y ellos no la pelea.'
+  },
+  tips: [
+    'Zhonya justo después de la ultimate: sigues haciendo daño mientras eres intocable.',
+    'La canalización de la R es visible y lenta: hazla desde detrás de tu equipo o tras un Destello.',
+    'El Terror es el CC más largo del juego clásico: úsalo sobre el hipercarry, no sobre el tanque.',
+    'Tu W te cura mucho: en un modo sin retorno a base, eso es una ventaja enorme.'
+  ]
+}));
+
+BUILDS.zilean.push(aramBuild({
+  name: 'ARAM — Bombas y segunda vida', role: 'Support', style: 'Utilidad / Poke', difficulty: 'Media',
+  resumen: 'La Deformación Temporal de Zilean resucita al aliado que caiga en el peor momento, lo que en un modo sin retorno a base cambia el resultado de cada choque. Y su doble bomba aturde a todo el que se acerque.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3116, 'Cetro de Cristal de Rylai']],
+    situacionales: [[3222, 'Crisol de Mikael'], [3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3190, 'Medallón Solari de Hierro']]
+  },
+  runas: R.supportAP, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'La bomba sobre la oleada pokea y farmea a la vez. El combo Q → W → Q aturde en área desde el nivel 3.',
+    mid: 'Tu E acelera a tu iniciador o ralentiza al rival que persiga: en ARAM ese control de ritmo vale tanto como el daño.',
+    late: 'La ultimate sobre el carry o el tanque ANTES de que muera: una resurrección en el momento justo gana el choque y la partida.'
+  },
+  tips: [
+    'La R se pone antes de morir, con margen: anticípate al burst, no reacciones a él.',
+    'La W reinicia enfriamientos y es lo que permite el aturdimiento de doble bomba.',
+    'Puedes poner la bomba sobre un aliado para acelerarlo: sigue detonando, úsalo con cabeza.',
+    'Tu pasiva da experiencia extra a un aliado cercano: quédate junto al carry para adelantarlo de nivel.'
+  ]
+}));
+
+BUILDS.ezreal.push(aramBuild({
+  name: 'ARAM — Poke con Muramana', role: 'ADC', style: 'Tirador / Poke',
+  resumen: 'El Disparo Místico a 1100 de rango en un carril recto es poke puro y sin riesgo, y con Muramana cada proyectil pega como un objeto entero. Ezreal desgasta al equipo rival hasta que la pelea ya está ganada.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3070, 'Lágrima de la Diosa'], [3078, 'Fuerza de Trinidad'], [3006, 'Grebas de Berserker'], [3004, 'Manamune']],
+    situacionales: [[3072, 'La Sanguinaria'], [3035, 'Últimas Palabras'], [3026, 'Ángel de la Guarda'], [3046, 'Bailarín Espectral']]
+  },
+  runas: R.adc, maestrias: M.adPen, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Q sin parar desde el máximo alcance. Cada impacto reduce tus enfriamientos y apila la Lágrima: el poke se retroalimenta.',
+    mid: 'Con Trinidad, cada Q procea Brillo. Tu patrón es Q → reposición → Q: nunca te dejes alcanzar.',
+    late: 'Muramana activa convierte tu maná en daño. La ultimate limpia oleadas y pokea desde el otro extremo del carril.'
+  },
+  tips: [
+    'La Q aplica efectos de objeto: es un autoataque disfrazado de habilidad.',
+    'El Desplazamiento (E) es tu vida: nunca lo uses para dañar si puede servir para escapar.',
+    'Claridad mantiene la Lágrima apilando y el poke sin pausa.',
+    'La W acelera la velocidad de ataque de un aliado: tírasela al hipercarry de tu equipo antes del choque.'
+  ]
+}));
+
+BUILDS.malzahar.push(aramBuild({
+  name: 'ARAM — Supresión y enjambre', role: 'Mid', style: 'Mago / Control', difficulty: 'Baja',
+  resumen: 'El Enjambre del Vacío limpia oleadas enteras solo y el Reino Aterrador desactiva por completo al campeón más peligroso del equipo rival durante 2.5 segundos. Simple, seguro y decisivo.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'E', 'Q'],
+  plan: {
+    early: 'El Enjambre (W) y las Visiones (E) limpian la oleada sin que te acerques. En ARAM eso es control del carril gratis.',
+    mid: 'Tu R sobre el asesino o el hipercarry rival lo saca entero del choque: es el mejor botón anti-carry del modo.',
+    late: 'Guarda la ultimate para el que más daño haga. Con Liandry, además del control, la supresión hace un daño porcentual enorme.'
+  },
+  tips: [
+    'Reino Aterrador es supresión: solo la Cimitarra Mercurial lo limpia.',
+    'La E se propaga al morir su objetivo: colócala sobre un súbdito para limpiar la oleada en cadena.',
+    'Los Vacíolings de tu pasiva empujan el carril solos mientras tú te reposicionas.',
+    'Claridad te da el maná para mantener W y E activos permanentemente.'
+  ]
+}));
+
+BUILDS.annie.push(aramBuild({
+  name: 'ARAM — Tibbers en el choque', role: 'Mid', style: 'Maga / Burst', difficulty: 'Baja',
+  resumen: 'Un aturdimiento en área sobre cinco rivales apretados, y un oso que se queda ardiendo encima de ellos. Annie no necesita más: en ARAM, su nivel 6 con la pasiva cargada decide el primer choque y con él la partida.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3151, 'Tormento de Liandry']]
+  },
+  runas: R.apMidPlano, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Farmea con la Q, que te devuelve el maná al matar. Cuenta siempre tus cargas: con 4 hechizos lanzados, el siguiente aturde.',
+    mid: 'Nunca entres al choque sin la pasiva cargada. Destello + R sobre los cinco es el momento que gana la partida.',
+    late: 'Tibbers hace daño de área mientras esté vivo: déjalo dentro de su formación. Tu W y tu Q siguen pegando mientras él aguanta.'
+  },
+  tips: [
+    'Carga el aturdimiento con el escudo (E) sobre ti misma: no gastes maná ofensivo para prepararlo.',
+    'Tu R aturde en área: en ARAM alcanza a todo el equipo con facilidad.',
+    'Con la pasiva descargada eres inofensiva: cuenta los hechizos antes de cada choque.',
+    'Claridad te permite mantener las cargas siempre listas sin quedarte sin maná.'
+  ]
+}));
+
+BUILDS.ryze.push(aramBuild({
+  name: 'ARAM — Cadena de hechizos', role: 'Mid', style: 'Mago / Escalado con maná',
+  resumen: 'Ryze convierte maná en daño, y en ARAM tiene oleadas infinitas para apilar la Lágrima sin arriesgar nada. Su ciclo Q-W-E encadenado es daño en área continuo que ningún equipo puede aguantar mucho tiempo.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3070, 'Lágrima de la Diosa'], [3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Apila la Lágrima con cada hechizo sobre la oleada. Eres débil hasta tener maná: juega detrás y farmea.',
+    mid: 'Con Vara de las Edades y Arcángel empieza tu partida de verdad. La cadena Q → W (raíz) → E → Q borra objetivos blandos.',
+    late: 'Tu maná es tu daño: cada Q pega como una ultimate. La E se propaga en área, así que en un carril estrecho pegas a los cinco.'
+  },
+  tips: [
+    'Cada hechizo reduce el enfriamiento de la Q: el ciclo correcto es Q → W → Q → E → Q.',
+    'La E se propaga entre objetivos cercanos: en ARAM siempre están cerca.',
+    'Tu ultimate acelera a todo el equipo: úsala para iniciar en grupo o retirarse tras un choque perdido.',
+    'Claridad + Lágrima es la combinación perfecta: apilas más rápido y nunca te quedas seco.'
+  ]
+}));
+
+BUILDS.gragas.push(aramBuild({
+  name: 'ARAM — Barril y desplazamiento', role: 'Mid', style: 'Mago / Peleador',
+  resumen: 'Gragas aguanta como un tanque, pega como un mago y con el Barril Explosivo desmonta la formación rival entera. En un carril estrecho su ultimate empuja a los cinco a la vez.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3116, 'Cetro de Cristal de Rylai']],
+    situacionales: [[3151, 'Tormento de Liandry'], [3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.apDef, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'El barril (Q) pokea desde lejos y la W reduce el daño que recibes: tu sostenimiento en el carril es de los mejores del modo.',
+    mid: 'El combo E (embestida) → Q → auto con la W activa hace un daño enorme. Vara de las Edades te da cuerpo para entrar y salir vivo.',
+    late: 'El Barril Explosivo separa a su equipo o empuja al carry hacia el tuyo: colócalo DETRÁS del objetivo para traértelo.'
+  },
+  tips: [
+    'El barril hace más daño cuanto más fermente: cuenta hasta dos antes de detonarlo si puedes.',
+    'La R empuja en dirección contraria al centro de la explosión: apunta detrás del rival.',
+    'La W reduce el daño recibido mientras bebes: actívala justo antes de la embestida.',
+    'La E atraviesa las paredes del carril de ARAM: es entrada y escape a la vez.'
+  ]
+}));
+
 // ---------- Metadatos de seasons ----------
 const SEASONS_META = {
   S1: {

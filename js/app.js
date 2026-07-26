@@ -17,6 +17,12 @@ const contextBar = document.getElementById('contextBar');
 const edicionSelect = document.getElementById('edicionSelect');
 const modoSelect = document.getElementById('modoSelect');
 const contextDesc = document.getElementById('contextDesc');
+const liveRegion = document.getElementById('liveRegion');
+
+// Anuncia un cambio a los lectores de pantalla
+function anunciar(texto) {
+  if (liveRegion) liveRegion.textContent = texto;
+}
 
 let currentRole = 'all';
 let currentSearch = '';
@@ -90,6 +96,8 @@ function updateContextDesc() {
 
 function refreshContext() {
   updateContextDesc();
+  const e = EDICIONES[edicion], m = MODOS[modo];
+  anunciar(`Contexto: ${e ? e.nombre : 'todas las eras'}, ${m ? m.nombre : 'todos los modos'}. ${document.querySelector('.ctx-count').textContent.trim()}`);
   if (!detail.classList.contains('hidden') && detail.dataset.champ) {
     return showChampion(detail.dataset.champ);
   }
@@ -109,22 +117,32 @@ function switchView(view) {
   mainNav.querySelectorAll('.nav-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.view === view));
   window.scrollTo(0, 0);
-  if (view === 'champions') renderGrid();
-  if (view === 'tierlist') renderTierlist();
-  if (view === 'seasons') renderSeasons();
+  if (view === 'champions') { renderGrid(); escribirRuta('#/campeones'); anunciar('Vista de campeones'); }
+  if (view === 'tierlist') { renderTierlist(); escribirRuta('#/tierlist/' + currentTierMode); anunciar('Tier list de ' + TIERLIST[currentTierMode].nombre); }
+  if (view === 'seasons') { renderSeasons(); escribirRuta('#/eras'); anunciar('Línea del tiempo de las eras'); }
 }
 
 // ---------- Vista: roster ----------
 function champCard(c) {
   const n = visibles(c).length;
+  const aria = `${c.name}, ${c.title}. ${c.roles.join(', ')}. ${n ? n + ' builds disponibles' : 'sin builds en este contexto'}`;
   return `
-    <div class="champ-card ${n ? 'has-builds' : ''}" data-id="${c.id}" style="--champ-color:${c.color}">
+    <div class="champ-card ${n ? 'has-builds' : ''}" data-id="${c.id}" style="--champ-color:${c.color}"
+         role="button" tabindex="0" aria-label="${aria}">
       ${n ? `<span class="builds-badge" title="${n} build(s) en este contexto">★ ${n}</span>` : ''}
       <div class="champ-portrait">${iconImg(champIconUrl(c), c.name, 'portrait-img', initials(c.name))}</div>
       <div class="champ-name">${c.name}</div>
       <div class="champ-title">${c.title}</div>
       <div class="champ-roles">${c.roles.map(r => `<span class="role-tag">${r}</span>`).join('')}</div>
     </div>`;
+}
+
+// Activa un elemento con clic, Enter o Espacio (accesible por teclado)
+function activable(el, fn) {
+  el.addEventListener('click', fn);
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); }
+  });
 }
 
 function renderGrid() {
@@ -156,7 +174,7 @@ function renderGrid() {
 
   grid.innerHTML = html;
   grid.querySelectorAll('.champ-card[data-id]').forEach(card => {
-    card.addEventListener('click', () => showChampion(card.dataset.id));
+    activable(card, () => irACampeon(card.dataset.id));
   });
 }
 
@@ -200,10 +218,17 @@ function renderTierlist() {
     <p class="sources-note">Lista curada a partir del meta clásico y las primeras estadísticas del modo. El "✓" marca entradas contrastadas con datos reales.</p>`;
 
   tierlistView.querySelectorAll('.mode-tab').forEach(tab => {
-    tab.addEventListener('click', () => { currentTierMode = tab.dataset.mode; renderTierlist(); });
+    tab.addEventListener('click', () => {
+      currentTierMode = tab.dataset.mode;
+      renderTierlist();
+      escribirRuta('#/tierlist/' + currentTierMode);
+      anunciar('Tier list de ' + TIERLIST[currentTierMode].nombre);
+    });
   });
   tierlistView.querySelectorAll('.tier-champ.clickable').forEach(el => {
-    el.addEventListener('click', () => showChampion(el.dataset.id, 0, true));
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    activable(el, () => irACampeon(el.dataset.id, 0, true));
   });
 }
 
@@ -254,7 +279,9 @@ function renderSeasons() {
     }).join('')}`;
 
   seasonsView.querySelectorAll('.season-build-card').forEach(card => {
-    card.addEventListener('click', () => showChampion(card.dataset.id, Number(card.dataset.index), true));
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    activable(card, () => irACampeon(card.dataset.id, Number(card.dataset.index), true));
   });
 }
 
@@ -277,8 +304,13 @@ function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
   const hay = lista.length > 0;
   const otras = todasLasBuilds ? 0 : champ.builds.length - lista.length;
 
+  anunciar(`${champ.name}. ${lista.length} build${lista.length === 1 ? '' : 's'} disponibles.`);
+
   detail.innerHTML = `
-    <button class="back-btn" id="backBtn">← Volver</button>
+    <div class="detail-toolbar">
+      <button class="back-btn" id="backBtn">← Volver</button>
+      <button class="share-btn" id="shareBtn" title="Copiar enlace a este campeón">🔗 Copiar enlace</button>
+    </div>
     <div class="detail-header" style="--champ-color:${champ.color}">
       <div class="detail-portrait">${iconImg(champIconUrl(champ), champ.name, 'portrait-img-lg', initials(champ.name))}</div>
       <div class="detail-info">
@@ -309,13 +341,30 @@ function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
 
   document.getElementById('backBtn').addEventListener('click', () => switchView(currentView));
 
+  const shareBtn = document.getElementById('shareBtn');
+  shareBtn.addEventListener('click', async () => {
+    const activa = detail.querySelector('.build-tab.active');
+    const i = activa ? Number(activa.dataset.index) : 0;
+    const url = `${location.origin}${location.pathname}#/campeon/${id}${i ? '/' + i : ''}${todasLasBuilds ? (i ? '/todas' : '/0/todas') : ''}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      shareBtn.textContent = '✓ Enlace copiado';
+    } catch {
+      shareBtn.textContent = url;   // sin permiso de portapapeles: se muestra para copiar a mano
+    }
+    setTimeout(() => { shareBtn.textContent = '🔗 Copiar enlace'; }, 2200);
+  });
+
   if (hay) {
     const tabs = detail.querySelectorAll('.build-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        renderBuild(lista[Number(tab.dataset.index)], champ);
+        const i = Number(tab.dataset.index);
+        renderBuild(lista[i], champ);
+        escribirRuta(`#/campeon/${id}/${i}${todasLasBuilds ? '/todas' : ''}`);
+        anunciar('Build: ' + lista[i].name);
       });
     });
     renderBuild(lista[idx], champ);
@@ -685,7 +734,47 @@ logoHome.addEventListener('click', () => {
   switchView('champions');
 });
 
+// ============ RUTAS COMPARTIBLES ============
+// #/campeon/taric/1 · #/tierlist/aram · #/eras · #/campeones
+// Permiten enviar un enlace directo a una build y que el botón atrás funcione.
+
+let navegandoPorRuta = false;
+
+function escribirRuta(hash) {
+  if (location.hash === hash) return;
+  navegandoPorRuta = true;
+  location.hash = hash;
+  setTimeout(() => { navegandoPorRuta = false; }, 0);
+}
+
+function irACampeon(id, idx = 0, todas = false) {
+  escribirRuta(`#/campeon/${id}${idx ? '/' + idx : ''}${todas ? '/todas' : ''}`);
+  showChampion(id, idx, todas);
+}
+
+function leerRuta() {
+  const partes = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  if (!partes.length) { switchView('champions'); return; }
+
+  const [seccion, a, b, c] = partes;
+  if (seccion === 'campeon' && a) {
+    const champ = CHAMPIONS.find(x => x.id === a);
+    if (champ) return showChampion(a, Number(b) || 0, b === 'todas' || c === 'todas');
+  }
+  if (seccion === 'tierlist') {
+    if (a && TIERLIST[a]) currentTierMode = a;
+    return switchView('tierlist');
+  }
+  if (seccion === 'eras') return switchView('seasons');
+  switchView('champions');
+}
+
+window.addEventListener('hashchange', () => {
+  if (navegandoPorRuta) return;   // la ruta la escribimos nosotros: ya está renderizada
+  leerRuta();
+});
+
 // ---------- Inicio ----------
 initContextBar();
 SEARCH_INDEX = buildSearchIndex();
-renderGrid();
+if (location.hash) leerRuta(); else renderGrid();
