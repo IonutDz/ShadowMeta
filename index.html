@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ShadowLOLClassic — Builds, Runas, Maestrías y Tier List de LoL Classic</title>
+  <title>ShadowMeta — Builds, runas y maestrías de League of Legends</title>
+  <meta name="description" content="Builds, páginas de runas, maestrías y tier lists de League of Legends: de la Season 1 a LoL Classic y el parche actual, en todos los modos de juego.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="logo" id="logoHome" title="ShadowLOLClassic — inicio">
+    <div class="logo" id="logoHome" title="ShadowMeta — inicio">
       <svg class="logo-gem" viewBox="0 0 32 32" aria-hidden="true">
         <polygon points="16,2 27,10 23,28 9,28 5,10" fill="none" stroke="currentColor" stroke-width="2"/>
         <polygon points="16,8 22,12 20,22 12,22 10,12" fill="currentColor" opacity="0.55"/>
@@ -18,26 +19,37 @@
         <line x1="27" y1="10" x2="22" y2="12" stroke="currentColor" stroke-width="1.4"/>
       </svg>
       <span class="logo-text">
-        <span class="logo-main"><span class="logo-shadow">SHADOW</span><span class="logo-lol">LOL</span></span>
-        <span class="logo-classic">CLASSIC · EDICIÓN S3</span>
+        <span class="logo-main"><span class="logo-shadow">SHADOW</span><span class="logo-meta">META</span></span>
+        <span class="logo-tagline">TODAS LAS ERAS · TODOS LOS MODOS</span>
       </span>
     </div>
 
     <nav class="main-nav" id="mainNav">
       <button class="nav-btn active" data-view="champions">Campeones</button>
       <button class="nav-btn" data-view="tierlist">Tier List</button>
-      <button class="nav-btn" data-view="seasons">Seasons</button>
+      <button class="nav-btn" data-view="seasons">Eras</button>
     </nav>
 
     <div class="searchbox">
-      <input type="text" id="searchInput" placeholder="Buscar campeón, build, modo..." autocomplete="off" spellcheck="false">
+      <input type="text" id="searchInput" placeholder="Buscar campeón, build, era o modo..." autocomplete="off" spellcheck="false">
       <div class="autocomplete" id="autocomplete"></div>
     </div>
   </header>
 
-  <div class="classic-banner" id="classicBanner">
-    ⚔️ Roster oficial de <strong>League of Legends Classic</strong> — lanzamiento 29 de julio de 2026 (parche 26.15) · 60 campeones con kits pre-rework · base Season 3 · runas y maestrías clásicas
-  </div>
+  <!-- Selector global de contexto -->
+  <section class="context-bar" id="contextBar">
+    <div class="context-selects">
+      <label class="ctx-field">
+        <span class="ctx-label">Era</span>
+        <select id="edicionSelect"></select>
+      </label>
+      <label class="ctx-field">
+        <span class="ctx-label">Modo</span>
+        <select id="modoSelect"></select>
+      </label>
+    </div>
+    <div class="context-desc" id="contextDesc"></div>
+  </section>
 
   <nav class="role-filter" id="roleFilter">
     <button class="role-btn active" data-role="all">Todos</button>
@@ -49,21 +61,14 @@
   </nav>
 
   <main id="mainView">
-    <!-- Vista: roster de campeones -->
     <section id="championGrid" class="champion-grid"></section>
-
-    <!-- Vista: detalle de campeón -->
     <section id="championDetail" class="champion-detail hidden"></section>
-
-    <!-- Vista: tier list por modos -->
     <section id="tierlistView" class="hidden"></section>
-
-    <!-- Vista: builds por season -->
     <section id="seasonsView" class="hidden"></section>
   </main>
 
   <footer class="footer">
-    <p>ShadowLOLClassic — Season 3 Edition · builds, runas, maestrías y tier lists de LoL Classic · iconos originales vía Data Dragon · fuentes: MetaSRC, Coachless, Mobalytics, OP.GG, Wiki de LoL</p>
+    <p>ShadowMeta — builds, runas, maestrías y tier lists de League of Legends · iconos oficiales vía Data Dragon · proyecto de fan, sin relación con Riot Games</p>
   </footer>
 
   <script src="js/data.js"></script>

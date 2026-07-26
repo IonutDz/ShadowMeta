@@ -1,4 +1,4 @@
-/* ============ ShadowLOLClassic — Season 3 Edition ============ */
+/* ============ ShadowMeta — todas las eras, todos los modos ============ */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
@@ -87,12 +87,12 @@ body {
   text-shadow: 0 0 24px var(--gold-glow);
 }
 .logo-shadow { color: var(--purple); }
-.logo-lol { color: var(--gold); }
-.logo-classic {
+.logo-lol, .logo-meta { color: var(--gold); }
+.logo-classic, .logo-tagline {
   font-family: var(--font-body);
-  font-size: .58rem;
+  font-size: .55rem;
   font-weight: 700;
-  letter-spacing: 3.5px;
+  letter-spacing: 2.6px;
   color: var(--blue);
 }
 
@@ -486,44 +486,178 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 
 .arrow-sep { color: var(--gold); font-size: 1.15rem; font-weight: 700; padding: 0 2px; }
 
-/* Runas clásicas */
-.runes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 12px;
-}
-
-.rune-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+/* ---------- COMPONENTE: página de runas clásica ---------- */
+.rune-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-panel));
+  border: 1px solid var(--border-gold);
   border-radius: 4px;
-  padding: 14px;
-  border-left: 3px solid var(--gold);
+  padding: 16px;
 }
-.rune-card.marca { border-left-color: var(--red); }
-.rune-card.sello { border-left-color: var(--gold); }
-.rune-card.glifo { border-left-color: var(--blue); }
-.rune-card.quinta { border-left-color: var(--purple); }
 
-.rune-head { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+.rune-line {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 12px;
+  background: rgba(1, 10, 19, .5);
+  border-radius: 3px;
+  border-left: 3px solid var(--gold);
+  flex-wrap: wrap;
+}
+.rune-line.marca { border-left-color: var(--red); }
+.rune-line.sello { border-left-color: var(--gold); }
+.rune-line.glifo { border-left-color: var(--blue); }
+.rune-line.quinta { border-left-color: var(--purple); }
 
-.rune-icon {
-  width: 38px;
-  height: 38px;
+.rune-slots { display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; }
+
+.rune-slot {
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: 1px solid var(--border-gold);
   background: var(--bg-deep);
-  font-size: .8rem;
+  font-size: .6rem;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .8);
 }
 
-.rune-type { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 2px; }
-.rune-card.marca .rune-type { color: var(--red); }
-.rune-card.sello .rune-type { color: var(--gold); }
-.rune-card.glifo .rune-type { color: var(--blue); }
-.rune-card.quinta .rune-type { color: #c58ae0; }
+.rune-line-info { flex: 1; min-width: 190px; }
+.rune-type { font-size: .66rem; text-transform: uppercase; letter-spacing: 1.6px; font-weight: 700; margin-bottom: 2px; }
+.rune-line.marca .rune-type { color: var(--red); }
+.rune-line.sello .rune-type { color: var(--gold); }
+.rune-line.glifo .rune-type { color: var(--blue); }
+.rune-line.quinta .rune-type { color: #c58ae0; }
+.rune-count { color: var(--text-dim); font-weight: 400; }
 
 .rune-name { color: var(--text-bright); font-weight: 600; font-size: .9rem; }
-.rune-detail { font-size: .8rem; line-height: 1.5; color: var(--text); }
+.rune-detail { font-size: .78rem; line-height: 1.5; color: var(--text); margin-top: 2px; }
+
+/* ---------- COMPONENTE: runas modernas ---------- */
+.modern-runes {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 12px;
+}
+
+.mr-tree {
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-panel));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+}
+.mr-tree.principal { border-color: var(--border-gold); box-shadow: 0 0 18px rgba(200, 170, 110, .1); }
+
+.mr-tree-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .84rem;
+  letter-spacing: 1.2px;
+  color: var(--gold-bright);
+}
+.mr-tree-icon { width: 28px; height: 28px; }
+.mr-frag-ico { color: var(--blue); font-size: 1.1rem; width: 28px; text-align: center; }
+
+.mr-runes { display: flex; flex-direction: column; gap: 10px; }
+
+.mr-rune {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .84rem;
+  color: var(--text-bright);
+}
+.mr-rune.keystone { font-weight: 700; color: var(--gold-bright); }
+
+.mr-rune-icon { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-deep); }
+.mr-keystone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-deep);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 18px var(--gold-glow);
+}
+.mr-frag-dot {
+  width: 12px; height: 12px;
+  margin: 0 9px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 8px rgba(10, 200, 185, .5);
+  flex-shrink: 0;
+}
+
+/* ---------- COMPONENTE: tabla de habilidades ---------- */
+.skill-table-wrap { overflow-x: auto; margin-top: 14px; }
+
+.skill-table {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 560px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.skill-row { display: flex; gap: 3px; }
+
+.skill-cell {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(1, 10, 19, .6);
+  border-radius: 2px;
+  font-size: .7rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.skill-lvl { background: none; font-size: .62rem; color: var(--text-dim); font-weight: 600; }
+
+.skill-key-label {
+  width: 30px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: .82rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-bright);
+}
+.skill-head .skill-key-label { background: none; border: none; }
+
+.skill-cell.on { color: var(--bg-deep); font-size: .75rem; font-weight: 700; }
+.skill-cell.on.key-Q { background: linear-gradient(180deg, #6db3d1, #3f83a9); }
+.skill-cell.on.key-W { background: linear-gradient(180deg, #8fd177, #5aa945); }
+.skill-cell.on.key-E { background: linear-gradient(180deg, #f0a35e, #d97b3f); }
+.skill-cell.on.key-R { background: linear-gradient(180deg, #ffd76e, #e8a33d); }
+
+.skill-priority {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.skill-priority-label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--blue);
+  font-weight: 700;
+  margin-right: 4px;
+}
 
 /* Maestrías */
 .mastery-summary { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -543,31 +677,80 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 
 .mastery-key { font-size: .9rem; color: var(--blue); font-weight: 600; }
 
-.mastery-trees { display: flex; flex-direction: column; gap: 10px; }
-
-.mastery-tree-row {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 12px 16px;
+/* ---------- COMPONENTE: tablero de maestrías ---------- */
+.mastery-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
-.tree-name {
-  min-width: 104px;
+.mastery-col {
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-panel));
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+}
+.mastery-col.ofensa { border-top-color: var(--red); }
+.mastery-col.defensa { border-top-color: var(--green); }
+.mastery-col.utilidad { border-top-color: var(--blue); }
+.mastery-col.vacio { opacity: .4; }
+
+.mastery-col-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mastery-col-name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: .85rem;
-  letter-spacing: .5px;
-  padding-top: 1px;
+  font-size: .88rem;
+  letter-spacing: 1px;
 }
-.tree-name.ofensa { color: var(--red); }
-.tree-name.defensa { color: var(--green); }
-.tree-name.utilidad { color: var(--blue); }
+.mastery-col.ofensa .mastery-col-name { color: var(--red); }
+.mastery-col.defensa .mastery-col-name { color: var(--green); }
+.mastery-col.utilidad .mastery-col-name { color: var(--blue); }
 
-.tree-points { font-size: .85rem; line-height: 1.55; }
+.mastery-col-pts {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--gold-bright);
+}
+
+.mastery-bar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.mastery-pip {
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+  background: rgba(1, 10, 19, .8);
+  border: 1px solid var(--border);
+}
+.mastery-col.ofensa .mastery-pip.on { background: var(--red); border-color: var(--red); box-shadow: 0 0 6px rgba(232, 64, 87, .5); }
+.mastery-col.defensa .mastery-pip.on { background: var(--green); border-color: var(--green); box-shadow: 0 0 6px rgba(31, 191, 117, .5); }
+.mastery-col.utilidad .mastery-pip.on { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 6px rgba(10, 200, 185, .5); }
+
+.mastery-talents { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.mastery-talent {
+  font-size: .72rem;
+  padding: 4px 9px;
+  background: rgba(1, 10, 19, .55);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-bright);
+}
+
+.mastery-empty { font-size: .76rem; color: var(--text-dim); font-style: italic; }
 
 /* Hechizos y habilidades */
 .spells-skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
@@ -652,20 +835,69 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   font-size: .7rem;
 }
 
-/* ---------- Banner LoL Classic ---------- */
-.classic-banner {
-  max-width: 1200px;
-  margin: 18px auto 0;
-  padding: 12px 24px;
-  width: calc(100% - 48px);
-  background: linear-gradient(90deg, rgba(200, 170, 110, .08), rgba(10, 200, 185, .06));
-  border: 1px solid var(--border-gold);
-  border-radius: 3px;
-  font-size: .84rem;
-  line-height: 1.55;
-  color: var(--text);
+/* ---------- Barra de contexto (selector de era y modo) ---------- */
+.context-bar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  padding: 14px 24px;
+  background: linear-gradient(90deg, rgba(200, 170, 110, .07), rgba(10, 200, 185, .05));
+  border-bottom: 1px solid var(--border-gold);
 }
-.classic-banner strong { color: var(--gold-bright); }
+
+.context-selects { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.ctx-field { display: flex; flex-direction: column; gap: 4px; }
+.ctx-label {
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.ctx-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 190px;
+  padding: 9px 34px 9px 13px;
+  background-color: var(--bg-card);
+  background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 55%, calc(100% - 12px) 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  color: var(--text-bright);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.ctx-field select:hover, .ctx-field select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+.ctx-field select option { background: var(--bg-panel); color: var(--text-bright); }
+
+.context-desc { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 3px; }
+.ctx-count { font-size: .84rem; color: var(--blue); font-weight: 600; }
+.ctx-count strong { color: var(--gold-bright); font-size: .95rem; }
+.ctx-text { font-size: .76rem; line-height: 1.5; color: var(--text); }
+
+/* ---------- Aviso de builds en otro contexto ---------- */
+.otras-builds {
+  margin-top: 14px;
+  padding: 11px 16px;
+  background: rgba(10, 200, 185, .07);
+  border: 1px dashed rgba(10, 200, 185, .35);
+  border-radius: 3px;
+  font-size: .82rem;
+  color: var(--blue);
+}
 
 /* ---------- Badge de builds en las cartas ---------- */
 .builds-badge {
@@ -735,7 +967,35 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 .season-badge.s-s1 { background: rgba(31, 191, 117, .15); color: var(--green); border: 1px solid rgba(31, 191, 117, .4); }
 .season-badge.s-s2 { background: rgba(10, 200, 185, .15); color: var(--blue); border: 1px solid rgba(10, 200, 185, .4); }
 .season-badge.s-s3 { background: rgba(200, 170, 110, .15); color: var(--gold); border: 1px solid rgba(200, 170, 110, .4); }
-.season-badge.s-s4, .season-badge.s-s5 { background: rgba(157, 77, 199, .15); color: #c58ae0; border: 1px solid rgba(157, 77, 199, .4); }
+.season-badge.s-classic { background: rgba(200, 170, 110, .18); color: var(--gold-bright); border: 1px solid var(--border-gold); }
+.season-badge.s-actual { background: rgba(157, 77, 199, .15); color: #c58ae0; border: 1px solid rgba(157, 77, 199, .4); }
+
+.chip-modo { background: rgba(10, 200, 185, .1); color: var(--blue); border: 1px solid rgba(10, 200, 185, .3); }
+
+/* Fuentes plegables */
+.sources-details {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.sources-details summary {
+  cursor: pointer;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  font-weight: 700;
+  list-style: none;
+  transition: color .2s;
+}
+.sources-details summary::-webkit-details-marker { display: none; }
+.sources-details summary::before { content: '▸ '; color: var(--gold); }
+.sources-details[open] summary::before { content: '▾ '; }
+.sources-details summary:hover { color: var(--gold); }
+.sources-details .sources-list { margin-top: 12px; }
+.sources-details .source-link { font-size: .8rem; padding: 6px 10px; }
+
+.spell-card { margin-bottom: 4px; }
 
 .chip-season { background: rgba(232, 64, 87, .1); color: #f28b9b; border: 1px solid rgba(232, 64, 87, .3); }
 .chip-stats { background: rgba(31, 191, 117, .1); color: var(--green); border: 1px solid rgba(31, 191, 117, .3); text-transform: none; letter-spacing: .3px; }
@@ -939,7 +1199,14 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   .main-nav { order: 3; width: 100%; justify-content: center; }
   .nav-btn { padding: 7px 12px; font-size: .76rem; }
   .searchbox { min-width: 150px; }
-  .classic-banner { width: calc(100% - 28px); font-size: .76rem; padding: 10px 14px; }
+  .context-bar { padding: 12px 14px; gap: 12px; }
+  .context-selects { width: 100%; }
+  .ctx-field { flex: 1; }
+  .ctx-field select { min-width: 0; width: 100%; font-size: .82rem; }
+  .modern-runes { grid-template-columns: 1fr; }
+  .mastery-board { grid-template-columns: 1fr; }
+  .rune-line { gap: 12px; }
+  .rune-slot { width: 26px; height: 26px; }
   .tier-label { min-width: 46px; font-size: 1.05rem; }
   .tier-champ { width: 60px; }
   .tier-icon { width: 44px; height: 44px; }

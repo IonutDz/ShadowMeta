@@ -1,7 +1,8 @@
-// ============ ShadowLOLClassic — Lógica de la app ============
-// Vistas: Campeones (roster LoL Classic) · Tier List (por modos) · Seasons (builds por era)
-// Búsqueda con autocomplete entre campeones, builds, modos y secciones.
-// Iconos oficiales de época (Data Dragon); cada build puede fijar su parche.
+// ============ ShadowMeta — Lógica de la app ============
+// Vistas: Campeones · Tier List · Línea del tiempo
+// Selector global de Edición (Classic / S1 / S2 / S3 / Actual) y Modo (Grieta / ARAM).
+// Componentes visuales: página de runas clásica (30 gemas), árboles de maestrías,
+// runas modernas (keystone + fragmentos) y tabla de habilidades de 18 niveles.
 
 const grid = document.getElementById('championGrid');
 const detail = document.getElementById('championDetail');
@@ -12,7 +13,10 @@ const autocompleteBox = document.getElementById('autocomplete');
 const roleFilter = document.getElementById('roleFilter');
 const mainNav = document.getElementById('mainNav');
 const logoHome = document.getElementById('logoHome');
-const classicBanner = document.getElementById('classicBanner');
+const contextBar = document.getElementById('contextBar');
+const edicionSelect = document.getElementById('edicionSelect');
+const modoSelect = document.getElementById('modoSelect');
+const contextDesc = document.getElementById('contextDesc');
 
 let currentRole = 'all';
 let currentSearch = '';
@@ -20,11 +24,16 @@ let currentView = 'champions';
 let currentTierMode = 'grieta';
 let acIndex = -1;
 
-// ---------- Iconos Data Dragon ----------
+// Estado del selector (persistente entre visitas)
+let edicion = localStorage.getItem('sm_edicion') || 'classic';
+let modo = localStorage.getItem('sm_modo') || 'grieta';
+
+// ---------- Iconos ----------
 const champIconUrl = c => `${DD}/champion/${c.dd}.png`;
 const itemIconUrl = (id, ver) => `${DD_HOST}/${ver || DD_VER}/img/item/${id}.png`;
 const spellIconUrl = (id, ver) => `${DD_HOST}/${ver || DD_VER}/img/spell/${id}.png`;
 const runeIconUrl = (img, ver) => `${DD_HOST}/${ver || DD_VER}/img/rune/${img}`;
+const perkIconUrl = path => `https://ddragon.leagueoflegends.com/cdn/img/${path}`;
 
 function iconImg(url, alt, cls, fallbackText) {
   const fb = (fallbackText || alt || '?').slice(0, 2);
@@ -39,6 +48,56 @@ function initials(name) {
   return parts.length > 1 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
 }
 
+// Builds del campeón dentro del contexto seleccionado
+const visibles = c => buildsDe(c, edicion, modo);
+
+// ---------- Selector de contexto ----------
+function initContextBar() {
+  edicionSelect.innerHTML =
+    '<option value="todas">Todas las eras</option>' +
+    Object.entries(EDICIONES).map(([k, e]) =>
+      `<option value="${k}">${e.icono} ${e.nombre}</option>`).join('');
+  modoSelect.innerHTML =
+    '<option value="todos">Todos los modos</option>' +
+    Object.entries(MODOS).map(([k, m]) =>
+      `<option value="${k}">${m.icono} ${m.nombre}</option>`).join('');
+
+  edicionSelect.value = edicion;
+  modoSelect.value = modo;
+
+  edicionSelect.addEventListener('change', () => {
+    edicion = edicionSelect.value;
+    localStorage.setItem('sm_edicion', edicion);
+    refreshContext();
+  });
+  modoSelect.addEventListener('change', () => {
+    modo = modoSelect.value;
+    localStorage.setItem('sm_modo', modo);
+    refreshContext();
+  });
+  updateContextDesc();
+}
+
+function updateContextDesc() {
+  const e = EDICIONES[edicion];
+  const m = MODOS[modo];
+  const total = CHAMPIONS.reduce((n, c) => n + visibles(c).length, 0);
+  const champs = CHAMPIONS.filter(c => visibles(c).length).length;
+  contextDesc.innerHTML = `
+    <span class="ctx-count"><strong>${total}</strong> build${total === 1 ? '' : 's'} · <strong>${champs}</strong> campe${champs === 1 ? 'ón' : 'ones'}</span>
+    <span class="ctx-text">${e ? e.desc : 'Todas las eras del juego, de la Season 1 al parche actual.'}${m ? ' · ' + m.desc : ''}</span>`;
+}
+
+function refreshContext() {
+  updateContextDesc();
+  if (!detail.classList.contains('hidden') && detail.dataset.champ) {
+    return showChampion(detail.dataset.champ);
+  }
+  if (currentView === 'champions') renderGrid();
+  if (currentView === 'seasons') renderSeasons();
+  if (currentView === 'tierlist') renderTierlist();
+}
+
 // ---------- Cambio de vista ----------
 function switchView(view) {
   currentView = view;
@@ -47,7 +106,6 @@ function switchView(view) {
   roleFilter.classList.toggle('hidden', view !== 'champions');
   tierlistView.classList.toggle('hidden', view !== 'tierlist');
   seasonsView.classList.toggle('hidden', view !== 'seasons');
-  classicBanner.classList.toggle('hidden', view !== 'champions');
   mainNav.querySelectorAll('.nav-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.view === view));
   window.scrollTo(0, 0);
@@ -56,15 +114,13 @@ function switchView(view) {
   if (view === 'seasons') renderSeasons();
 }
 
-// ---------- Vista: roster de campeones ----------
+// ---------- Vista: roster ----------
 function champCard(c) {
-  const hasBuilds = c.builds.length > 0;
+  const n = visibles(c).length;
   return `
-    <div class="champ-card ${hasBuilds ? 'has-builds' : ''}" data-id="${c.id}" style="--champ-color:${c.color}">
-      ${hasBuilds ? `<span class="builds-badge" title="${c.builds.length} build(s) detalladas">★ ${c.builds.length}</span>` : ''}
-      <div class="champ-portrait">
-        ${iconImg(champIconUrl(c), c.name, 'portrait-img', initials(c.name))}
-      </div>
+    <div class="champ-card ${n ? 'has-builds' : ''}" data-id="${c.id}" style="--champ-color:${c.color}">
+      ${n ? `<span class="builds-badge" title="${n} build(s) en este contexto">★ ${n}</span>` : ''}
+      <div class="champ-portrait">${iconImg(champIconUrl(c), c.name, 'portrait-img', initials(c.name))}</div>
       <div class="champ-name">${c.name}</div>
       <div class="champ-title">${c.title}</div>
       <div class="champ-roles">${c.roles.map(r => `<span class="role-tag">${r}</span>`).join('')}</div>
@@ -80,7 +136,7 @@ function renderGrid() {
   });
 
   const sorted = [...filtered].sort((a, b) =>
-    (b.builds.length > 0) - (a.builds.length > 0) || a.name.localeCompare(b.name, 'es'));
+    (visibles(b).length > 0) - (visibles(a).length > 0) || a.name.localeCompare(b.name, 'es'));
 
   let html = sorted.length === 0
     ? '<div class="no-results">Ningún campeón invocado con ese nombre.</div>'
@@ -91,14 +147,11 @@ function renderGrid() {
       <div class="soon-divider"><span>Próximamente en LoL Classic</span></div>
       ${PROXIMOS.map(([dd, name, title]) => `
         <div class="champ-card soon-card" style="--champ-color:#3a4a63">
-          <div class="champ-portrait">
-            ${iconImg(`${DD}/champion/${dd}.png`, name, 'portrait-img', name.slice(0, 2))}
-          </div>
+          <div class="champ-portrait">${iconImg(`${DD}/champion/${dd}.png`, name, 'portrait-img', name.slice(0, 2))}</div>
           <div class="champ-name">${name}</div>
           <div class="champ-title">${title}</div>
           <div class="champ-roles"><span class="role-tag soon-tag">Tras el lanzamiento</span></div>
-        </div>
-      `).join('')}`;
+        </div>`).join('')}`;
   }
 
   grid.innerHTML = html;
@@ -114,11 +167,10 @@ function renderTierlist() {
   const mode = TIERLIST[currentTierMode];
   tierlistView.innerHTML = `
     <div class="view-header">
-      <h2>Tier List — LoL Classic</h2>
+      <h2>Tier List</h2>
       <div class="mode-tabs">
-        ${Object.entries(TIERLIST).map(([key, m]) => `
-          <button class="mode-tab ${key === currentTierMode ? 'active' : ''}" data-mode="${key}">${m.icono} ${m.nombre}</button>
-        `).join('')}
+        ${Object.entries(TIERLIST).map(([key, m]) =>
+          `<button class="mode-tab ${key === currentTierMode ? 'active' : ''}" data-mode="${key}">${m.icono} ${m.nombre}</button>`).join('')}
       </div>
     </div>
     <p class="view-desc">${mode.desc}</p>
@@ -134,8 +186,9 @@ function renderTierlist() {
                 const c = CHAMPIONS.find(ch => ch.id === id);
                 if (!c) return '';
                 const nota = mode.notas[id];
+                const tiene = c.builds.length > 0;
                 return `
-                  <div class="tier-champ ${c.builds.length ? 'clickable' : ''}" data-id="${c.id}" title="${nota || c.name + ' — ' + c.roles.join('/')}">
+                  <div class="tier-champ ${tiene ? 'clickable' : ''}" data-id="${c.id}" title="${nota || c.name + ' — ' + c.roles.join('/')}">
                     ${iconImg(champIconUrl(c), c.name, 'tier-icon', initials(c.name))}
                     <span class="tier-champ-name">${c.name}${nota ? ' ✓' : ''}</span>
                   </div>`;
@@ -144,49 +197,41 @@ function renderTierlist() {
           </div>`;
       }).join('')}
     </div>
-    <div class="build-section sources-section">
-      <h3>Fuentes de meta en vivo</h3>
-      <div class="sources-list">
-        ${FUENTES_META.map(([url, label]) => `
-          <a class="source-link" href="${url}" target="_blank" rel="noopener noreferrer">🔗 ${label}</a>
-        `).join('')}
-      </div>
-      <p class="sources-note">Lista curada para el lanzamiento (parche 26.15). El "✓" marca datos verificados con estadísticas reales. Los enlaces de arriba son páginas en vivo: siempre reflejan el meta actual del modo.</p>
-    </div>
-  `;
+    <p class="sources-note">Lista curada a partir del meta clásico y las primeras estadísticas del modo. El "✓" marca entradas contrastadas con datos reales.</p>`;
 
   tierlistView.querySelectorAll('.mode-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      currentTierMode = tab.dataset.mode;
-      renderTierlist();
-    });
+    tab.addEventListener('click', () => { currentTierMode = tab.dataset.mode; renderTierlist(); });
   });
   tierlistView.querySelectorAll('.tier-champ.clickable').forEach(el => {
-    el.addEventListener('click', () => showChampion(el.dataset.id));
+    el.addEventListener('click', () => showChampion(el.dataset.id, 0, true));
   });
 }
 
-// ---------- Vista: builds por season ----------
+// ---------- Vista: línea del tiempo ----------
 function renderSeasons() {
-  const seasonBuilds = {};
+  const porEdicion = {};
   for (const c of CHAMPIONS) {
     c.builds.forEach((b, i) => {
-      const s = b.season || 'S3';
-      (seasonBuilds[s] = seasonBuilds[s] || []).push({ champ: c, build: b, index: i });
+      for (const ed of b.ediciones) {
+        if (ed === 'classic') continue; // Classic tiene su propia edición en el selector
+        (porEdicion[ed] = porEdicion[ed] || []).push({ champ: c, build: b, index: i });
+      }
     });
   }
+  const orden = ['s1', 's2', 's3', 'actual'];
 
   seasonsView.innerHTML = `
-    <div class="view-header"><h2>Builds por Season</h2></div>
-    <p class="view-desc">El archivo histórico del proyecto: cada build pertenece a una era y usa los iconos del parche de SU temporada. LoL Classic toma la Season 3 como base, pero el viaje empieza antes.</p>
-    ${Object.keys(SEASONS_META).map(sKey => {
-      const meta = SEASONS_META[sKey];
-      const entries = seasonBuilds[sKey] || [];
+    <div class="view-header"><h2>La línea del tiempo</h2></div>
+    <p class="view-desc">Cada build pertenece a una era y se renderiza con los iconos del parche de <em>su</em> temporada. De las botas y tres pociones de 2010 al meta de hoy.</p>
+    ${orden.map(ed => {
+      const meta = EDICIONES[ed];
+      const entries = porEdicion[ed] || [];
       return `
         <div class="season-block">
           <div class="season-head">
-            <span class="season-badge s-${sKey.toLowerCase()}">${sKey}</span>
-            <h3>${meta.nombre} <span class="season-years">· ${meta.años}</span></h3>
+            <span class="season-badge s-${ed}">${meta.icono} ${meta.corto}</span>
+            <h3>${meta.nombre}</h3>
+            <span class="season-years">parche ${meta.patch}</span>
           </div>
           <p class="season-desc">${meta.desc}</p>
           ${entries.length ? `
@@ -199,24 +244,22 @@ function renderSeasons() {
                     <div class="season-build-name">${build.name}</div>
                     <div class="season-build-tags">
                       <span class="role-tag">${build.role}</span>
-                      <span class="role-tag">${build.style}</span>
+                      <span class="role-tag">${MODOS[build.modo].corto}</span>
                     </div>
                   </div>
-                </div>
-              `).join('')}
-            </div>
-          ` : '<p class="season-empty">Aún no hay builds archivadas de esta era — próximamente.</p>'}
+                </div>`).join('')}
+            </div>`
+          : '<p class="season-empty">Aún no hay builds archivadas de esta era.</p>'}
         </div>`;
-    }).join('')}
-  `;
+    }).join('')}`;
 
   seasonsView.querySelectorAll('.season-build-card').forEach(card => {
-    card.addEventListener('click', () => showChampion(card.dataset.id, Number(card.dataset.index)));
+    card.addEventListener('click', () => showChampion(card.dataset.id, Number(card.dataset.index), true));
   });
 }
 
-// ---------- Vista: detalle de campeón ----------
-function showChampion(id, buildIdx = 0) {
+// ---------- Detalle de campeón ----------
+function showChampion(id, buildIdx = 0, todasLasBuilds = false) {
   const champ = CHAMPIONS.find(c => c.id === id);
   if (!champ) return;
 
@@ -225,16 +268,19 @@ function showChampion(id, buildIdx = 0) {
   tierlistView.classList.add('hidden');
   seasonsView.classList.add('hidden');
   detail.classList.remove('hidden');
+  detail.dataset.champ = id;
   window.scrollTo(0, 0);
 
-  const hasBuilds = champ.builds.length > 0;
+  // Desde la línea del tiempo o la tier list se muestran todas; si no, solo las del contexto
+  const lista = todasLasBuilds ? champ.builds : visibles(champ);
+  const idx = Math.min(buildIdx, Math.max(0, lista.length - 1));
+  const hay = lista.length > 0;
+  const otras = todasLasBuilds ? 0 : champ.builds.length - lista.length;
 
   detail.innerHTML = `
     <button class="back-btn" id="backBtn">← Volver</button>
     <div class="detail-header" style="--champ-color:${champ.color}">
-      <div class="detail-portrait">
-        ${iconImg(champIconUrl(champ), champ.name, 'portrait-img-lg', initials(champ.name))}
-      </div>
+      <div class="detail-portrait">${iconImg(champIconUrl(champ), champ.name, 'portrait-img-lg', initials(champ.name))}</div>
       <div class="detail-info">
         <h1>${champ.name}</h1>
         <div class="champ-title">${champ.title}</div>
@@ -242,54 +288,166 @@ function showChampion(id, buildIdx = 0) {
         <div class="champ-roles">${champ.roles.map(r => `<span class="role-tag">${r}</span>`).join('')}</div>
       </div>
     </div>
-    ${hasBuilds ? `
+    ${hay ? `
       <div class="build-tabs" id="buildTabs">
-        ${champ.builds.map((b, i) => `
-          <button class="build-tab ${i === buildIdx ? 'active' : ''}" data-index="${i}">
-            <span class="season-badge s-${(b.season || 'S3').toLowerCase()}">${b.season || 'S3'}</span>${b.name}
+        ${lista.map((b, i) => `
+          <button class="build-tab ${i === idx ? 'active' : ''}" data-index="${i}">
+            <span class="season-badge s-${b.ediciones[0]}">${EDICIONES[b.ediciones[0]].corto}</span>${b.name}
           </button>`).join('')}
       </div>
       <div class="build-content" id="buildContent"></div>
+      ${otras > 0 ? `<p class="otras-builds">↕ ${champ.name} tiene ${otras} build${otras === 1 ? '' : 's'} más en otras eras o modos — cámbialos en el selector de arriba.</p>` : ''}
     ` : `
       <div class="no-builds">
-        <p><strong>${champ.name}</strong> está confirmado en el roster de lanzamiento de LoL Classic,
-        pero aún no hemos escrito sus builds clásicas.</p>
-        <p class="no-builds-sub">Mientras tanto, consulta su build actualizada en las fuentes en vivo:</p>
-        <div class="sources-list no-builds-sources">
-          <a class="source-link" href="https://www.metasrc.com/lol/classic/champions/${champ.dd === 'MonkeyKing' ? 'wukong' : champ.dd.toLowerCase()}/build" target="_blank" rel="noopener noreferrer">🔗 MetaSRC Classic — ${champ.name}</a>
-          <a class="source-link" href="https://coachless.gg/builds" target="_blank" rel="noopener noreferrer">🔗 Coachless — builds actualizadas</a>
-        </div>
-      </div>
-    `}
-  `;
+        <p><strong>${champ.name}</strong> no tiene builds para
+        <strong>${EDICIONES[edicion] ? EDICIONES[edicion].nombre : 'todas las eras'}</strong>
+        en <strong>${MODOS[modo] ? MODOS[modo].nombre : 'todos los modos'}</strong>.</p>
+        ${champ.builds.length
+          ? `<p class="no-builds-sub">Pero sí tiene ${champ.builds.length} build${champ.builds.length === 1 ? '' : 's'} en otro contexto: cambia la edición o el modo en el selector de arriba.</p>`
+          : '<p class="no-builds-sub">Todavía no hemos escrito sus builds. Llegarán en próximas actualizaciones.</p>'}
+      </div>`}`;
 
   document.getElementById('backBtn').addEventListener('click', () => switchView(currentView));
 
-  if (hasBuilds) {
+  if (hay) {
     const tabs = detail.querySelectorAll('.build-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        renderBuild(champ.builds[Number(tab.dataset.index)], champ);
+        renderBuild(lista[Number(tab.dataset.index)], champ);
       });
     });
-    renderBuild(champ.builds[buildIdx], champ);
+    renderBuild(lista[idx], champ);
   }
 }
 
-// Fuentes por defecto de cada campeón + las específicas de la build
-function buildSources(build, champ) {
-  const metasrcId = champ.dd === 'MonkeyKing' ? 'wukong' : champ.dd.toLowerCase();
-  const defaults = [
-    [`https://www.metasrc.com/lol/classic/champions/${metasrcId}/build`, `MetaSRC Classic — ${champ.name} (meta en vivo del modo)`],
-    ['https://coachless.gg/builds', 'Coachless — builds analíticas actualizadas'],
-    [`https://leagueoflegends.fandom.com/es/wiki/${encodeURIComponent(champ.name.replace(/ /g, '_'))}`, `Wiki de LoL — ${champ.name} (kit e historial de parches)`],
-    ['https://movistaresports.com/asi-va-a-ser-league-of-legends-classic/', 'Movistar eSports — sistemas de runas y maestrías de LoL Classic']
+// ============ COMPONENTES VISUALES ============
+
+// --- Página de runas clásica: 9 marcas, 9 sellos, 9 glifos, 3 quintaesencias ---
+function runePageComponent(runas, ver) {
+  const filas = [
+    { key: 'marca', label: 'Marcas', n: 9 },
+    { key: 'sello', label: 'Sellos', n: 9 },
+    { key: 'glifo', label: 'Glifos', n: 9 },
+    { key: 'quinta', label: 'Quintaesencias', n: 3 }
   ];
-  const all = [...(build.fuentes || []), ...defaults];
-  const seen = new Set();
-  return all.filter(([url]) => !seen.has(url) && seen.add(url));
+  return `
+    <div class="rune-page">
+      ${filas.map(f => {
+        const r = runas[f.key];
+        return `
+          <div class="rune-line ${f.key}">
+            <div class="rune-slots">
+              ${Array.from({ length: f.n }, () =>
+                iconImg(runeIconUrl(r.img, ver), r.nombre, 'rune-slot', '◆')).join('')}
+            </div>
+            <div class="rune-line-info">
+              <div class="rune-type">${f.label} <span class="rune-count">×${f.n}</span></div>
+              <div class="rune-name">${r.nombre.replace(/\s*x\d+$/, '')}</div>
+              <div class="rune-detail">${r.detalle}</div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// --- Runas modernas: keystone + secundario + fragmentos ---
+function modernRunesComponent(rm) {
+  const rama = (r, esPrincipal) => `
+    <div class="mr-tree ${esPrincipal ? 'principal' : 'secundario'}">
+      <div class="mr-tree-head">
+        ${iconImg(perkIconUrl(r.icon), r.arbol, 'mr-tree-icon', r.arbol[0])}
+        <span>${r.arbol}</span>
+      </div>
+      <div class="mr-runes">
+        ${r.runas.map(([, nombre, icon], i) => `
+          <div class="mr-rune ${esPrincipal && i === 0 ? 'keystone' : ''}">
+            ${iconImg(perkIconUrl(icon), nombre, esPrincipal && i === 0 ? 'mr-keystone-icon' : 'mr-rune-icon', nombre[0])}
+            <span>${nombre}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  return `
+    <div class="modern-runes">
+      ${rama(rm.principal, true)}
+      ${rama(rm.secundario, false)}
+      <div class="mr-tree fragmentos">
+        <div class="mr-tree-head"><span class="mr-frag-ico">◈</span><span>Fragmentos</span></div>
+        <div class="mr-runes">
+          ${rm.fragmentos.map(f => `<div class="mr-rune"><span class="mr-frag-dot"></span><span>${f}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// --- Árboles de maestrías con reparto visual de puntos ---
+function masteryComponent(m) {
+  const clase = { 'Ofensa': 'ofensa', 'Defensa': 'defensa', 'Utilidad': 'utilidad' };
+  const asignados = {};
+  m.arboles.forEach(a => { asignados[a.arbol] = a; });
+
+  return `
+    <div class="mastery-summary">
+      <div class="mastery-dist">${m.reparto}</div>
+      <div class="mastery-key">${m.clave}</div>
+    </div>
+    <div class="mastery-board">
+      ${['Ofensa', 'Defensa', 'Utilidad'].map(nombre => {
+        const a = asignados[nombre];
+        const pts = a ? a.puntos : 0;
+        const talentos = a ? a.detalle.replace(/\.$/, '').split(/,\s*/) : [];
+        return `
+          <div class="mastery-col ${clase[nombre]} ${pts ? '' : 'vacio'}">
+            <div class="mastery-col-head">
+              <span class="mastery-col-name">${nombre}</span>
+              <span class="mastery-col-pts">${pts}</span>
+            </div>
+            <div class="mastery-bar">
+              ${Array.from({ length: 21 }, (_, i) =>
+                `<span class="mastery-pip ${i < pts ? 'on' : ''}"></span>`).join('')}
+            </div>
+            ${pts
+              ? `<div class="mastery-talents">${talentos.map(t => `<span class="mastery-talent">${t}</span>`).join('')}</div>`
+              : '<div class="mastery-empty">Sin puntos</div>'}
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// --- Tabla de subida de habilidades por nivel (1-18) ---
+function skillOrderComponent(prioridad) {
+  const puntos = { Q: 0, W: 0, E: 0, R: 0 };
+  const orden = [];
+  const nivelesUlti = { 6: true, 11: true, 16: true };
+
+  for (let nivel = 1; nivel <= 18; nivel++) {
+    let sube;
+    if (nivelesUlti[nivel] && puntos.R < 3) sube = 'R';
+    else if (nivel <= 3) sube = prioridad[nivel - 1];       // una de cada al principio
+    else sube = prioridad.find(h => puntos[h] < 5) || 'R';
+    puntos[sube]++;
+    orden.push(sube);
+  }
+
+  return `
+    <div class="skill-table-wrap">
+      <div class="skill-table">
+        <div class="skill-row skill-head">
+          <span class="skill-cell skill-key-label"></span>
+          ${orden.map((_, i) => `<span class="skill-cell skill-lvl">${i + 1}</span>`).join('')}
+        </div>
+        ${['Q', 'W', 'E', 'R'].map(h => `
+          <div class="skill-row">
+            <span class="skill-cell skill-key-label key-${h}">${h}</span>
+            ${orden.map(s => `<span class="skill-cell ${s === h ? 'on key-' + h : ''}">${s === h ? '◆' : ''}</span>`).join('')}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="skill-priority">
+      <span class="skill-priority-label">Prioridad de mejora</span>
+      ${prioridad.map(h => `<span class="skill-key key-${h}">${h}</span>`).join('<span class="arrow-sep">›</span>')}
+    </div>`;
 }
 
 function itemPill(pair, ver) {
@@ -300,27 +458,17 @@ function itemPill(pair, ver) {
   </span>`;
 }
 
+// ---------- Render de una build ----------
 function renderBuild(build, champ) {
   const content = document.getElementById('buildContent');
-  const ver = build.parche || DD_VER;
-  const r = build.runas;
-  const runeTypes = [
-    { key: 'marca', label: 'Marcas · Rojas' },
-    { key: 'sello', label: 'Sellos · Amarillos' },
-    { key: 'glifo', label: 'Glifos · Azules' },
-    { key: 'quinta', label: 'Quintaesencias' }
-  ];
-  const treeClass = { 'Ofensa': 'ofensa', 'Defensa': 'defensa', 'Utilidad': 'utilidad' };
-  const phases = [
-    { key: 'early', label: 'Early game', ico: '🌅' },
-    { key: 'mid', label: 'Mid game', ico: '⚔️' },
-    { key: 'late', label: 'Late game', ico: '👑' }
-  ];
-  const seasonNames = { S1: 'Season 1', S2: 'Season 2', S3: 'Season 3', S4: 'Season 4', S5: 'Season 5' };
+  const ver = build.parche;
+  const esModerna = !!build.runasModernas;
+  const edLabel = build.ediciones.map(e => EDICIONES[e].nombre).join(' · ');
 
   content.innerHTML = `
     <div class="build-meta">
-      <span class="meta-chip chip-season">${seasonNames[build.season] || build.season || 'Season 3'} · parche ${ver}</span>
+      <span class="meta-chip chip-season">${edLabel} · parche ${ver}</span>
+      <span class="meta-chip chip-modo">${MODOS[build.modo].icono} ${MODOS[build.modo].nombre}</span>
       <span class="meta-chip chip-role">${build.role}</span>
       <span class="meta-chip chip-style">${build.style}</span>
       <span class="meta-chip chip-diff">Dificultad: ${build.difficulty}</span>
@@ -346,119 +494,112 @@ function renderBuild(build, champ) {
     </div>
 
     <div class="build-section">
-      <h3>Runas clásicas</h3>
-      <div class="runes-grid">
-        ${runeTypes.map(t => `
-          <div class="rune-card ${t.key}">
-            <div class="rune-head">
-              ${iconImg(runeIconUrl(r[t.key].img, ver), t.label, 'rune-icon', '◆')}
-              <div>
-                <div class="rune-type">${t.label}</div>
-                <div class="rune-name">${r[t.key].nombre}</div>
-              </div>
-            </div>
-            <div class="rune-detail">${r[t.key].detalle}</div>
-          </div>
-        `).join('')}
-      </div>
+      <h3>${esModerna ? 'Runas' : 'Página de runas'}</h3>
+      ${esModerna ? modernRunesComponent(build.runasModernas) : runePageComponent(build.runas, ver)}
     </div>
 
+    ${build.maestrias ? `
     <div class="build-section">
-      <h3>Maestrías — ${seasonNames[build.season] || 'clásicas'}</h3>
-      <div class="mastery-summary">
-        <div class="mastery-dist">${build.maestrias.reparto}</div>
-        <div class="mastery-key">${build.maestrias.clave}</div>
-      </div>
-      <div class="mastery-trees">
-        ${build.maestrias.arboles.map(a => `
-          <div class="mastery-tree-row">
-            <div class="tree-name ${treeClass[a.arbol] || ''}">${a.arbol} · ${a.puntos}</div>
-            <div class="tree-points">${a.detalle}</div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
+      <h3>Maestrías</h3>
+      ${masteryComponent(build.maestrias)}
+    </div>` : ''}
 
     <div class="build-section">
       <h3>Hechizos y habilidades</h3>
-      <div class="spells-skills">
-        <div class="ss-card">
-          <div class="label">Hechizos de invocador</div>
-          <div class="spell-row">
-            ${build.hechizos.map(([sid, sn]) => `
-              <span class="spell-chip">${iconImg(spellIconUrl(sid, ver), sn, 'spell-icon', sn[0])}<span>${sn}</span></span>
-            `).join('')}
-          </div>
-        </div>
-        <div class="ss-card">
-          <div class="label">Orden de habilidades — maximizar</div>
-          <div class="skill-order">
-            ${build.habilidades.map(h => `<span class="skill-key">${h}</span>`).join('<span class="arrow-sep">›</span>')}
-          </div>
+      <div class="ss-card spell-card">
+        <div class="label">Hechizos de invocador</div>
+        <div class="spell-row">
+          ${build.hechizos.map(([sid, sn]) =>
+            `<span class="spell-chip">${iconImg(spellIconUrl(sid, ver), sn, 'spell-icon', sn[0])}<span>${sn}</span></span>`).join('')}
         </div>
       </div>
+      ${skillOrderComponent(build.habilidades)}
     </div>
 
     ${build.plan ? `
     <div class="build-section">
       <h3>Plan de partida</h3>
       <div class="plan-grid">
-        ${phases.map(p => `
-          <div class="plan-card plan-${p.key}">
-            <div class="plan-label">${p.ico} ${p.label}</div>
-            <p>${build.plan[p.key]}</p>
-          </div>
-        `).join('')}
+        ${[{ k: 'early', l: 'Early game', i: '🌅' }, { k: 'mid', l: 'Mid game', i: '⚔️' }, { k: 'late', l: 'Late game', i: '👑' }]
+          .map(p => `
+            <div class="plan-card plan-${p.k}">
+              <div class="plan-label">${p.i} ${p.l}</div>
+              <p>${build.plan[p.k]}</p>
+            </div>`).join('')}
       </div>
     </div>` : ''}
 
     <div class="build-section">
-      <h3>Consejos del invocador</h3>
-      <ul class="tips-list">
-        ${build.tips.map(t => `<li>${t}</li>`).join('')}
-      </ul>
+      <h3>Consejos</h3>
+      <ul class="tips-list">${build.tips.map(t => `<li>${t}</li>`).join('')}</ul>
     </div>
 
-    <div class="build-section sources-section">
-      <h3>Fuentes</h3>
+    <details class="sources-details">
+      <summary>Fuentes y créditos</summary>
       <div class="sources-list">
-        ${buildSources(build, champ).map(([url, label]) => `
-          <a class="source-link" href="${url}" target="_blank" rel="noopener noreferrer">🔗 ${label}</a>
-        `).join('')}
+        ${(build.fuentes || []).map(([url, label]) =>
+          `<a class="source-link" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`).join('')}
+        ${FUENTES_META.map(([url, label]) =>
+          `<a class="source-link" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`).join('')}
       </div>
-      <p class="sources-note">Mezcla de fuentes: estadísticas en vivo (MetaSRC, Coachless), documentación del kit clásico (Wiki) y cobertura del lanzamiento. Los enlaces siempre muestran el meta actual. Iconos de Data Dragon (parche ${ver}).</p>
-    </div>
-  `;
+      <p class="sources-note">Iconos oficiales de Data Dragon (parche ${ver}). Proyecto de fan, sin relación con Riot Games.</p>
+    </details>`;
 }
 
 // ---------- Búsqueda con autocomplete ----------
 function buildSearchIndex() {
   const idx = [];
   for (const c of CHAMPIONS) {
-    idx.push({ tipo: 'Campeón', label: c.name, sub: `${c.title} · ${c.roles.join('/')}`, icon: champIconUrl(c), go: () => showChampion(c.id) });
+    idx.push({ tipo: 'Campeón', label: c.name, sub: `${c.title} · ${c.roles.join('/')}`, icon: champIconUrl(c), go: () => showChampion(c.id, 0, true) });
     c.builds.forEach((b, i) => {
-      idx.push({ tipo: 'Build', label: `${c.name}: ${b.name}`, sub: `${b.season || 'S3'} · ${b.role} · ${b.style}`, icon: champIconUrl(c), go: () => showChampion(c.id, i) });
+      idx.push({
+        tipo: EDICIONES[b.ediciones[0]].corto,
+        label: `${c.name}: ${b.name}`,
+        sub: `${EDICIONES[b.ediciones[0]].nombre} · ${MODOS[b.modo].nombre} · ${b.style}`,
+        icon: champIconUrl(c),
+        go: () => showChampion(c.id, i, true)
+      });
     });
   }
-  idx.push({ tipo: 'Sección', label: 'Tier List — Grieta Clásica', sub: 'Modo 5v5 de LoL Classic', emoji: '⚔️', go: () => { currentTierMode = 'grieta'; switchView('tierlist'); } });
-  idx.push({ tipo: 'Sección', label: 'Tier List — ARAM Clásico', sub: 'Modo carril único', emoji: '❄️', go: () => { currentTierMode = 'aram'; switchView('tierlist'); } });
-  for (const [sKey, meta] of Object.entries(SEASONS_META)) {
-    idx.push({ tipo: 'Sección', label: `Builds de ${meta.nombre}`, sub: meta.años, emoji: '📜', go: () => switchView('seasons') });
+  for (const [k, m] of Object.entries(TIERLIST)) {
+    idx.push({ tipo: 'Tier List', label: `Tier List — ${m.nombre}`, sub: 'Ranking de campeones', emoji: m.icono, go: () => { currentTierMode = k; switchView('tierlist'); } });
   }
-  idx.push({ tipo: 'Sección', label: 'Roster de campeones', sub: 'LoL Classic — lanzamiento 26.15', emoji: '🏆', go: () => switchView('champions') });
+  for (const [k, e] of Object.entries(EDICIONES)) {
+    idx.push({
+      tipo: 'Era', label: e.nombre, sub: `Ver todas las builds de ${e.nombre}`, emoji: e.icono,
+      go: () => aplicarContexto(k, 'todos')
+    });
+  }
+  for (const [k, m] of Object.entries(MODOS)) {
+    idx.push({
+      tipo: 'Modo', label: m.nombre, sub: m.desc, emoji: m.icono,
+      go: () => aplicarContexto('todas', k)
+    });
+  }
+  idx.push({ tipo: 'Sección', label: 'La línea del tiempo', sub: 'Builds de todas las eras', emoji: '📜', go: () => switchView('seasons') });
   return idx;
 }
 
-const SEARCH_INDEX = buildSearchIndex();
+function aplicarContexto(nuevaEdicion, nuevoModo) {
+  edicion = nuevaEdicion;
+  modo = nuevoModo;
+  edicionSelect.value = edicion;
+  modoSelect.value = modo;
+  localStorage.setItem('sm_edicion', edicion);
+  localStorage.setItem('sm_modo', modo);
+  updateContextDesc();
+  switchView('champions');
+}
+
+let SEARCH_INDEX = [];
 
 function renderAutocomplete(term) {
   acIndex = -1;
-  if (!term.trim()) { autocompleteBox.innerHTML = ''; autocompleteBox.classList.remove('open'); return; }
+  if (!term.trim()) { autocompleteBox.innerHTML = ''; autocompleteBox.classList.remove('open'); autocompleteBox._matches = []; return; }
   const t = term.trim().toLowerCase();
   const matches = SEARCH_INDEX
     .map(e => {
-      const l = e.label.toLowerCase();
-      const s = (e.sub || '').toLowerCase();
+      const l = e.label.toLowerCase(), s = (e.sub || '').toLowerCase();
       let score = -1;
       if (l.startsWith(t)) score = 0;
       else if (l.includes(t)) score = 1;
@@ -469,7 +610,12 @@ function renderAutocomplete(term) {
     .sort((a, b) => a.score - b.score || a.e.label.localeCompare(b.e.label, 'es'))
     .slice(0, 8);
 
-  if (!matches.length) { autocompleteBox.innerHTML = '<div class="ac-empty">Sin resultados</div>'; autocompleteBox.classList.add('open'); return; }
+  if (!matches.length) {
+    autocompleteBox.innerHTML = '<div class="ac-empty">Sin resultados</div>';
+    autocompleteBox.classList.add('open');
+    autocompleteBox._matches = [];
+    return;
+  }
 
   autocompleteBox.innerHTML = matches.map(({ e }, i) => `
     <div class="ac-item" data-i="${i}">
@@ -479,12 +625,9 @@ function renderAutocomplete(term) {
         <div class="ac-sub">${e.sub || ''}</div>
       </div>
       <span class="ac-type">${e.tipo}</span>
-    </div>
-  `).join('');
+    </div>`).join('');
   autocompleteBox.classList.add('open');
-
-  const items = autocompleteBox.querySelectorAll('.ac-item');
-  items.forEach((el, i) => {
+  autocompleteBox.querySelectorAll('.ac-item').forEach((el, i) => {
     el.addEventListener('mousedown', ev => { ev.preventDefault(); pickSuggestion(matches[i].e); });
   });
   autocompleteBox._matches = matches;
@@ -508,15 +651,11 @@ searchInput.addEventListener('keydown', e => {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault();
     if (!matches.length) return;
-    acIndex = e.key === 'ArrowDown'
-      ? (acIndex + 1) % matches.length
-      : (acIndex - 1 + matches.length) % matches.length;
-    autocompleteBox.querySelectorAll('.ac-item').forEach((el, i) =>
-      el.classList.toggle('active', i === acIndex));
+    acIndex = e.key === 'ArrowDown' ? (acIndex + 1) % matches.length : (acIndex - 1 + matches.length) % matches.length;
+    autocompleteBox.querySelectorAll('.ac-item').forEach((el, i) => el.classList.toggle('active', i === acIndex));
   } else if (e.key === 'Enter') {
     if (acIndex >= 0 && matches[acIndex]) pickSuggestion(matches[acIndex].e);
     else if (matches.length) pickSuggestion(matches[0].e);
-    else { switchView('champions'); renderGrid(); }
   } else if (e.key === 'Escape') {
     autocompleteBox.classList.remove('open');
     acIndex = -1;
@@ -546,5 +685,7 @@ logoHome.addEventListener('click', () => {
   switchView('champions');
 });
 
-// Inicio
+// ---------- Inicio ----------
+initContextBar();
+SEARCH_INDEX = buildSearchIndex();
 renderGrid();

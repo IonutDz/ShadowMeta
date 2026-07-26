@@ -1,17 +1,74 @@
-// ============ ShadowLOLClassic — Datos ============
-// Roster oficial de League of Legends Classic (lanzamiento 29/07/2026, parche 26.15):
-// los 40 campeones originales + los añadidos hasta 2013, con kits pre-rework y base Season 3.
-// Iconos oficiales de la época servidos desde Data Dragon (CDN de Riot):
+// ============ ShadowMeta — Datos ============
+// Builds, runas, maestrías y tier lists de League of Legends a través de sus eras.
+// Iconos oficiales servidos desde Data Dragon (CDN de Riot):
 //   Campeón:  dd 'Taric'          -> cdn/<ver>/img/champion/Taric.png
 //   Objeto:   [id, 'Nombre']      -> cdn/<ver>/img/item/<id>.png
 //   Hechizo:  ['SummonerX','N']   -> cdn/<ver>/img/spell/SummonerX.png
 //   Runa:     img 'r_1_1.png'     -> cdn/<ver>/img/rune/<img>.png
-// Cada build lleva `season` ('S1','S2','S3'...) y opcionalmente `parche` para usar
-// los iconos de otra época (ej. '3.6.14', el parche más antiguo archivado, era S2/early S3).
+//
+// Cada build declara:
+//   season : 'S1' | 'S2' | 'S3' | 'ACT'     (define el parche de iconos por defecto)
+//   modo   : 'grieta' | 'aram'              (por defecto 'grieta')
+//   ediciones: [...]                        (opcional; si falta se deriva de la season)
+//   parche : '3.6.14'                       (opcional; fuerza los iconos de un parche concreto)
 
-const DD_VER = '3.15.5';
 const DD_HOST = 'https://ddragon.leagueoflegends.com/cdn';
+
+// Parche de Data Dragon usado para los iconos de cada era
+const PATCHES = {
+  S1: '3.6.14',   // el más antiguo archivado por Riot
+  S2: '3.6.14',
+  S3: '3.15.5',   // base de LoL Classic
+  ACT: '16.14.1'  // parche vivo
+};
+
+const DD_VER = PATCHES.S3;
 const DD = DD_HOST + '/' + DD_VER + '/img';
+
+// ---------- Ediciones (selector de época) ----------
+const EDICIONES = {
+  classic: {
+    nombre: 'LoL Classic',
+    corto: 'Classic',
+    icono: '⚔️',
+    patch: PATCHES.S3,
+    desc: 'El modo retro oficial de Riot (lanzamiento 29/07/2026): 60 campeones con kits pre-rework sobre itemización, runas y maestrías de la Season 3.'
+  },
+  s3: {
+    nombre: 'Season 3',
+    corto: 'S3',
+    icono: '🏆',
+    patch: PATCHES.S3,
+    desc: '2013. Trinkets recién llegados, objetos de oro para soportes, espíritus de jungla y Tenaza de Muerte Ígnea en cada mago. El meta más querido de la historia del juego.'
+  },
+  s2: {
+    nombre: 'Season 2',
+    corto: 'S2',
+    icono: '📜',
+    patch: PATCHES.S2,
+    desc: '2011–2012. La era de la visión y los primeros junglas modernos: Piedra Filosofal, Armadura de Tela + 5 pociones y soportes que compraban todos los wards del equipo.'
+  },
+  s1: {
+    nombre: 'Season 1',
+    corto: 'S1',
+    icono: '🕯️',
+    patch: PATCHES.S1,
+    desc: '2010–2011. Los orígenes: sin trinkets, sin objetos de soporte, penetración de armadura reinando en las runas y peleas caóticas en mid desde el minuto 20.'
+  },
+  actual: {
+    nombre: 'LoL Actual',
+    corto: 'Actual',
+    icono: '⚡',
+    patch: PATCHES.ACT,
+    desc: 'El League de hoy (parche ' + PATCHES.ACT + '): runas modernas, objetos legendarios y el meta vivo. Las builds clásicas no aplican aquí — este es otro juego.'
+  }
+};
+
+// ---------- Modos de juego ----------
+const MODOS = {
+  grieta: { nombre: 'Grieta del Invocador', corto: 'Grieta', icono: '⚔️', desc: '5v5 en la Grieta: tres carriles, jungla y objetivos neutrales.' },
+  aram: { nombre: 'ARAM', corto: 'ARAM', icono: '❄️', desc: 'Todos aleatorios, todos a mid: un solo carril, sin retorno a base y peleas constantes.' }
+};
 
 // ---------- Roster de lanzamiento de LoL Classic ----------
 // [ddragonId, Nombre, Título clásico, roles]
@@ -1110,9 +1167,725 @@ const BUILDS = {
         'Apunta la ultimate a las peleas que empiezan a lo lejos: llega antes que tú y ya va haciendo daño.',
         'Tu W acelera la velocidad de ataque aliada: tírasela al Kog\'Maw o al Yi de tu equipo en las peleas.'
       ]
+    },
+    {
+      name: 'Mid — Actual (Primer Golpe)',
+      season: 'ACT',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Tirador de habilidades',
+      difficulty: 'Media',
+      resumen: 'El Ezreal moderno vive de Primer Golpe: cada Q que abre un intercambio genera oro extra, y el Cintomisil hextech convierte ese oro en un poke que nadie puede sostener. Sigue siendo el campeón que nunca está donde le disparan.',
+      items: {
+        inicio: [[1055, 'Espada de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']],
+        core: [[3152, 'Cintomisil hextech'], [3006, 'Grebas de berserker'], [3078, 'Fuerza de trinidad'], [3042, 'Muramana']],
+        situacionales: [[6694, 'Rencor de Serylda'], [3036, 'Recuerdos de lord Dominik'], [3139, 'Cimitarra mercurial'], [3026, 'Ángel de la guarda']]
+      },
+      runasModernas: {
+        principal: {
+          arbol: 'Inspiración', icon: 'perk-images/Styles/7203_Whimsy.png',
+          runas: [
+            [8369, 'Primer golpe', 'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png'],
+            [8304, 'Calzado mágico', 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'],
+            [8321, 'Reembolso', 'perk-images/Styles/Inspiration/CashBack/CashBack2.png'],
+            [8347, 'Perspicacia cósmica', 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png']
+          ]
+        },
+        secundario: {
+          arbol: 'Precisión', icon: 'perk-images/Styles/7201_Precision.png',
+          runas: [
+            [9111, 'Triunfo', 'perk-images/Styles/Precision/Triumph.png'],
+            [9104, 'Leyenda: Presteza', 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png']
+          ]
+        },
+        fragmentos: ['Velocidad de ataque', 'Fuerza adaptativa', 'Vida escalada']
+      },
+      hechizos: [['SummonerFlash', 'Destello'], ['SummonerDot', 'Ignición']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'Abre siempre los intercambios con Q para activar Primer Golpe: el oro extra acelera tu Cintomisil, que es el objeto que define la partida.',
+        mid: 'Con Cintomisil y Trinidad, cada Q pega como un objeto entero. Asedia torres desde fuera de rango y rota con la ultimate para asistir a los laterales.',
+        late: 'Muramana activa convierte tu maná en daño puro. Nunca entres: castiga desde 1100 de rango y guarda la E como tu único escape real.'
+      },
+      tips: [
+        'Primer Golpe se activa al golpear primero en un combate: la Q a máximo rango es el activador perfecto.',
+        'El Cintomisil escala con el oro que ganas: es literalmente un objeto que premia jugar bien la fase de líneas.',
+        'La Q sigue aplicando efectos de objeto: cada proyectil procea Trinidad y Muramana.',
+        'Con Calzado mágico ahorras 300 de oro en botas: úsalo para llegar antes al primer objeto legendario.'
+      ]
     }
-  ]
+  ],
+
+  karthus: [
+    {
+      name: 'Mid — Requiem global',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Mago de área / Ejecución',
+      difficulty: 'Media',
+      resumen: 'El liche que mata desde la tumba: farmea con Laceración a distancia segura, apila poder de habilidad hasta que su Réquiem ejecute a media pantalla del mapa, y cuando muere sigue lanzando hechizos durante siete segundos más. Karthus no juega peleas: juega números.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3070, 'Lágrima de la Diosa'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel'], [3089, 'Gorra Mortal de Rabadon']],
+        situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3001, 'Cetro Abisal']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de penetración mágica en cada Laceración y en el Réquiem.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura: eres el objetivo más lento del mapa.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al 18: tu escalado es tu identidad.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP desde el minuto uno.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Escalado arcano con maná',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+        ]
+      },
+      hechizos: [['SummonerTeleport', 'Teleportación'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'E', 'W'],
+      plan: {
+        early: 'Farmea con la Q pequeña sobre súbditos individuales: cada impacto directo cura tu maná con la pasiva de la E. Lágrima al primer retorno, siempre.',
+        mid: 'Empuja oleadas en segundos con E activa y roba camps. Cada Réquiem disponible es presión global: los rivales heridos no pueden quedarse en el mapa.',
+        late: 'Muere en el sitio correcto. Tu pasiva te da siete segundos de hechizos gratis sin coste de maná: entra, muere y borra a su equipo desde el más allá.'
+      },
+      tips: [
+        'La Q hace daño doble si golpea a un solo objetivo: apunta a los campeones aislados, no al centro de la oleada.',
+        'El Muro de Dolor (W) ralentiza brutalmente y reduce RM: colócalo para cortar la retirada, no para frenar la entrada.',
+        'Réquiem se canaliza 3 segundos y todo el mapa lo oye: úsalo tras la primera muerte de una pelea, cuando ya están heridos.',
+        'Con el Bastón del Arcángel lleno, tu Réquiem al nivel 16 remata a casi cualquier carry por debajo del 30% de vida.'
+      ]
+    },
+    {
+      name: 'ARAM — Bomba de área',
+      season: 'S3',
+      modo: 'aram',
+      role: 'Mid',
+      style: 'Mago de área / Poke',
+      difficulty: 'Baja',
+      resumen: 'Karthus fue diseñado para ARAM sin saberlo: un solo carril, cinco rivales apretados y una Q que no falla nunca. Suma la pasiva de muerte y tienes al campeón que gana peleas incluso cuando pierde el 1v5.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida']],
+        core: [[3070, 'Lágrima de la Diosa'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel'], [3116, 'Cetro de Cristal de Rylai']],
+        situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3135, 'Bastón del Vacío'], [3165, 'Morellonomicón'], [3157, 'Reloj de Arena de Zhonya']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: en ARAM nadie compra resistencia mágica pronto.' },
+        sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18: en el carril único todo el mundo te pokea.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP para dominar el poke desde el nivel 1.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Poke arcano sostenido',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+        ]
+      },
+      hechizos: [['SummonerMana', 'Claridad'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'Q sin parar sobre la línea de súbditos y campeones: en ARAM no hay retorno a base, así que cada punto de vida que quites es permanente.',
+        mid: 'Rylai convierte tu Q en una ralentización constante en área: su equipo no puede ni acercarse a tu torre.',
+        late: 'Réquiem tras cada pelea reñida: los supervivientes con poca vida no llegan vivos a su torre. Y si mueres, sigues lanzando hechizos gratis.'
+      },
+      tips: [
+        'Claridad en ARAM es el hechizo estrella de Karthus: maná infinito significa Q infinita.',
+        'Tu pasiva es una ventaja enorme en ARAM: morir iniciando una pelea puede ser la jugada correcta.',
+        'El Muro de Dolor bloquea el paso del carril entero: es el mejor peel del modo.',
+        'Con Rylai y el Muro, un equipo que intente asediar tu torre simplemente no puede avanzar.'
+      ]
+    }
+  ],
+
+  morgana: [
+    {
+      name: 'Support — Escudo Negro',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Support',
+      style: 'Maga / Control',
+      difficulty: 'Baja',
+      resumen: 'El soporte que anula composiciones enteras: el Escudo Negro absorbe todo el control de masas mágico del equipo rival, y el Lazo Oscuro deja tres segundos de raíz a quien se atreva a acercarse. Contra ganchos, aturdimientos y supresiones, Morgana es un botón de "no".',
+      items: {
+        inicio: [[3301, 'Moneda Antigua'], [2003, 'Poción de Vida'], [2044, 'Guardián Invisible']],
+        core: [[2049, 'Piedra de Visión'], [3117, 'Botas de Movilidad'], [3174, 'Grial Impuro de Athene']],
+        situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3190, 'Medallón Solari de Hierro'], [3222, 'Crisol de Mikael'], [3116, 'Cetro de Cristal de Rylai']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: el Suelo Atormentado castiga de verdad.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura para el 2v2 de la botlane.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Oro x3', detalle: '+3 de oro por 10 segundos.' }
+      },
+      maestrias: {
+        reparto: '0/9/21',
+        clave: 'Utilidad con presencia mágica',
+        arboles: [
+          { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' },
+          { arbol: 'Utilidad', puntos: 21, detalle: 'Perspicacia del Invocador, Meditación, Explorador, Avaricia, Riqueza, Carterista, Cerebro.' }
+        ]
+      },
+      hechizos: [['SummonerExhaust', 'Agotamiento'], ['SummonerFlash', 'Destello']],
+      habilidades: ['W', 'Q', 'E'],
+      plan: {
+        early: 'El Suelo Atormentado (W) sobre la oleada empuja y castiga a la vez. Guarda el Lazo (Q) para el gank de tu jungla o para el que se acerque demasiado.',
+        mid: 'Escudo Negro sobre el iniciador enemigo prioritario: si Blitzcrank o Amumu no pueden iniciar, la pelea no existe. Tu Piedra de Visión ilumina el río.',
+        late: 'Zhonya + ultimate es una jugada de todo o nada preciosa: entra, aturde a tres con Alma Encadenada y congela el reloj mientras tu equipo limpia.'
+      },
+      tips: [
+        'El Escudo Negro bloquea TODO el CC mágico mientras aguante: ponlo ANTES del gancho, no después.',
+        'El Lazo Oscuro atraviesa súbditos si están muy juntos: apunta a los huecos entre la oleada.',
+        'La ultimate aturde solo si aguantas cerca los 3 segundos completos: Zhonya justo después es la jugada estándar.',
+        'Con la Q disponible controlas un pasillo entero del mapa: los rivales no cruzan el río contigo mirando.'
+      ]
+    }
+  ],
+
+  annie: [
+    {
+      name: 'Mid — Tibbers (Burst)',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Maga / Burst',
+      difficulty: 'Baja',
+      resumen: 'La niña con el oso: cuatro hechizos y tienes un aturdimiento garantizado. Annie no tiene mecánicas complejas — tiene un botón que aturde a todo el equipo enemigo y un oso que se queda ardiendo encima. La curva de aprendizaje más honesta del mid.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3128, 'Tenaza de Muerte Ígnea'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+        situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3001, 'Cetro Abisal']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica para que el combo entero entre limpio.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura contra los asesinos AD del mid.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Poder de Habilidad x9', detalle: '+11 de AP plano: tu burst del nivel 6 ya mata.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Burst mágico directo',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+        ]
+      },
+      hechizos: [['SummonerDot', 'Ignición'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'Farmea con Q (te devuelve el maná si mata) y cuenta siempre tus cargas de pasiva: con 4 hechizos lanzados, el siguiente aturde.',
+        mid: 'Nivel 6 con aturdimiento cargado = kill garantizado: Destello → R (Tibbers aturde) → W → Q → Ignición. Roama a los laterales, nadie sobrevive a eso.',
+        late: 'Eres la iniciación del equipo: un Tibbers sobre tres rivales aturdidos gana la teamfight antes de que empiece. Nunca gastes el aturdimiento farmeando.'
+      },
+      tips: [
+        'Lleva SIEMPRE la pasiva cargada al entrar a una pelea: es la diferencia entre una kill y morir tú.',
+        'Puedes cargar el escudo (E) sobre ti mismo para acumular el aturdimiento sin gastar maná ofensivo.',
+        'Tibbers sigue haciendo daño de área mientras está vivo: colócalo en medio de su equipo, no sobre el tanque.',
+        'Con la Tenaza de Muerte Ígnea, tu combo completo borra a cualquier carry sin defensas mágicas.'
+      ]
+    }
+  ],
+
+  nasus: [
+    {
+      name: 'Top — Apilar la Q (Escalado)',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Top',
+      style: 'Juggernaut / Split push',
+      difficulty: 'Baja',
+      resumen: 'El guardián que juega a un juego distinto al resto: mientras todos pelean, Nasus cuenta súbditos. Cada last hit con Golpe Devastador es permanente, y llegado el minuto 30 con 400 cargas su Q golpea más fuerte que cualquier ultimate del juego.',
+      items: {
+        inicio: [[1054, 'Escudo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3083, 'Armadura de Warmog']],
+        situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3075, 'Malla de Espinas'], [3025, 'Guantelete de Hielo']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Armadura x9', detalle: '+8.2 de armadura: tu única misión temprana es no morir mientras apilas.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura para aguantar el acoso del top rival.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: llegar al last hit y salir es todo tu early game.' }
+      },
+      maestrias: {
+        reparto: '9/21/0',
+        clave: 'Supervivencia hasta el late',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 9, detalle: 'Fuerza Bruta, Carnicero, Pericia con las Armas.' },
+          { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' }
+        ]
+      },
+      hechizos: [['SummonerTeleport', 'Teleportación'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'E', 'W'],
+      plan: {
+        early: 'No pelees. Apila. Usa la E para farmear a distancia cuando te acosen y consigue todas las cargas de Q que puedas — 100 al minuto 15 es un buen ritmo.',
+        mid: 'Con 200 cargas y Capa de Fuego Solar puedes 1v1 a casi cualquiera. Empieza a hacer split push: eres el mejor derribador de torres del juego.',
+        late: 'Furia Impía (R) te da vida, alcance y CDR masivo: entras a la pelea como un tanque inmortal cuya Q hace 700 de daño. Split push hasta el nexo.'
+      },
+      tips: [
+        'La Q ignora el enfriamiento si el súbdito muere con ella: nunca falles un last hit con la Q disponible.',
+        'La E reduce la armadura y hace daño en área: es tu herramienta de farmeo seguro bajo torre.',
+        'La ultimate no da daño directo pero sí supervivencia y CDR: actívala al ENTRAR, no cuando ya estés bajo.',
+        'Tu debilidad es el minuto 10-20: pide ayuda a tu jungla y juega bajo torre sin vergüenza.'
+      ]
+    }
+  ],
+
+  twistedfate: [
+    {
+      name: 'Mid — Destino global',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Mago / Presión global',
+      difficulty: 'Alta',
+      resumen: 'El maestro de las cartas no gana su carril: gana el mapa. Con Destino revela a los cinco rivales y aparece en cualquier pelea del mapa, y con la carta dorada convierte cada pick en un 5v4. Es un campeón de macrojuego disfrazado de mago.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+        situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3100, 'Perdición del Liche']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: la carta azul pokea de verdad.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: llegar a la pelea tras el Destino, medio segundo antes.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Presión global con burst',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Errante.' }
+        ]
+      },
+      hechizos: [['SummonerTeleport', 'Teleportación'], ['SummonerFlash', 'Destello']],
+      habilidades: ['W', 'Q', 'E'],
+      plan: {
+        early: 'Farmea con la carta roja (daño en área) y castiga con la azul, que te devuelve maná. Guarda la dorada para cuando tu jungla venga.',
+        mid: 'A partir del nivel 6, tu Destino es el mejor hechizo del juego: revela a los cinco enemigos, avisa a tu equipo, y teletranspórtate a un 2v2 para hacerlo 3v2.',
+        late: 'Eres el iniciador silencioso: Destino + carta dorada sobre el carry rival abre cualquier pelea. Empuja un lateral y amenaza con aparecer en el otro extremo.'
+      },
+      tips: [
+        'Elegir la carta (W) tiene su propio ritmo: para la dorada, para el ciclo en el momento exacto — practica el timing en la herramienta de práctica.',
+        'La ultimate revela el mapa entero 8 segundos aunque no la uses para viajar: es información gratis para tomar barón.',
+        'Comunica SIEMPRE el Destino a tu equipo antes de canalizarlo: un TF sin seguimiento es una ultimate perdida.',
+        'La carta azul devuelve maná al impactar: úsala para el farmeo sostenido en carriles difíciles.'
+      ]
+    }
+  ],
+
+  sivir: [
+    {
+      name: 'ADC — Escudo Mágico',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'ADC',
+      style: 'Tiradora / Push',
+      difficulty: 'Baja',
+      resumen: 'La tiradora que empuja oleadas más rápido que nadie y anula el hechizo clave del rival con su Escudo Mágico. Sumado a Marcha Implacable, Sivir convierte a todo su equipo en un pelotón que llega antes a cada objetivo del mapa.',
+      items: {
+        inicio: [[1055, 'Espada de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3006, 'Grebas de Berserker'], [3087, 'Puñal de Statikk'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral']],
+        situacionales: [[3072, 'La Sanguinaria'], [3035, 'Últimas Palabras'], [3026, 'Ángel de la Guarda'], [3085, 'Huracán de Runaan']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Daño de Ataque x9', detalle: '+8.5 de AD para el last hit y el bumerán.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Daño de Ataque x3', detalle: '+6.75 de AD.' }
+      },
+      maestrias: {
+        reparto: '21/9/0',
+        clave: 'Daño sostenido y empuje',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Furia, Carnicero, Pericia con las Armas, Frenesí, Letalidad, Verdugo.' },
+          { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' }
+        ]
+      },
+      hechizos: [['SummonerHeal', 'Curación'], ['SummonerFlash', 'Destello']],
+      habilidades: ['W', 'Q', 'E'],
+      plan: {
+        early: 'El Escudo Mágico (E) es tu superpoder de línea: bloquea el gancho de Blitzcrank, el lazo de Morgana o el aturdimiento de Leona y el 2v2 se vuelve tuyo gratis.',
+        mid: 'Con Statikk y la W activa, empujas cualquier oleada en dos segundos. Rota inmediatamente después: tu equipo consigue objetivos gratis mientras el rival farmea.',
+        late: 'Marcha Implacable (R) es una iniciación de equipo: activa antes de entrar y todo tu equipo cae encima del suyo a la vez.'
+      },
+      tips: [
+        'El Escudo Mágico absorbe UN hechizo dirigido: acertarlo es lo que separa a una Sivir buena de una excelente.',
+        'El bumerán (Q) hace menos daño con cada objetivo que atraviesa: apunta a los rivales aislados.',
+        'La W rebota entre objetivos: activarla antes de derribar una torre acelera el asedio muchísimo.',
+        'Tu ultimate es utilidad, no daño: úsala para agrupar y llegar, o para huir de un mal enfrentamiento.'
+      ]
+    }
+  ],
+
+  alistar: [
+    {
+      name: 'Support — Combo W-Q',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Support',
+      style: 'Tanque / Iniciador',
+      difficulty: 'Media',
+      resumen: 'El minotauro que hace el combo más antiguo y más letal de la botlane: embestir al rival contra tu torre y lanzarlo por los aires antes de que aterrice. Con la ultimate activa, Alistar entra en la torre enemiga, saca a su carry y sale caminando.',
+      items: {
+        inicio: [[3302, 'Escudo Reliquia'], [2003, 'Poción de Vida'], [2044, 'Guardián Invisible']],
+        core: [[2049, 'Piedra de Visión'], [3117, 'Botas de Movilidad'], [3190, 'Medallón Solari de Hierro']],
+        situacionales: [[3110, 'Corazón de Hielo'], [3050, 'Heraldo de Zeke'], [3222, 'Crisol de Mikael'], [3075, 'Malla de Espinas']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Armadura x9', detalle: '+8.2 de armadura para plantarte encima del ADC rival.' },
+        sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18: tu ultimate reduce el daño, esto lo multiplica.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: llegar al combo W-Q antes de que reaccionen.' }
+      },
+      maestrias: {
+        reparto: '0/21/9',
+        clave: 'Tanque iniciador',
+        arboles: [
+          { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Explorador.' }
+        ]
+      },
+      hechizos: [['SummonerExhaust', 'Agotamiento'], ['SummonerFlash', 'Destello']],
+      habilidades: ['W', 'Q', 'E'],
+      plan: {
+        early: 'El combo W → Q lanzado casi a la vez encadena dos controles seguidos: practícalo hasta que sea muscular. Un solo combo bien hecho gana la línea.',
+        mid: 'Con la ultimate reduces el 70% del daño recibido: puedes iniciar dentro de su torre y sobrevivir. Sé el que abre todas las peleas.',
+        late: 'Tu trabajo es apartar al asesino de tu carry con la Q y ser imposible de matar mientras tanto. Un Alistar con ulti es un muro que camina.'
+      },
+      tips: [
+        'El combo Destello + Q lanza a los rivales hacia tu equipo: es la iniciación más limpia del juego clásico.',
+        'La W empuja al rival: si te colocas detrás de él, lo empujas HACIA tu torre, no lejos de ella.',
+        'Tu ultimate limpia ralentizaciones y reduce daño: actívala ANTES de entrar, no cuando ya estés a media vida.',
+        'La E cura en área al golpear súbditos: te da un sustain enorme en la fase de líneas.'
+      ]
+    }
+  ],
+
+  veigar: [
+    {
+      name: 'Mid — AP infinito',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Mago / Escalado infinito',
+      difficulty: 'Media',
+      resumen: 'El único campeón del juego con escalado sin techo: cada Materia Oscura sobre un súbdito suma poder de habilidad permanente. Con la Jaula del Terror para atrapar y una ultimate que escala con el AP del RIVAL, Veigar borra magos enteros de un solo botón.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[3070, 'Lágrima de la Diosa'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel'], [3089, 'Gorra Mortal de Rabadon']],
+        situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3001, 'Cetro Abisal']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: con tu AP acumulado, cada punto se multiplica.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura: eres pequeño, lento y muy apetecible.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP para empezar a apilar antes.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Escalado arcano puro',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+        ]
+      },
+      hechizos: [['SummonerBarrier', 'Barrera'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'Apila con cada Q sobre súbditos moribundos: 60-80 cargas al minuto 15 es tu objetivo. Juega bajo torre sin complejos, tu momento llega después.',
+        mid: 'La Jaula (E) es tu combo entero: atrapa → W (Materia Oscura) → Q → R. Cualquier mago rival muere de una sola ultimate, porque escala con SU poder de habilidad.',
+        late: 'Con 800+ de AP eres una torreta de un disparo. Colócate detrás de todo, atrapa con la jaula al que se acerque y borra a quien entre en tu rango.'
+      },
+      tips: [
+        'La Jaula del Terror aturde solo si el rival la cruza desde dentro hacia fuera: colócala DETRÁS del objetivo.',
+        'La Materia Oscura (W) tarda 1.2 segundos en caer: lánzala sobre el rival ya atrapado, nunca antes.',
+        'Tu ultimate hace más daño cuanto más AP tenga el rival: contra un Rabadon enemigo es una ejecución garantizada.',
+        'La Q apila con cualquier unidad que mates: los camps de jungla también cuentan.'
+      ]
+    }
+  ],
+
+  jarvaniv: [
+    {
+      name: 'Jungla — Bandera y Dragón',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Jungla',
+      style: 'Peleador / Iniciador',
+      difficulty: 'Media',
+      resumen: 'El ejemplo de Demacia y su combo E-Q, la iniciación más limpia del juego: bandera al suelo, salto hacia ella, aturdimiento en área. Con Cataclismo encierra al carry rival en una arena de la que nadie sale vivo.',
+      items: {
+        inicio: [[1039, 'Machete del Cazador'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+        core: [[1080, 'Piedra Espiritual'], [3209, 'Espíritu del Lagarto Anciano'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+        situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3026, 'Ángel de la Guarda'], [3071, 'La Cuchilla Negra']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Daño de Ataque x9', detalle: '+8.5 de AD: tu Q pega un % de vida máxima, pero el AD acelera el clear.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura, obligatorios en jungla.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: llegar al gank sin ser visto.' }
+      },
+      maestrias: {
+        reparto: '9/21/0',
+        clave: 'Iniciador resistente',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 9, detalle: 'Fuerza Bruta, Carnicero, Pericia con las Armas.' },
+          { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' }
+        ]
+      },
+      hechizos: [['SummonerSmite', 'Castigo'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'E', 'W'],
+      plan: {
+        early: 'El E-Q es tu gank: lanza la bandera por detrás del rival y salta hacia ella para empujarlo hacia tu carril. Funciona desde el nivel 3.',
+        mid: 'Con el Lagarto Anciano y Capa de Fuego Solar eres un peleador completo. Controla dragón: tu Q hace daño porcentual, así que los objetivos caen rápido.',
+        late: 'Tu Cataclismo aísla al carry rival dentro de un muro: úsalo para separar, no solo para atrapar. Un buen R decide la partida entera.'
+      },
+      tips: [
+        'La bandera (E) también sirve de escape: lánzala hacia un muro y salta para atravesar terreno.',
+        'El Cataclismo se puede cancelar reactivándolo: si atrapas al equipo equivocado, ábrelo antes de encerrar a tu propio equipo.',
+        'Tu Q reduce la armadura y hace daño porcentual: eres excelente contra tanques y contra objetivos neutrales.',
+        'El escudo pasivo de la W te da sustain en el clear: úsala cada vez que esté disponible en los campamentos.'
+      ]
+    }
+  ],
+
+  leona: [
+    {
+      name: 'Support — Amanecer (Iniciadora)',
+      season: 'S3',
+      modo: 'grieta',
+      role: 'Support',
+      style: 'Tanque / Control de masas',
+      difficulty: 'Baja',
+      resumen: 'La tanque solar que encadena tres controles seguidos y no suelta nunca: E para acercarse, Q para aturdir, R para clavar en el sitio. Leona no pokea ni cura — Leona señala a un rival y ese rival deja de existir.',
+      items: {
+        inicio: [[3302, 'Escudo Reliquia'], [2003, 'Poción de Vida'], [2044, 'Guardián Invisible']],
+        core: [[2049, 'Piedra de Visión'], [3111, 'Botas de Mercurio'], [3190, 'Medallón Solari de Hierro']],
+        situacionales: [[3110, 'Corazón de Hielo'], [3075, 'Malla de Espinas'], [3050, 'Heraldo de Zeke'], [3143, 'Presagio de Randuin']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Armadura x9', detalle: '+8.2 de armadura para el intercambio agresivo constante.' },
+        sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura: vas a comer todos los autos del ADC rival.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: pegarte al objetivo es literalmente tu kit entero.' }
+      },
+      maestrias: {
+        reparto: '0/21/9',
+        clave: 'Tanque de iniciación',
+        arboles: [
+          { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Explorador.' }
+        ]
+      },
+      hechizos: [['SummonerExhaust', 'Agotamiento'], ['SummonerFlash', 'Destello']],
+      habilidades: ['E', 'Q', 'W'],
+      plan: {
+        early: 'Nivel 2 con E disponible: salta al ADC rival, Q para aturdir y deja que tu tirador haga el resto. Cada intercambio con tu combo completo lo ganas tú.',
+        mid: 'Con el Medallón y la Piedra de Visión eres un muro andante. Busca picks por el río: tu E desde niebla de guerra es un kill garantizado.',
+        late: 'Elige un objetivo y encadena: R (aturde en área) → E (llegar) → Q (aturdir). Nadie se libra de tres controles seguidos.'
+      },
+      tips: [
+        'La pasiva marca al objetivo: tus aliados hacen daño extra al golpear al marcado. Comunica a quién marcas.',
+        'El escudo (W) te da armadura y RM mientras dura: actívalo antes de saltar, no después.',
+        'El Amanecer Solar (R) tiene alcance enorme: puedes iniciar peleas desde detrás de tu propia frontline.',
+        'Tu E te acerca pero también te compromete: sin Destello disponible, piensa dos veces antes de saltar.'
+      ]
+    }
+  ],
+
 };
+
+// ---------- Builds adicionales para campeones ya definidos arriba ----------
+// (se añaden con push para no sobrescribir sus builds existentes)
+BUILDS.lux.push(
+    {
+      name: 'ARAM — Artillería pura',
+      season: 'S3',
+      modo: 'aram',
+      role: 'Mid',
+      style: 'Maga / Poke',
+      difficulty: 'Baja',
+      resumen: 'Lux en ARAM es sencillamente injusta: un carril recto, cinco rivales sin escapatoria y una Chispa Final que atraviesa la pantalla entera. Si el enemigo no puede acercarse, no puede ganar.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida']],
+        core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+        situacionales: [[3135, 'Bastón del Vacío'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3165, 'Morellonomicón']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: en ARAM nadie compra RM a tiempo.' },
+        sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18 para aguantar el poke rival.' },
+        glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al 18.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP: el poke duele desde el minuto 1.' }
+      },
+      maestrias: {
+        reparto: '21/0/9',
+        clave: 'Poke a máxima distancia',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+          { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+        ]
+      },
+      hechizos: [['SummonerMana', 'Claridad'], ['SummonerFlash', 'Destello']],
+      habilidades: ['E', 'Q', 'W'],
+      plan: {
+        early: 'E al máximo alcance sin parar. En ARAM cada punto de vida quitado es permanente hasta que muera alguien: el desgaste ES la estrategia.',
+        mid: 'Tu escudo (W) protege a todo el equipo en línea recta: en un solo carril alcanza a los cinco. Es tan valioso como tu daño.',
+        late: 'Chispa Final con enfriamiento reducido: ejecuta a cualquiera que se retire con menos de media vida. Nunca camines delante de tu frontline.'
+      },
+      tips: [
+        'Claridad es el hechizo de ARAM por excelencia para Lux: maná infinito significa poke infinito.',
+        'La Q atrapa a varios en el carril estrecho de ARAM: una raíz doble es una pelea ganada.',
+        'Detona la pasiva con un auto tras cada habilidad, incluso en el poke a distancia.',
+        'Tu W en línea recta escuda a todo el equipo agrupado: úsalo antes de cada choque, no después.'
+      ]
+    }
+);
+
+BUILDS.sona.push(
+    {
+      name: 'ARAM — Auras y Crescendo',
+      season: 'S3',
+      modo: 'aram',
+      role: 'Support',
+      style: 'Enchanter / Poke',
+      difficulty: 'Baja',
+      resumen: 'Sona en ARAM es una batería infinita: poke con el Himno del Valor, curación en área que mantiene a cinco aliados en pie, y un Crescendo que atraviesa todo el carril y aturde al equipo entero. El soporte que gana ARAMs sola.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida']],
+        core: [[3174, 'Grial Impuro de Athene'], [3117, 'Botas de Movilidad'], [3190, 'Medallón Solari de Hierro']],
+        situacionales: [[3116, 'Cetro de Cristal de Rylai'], [3222, 'Crisol de Mikael'], [3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya']]
+      },
+      runas: {
+        marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de pen. mágica: tu Q pokea a cinco a la vez.' },
+        sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18: eres el objetivo prioritario de todo el equipo rival.' },
+        glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+        quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP: curas y poke escalan a la vez.' }
+      },
+      maestrias: {
+        reparto: '9/0/21',
+        clave: 'Auras, curación y enfriamientos',
+        arboles: [
+          { arbol: 'Ofensa', puntos: 9, detalle: 'Hechicería, Conocimiento Arcano — CDR y penetración para el poke.' },
+          { arbol: 'Utilidad', puntos: 21, detalle: 'Perspicacia del Invocador, Meditación, Fuerza Espiritual, Riqueza, Inteligencia, Cerebro.' }
+        ]
+      },
+      hechizos: [['SummonerMana', 'Claridad'], ['SummonerFlash', 'Destello']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'Q sin parar desde la línea trasera: alcanza a dos rivales cada vez y el acorde duplica el daño. Nadie puede acercarse a la torre contigo detrás.',
+        mid: 'Alterna auras: W cuando te pokeen, E cuando el equipo necesite reposicionarse, Q el resto del tiempo. Tu presencia sostiene a cinco personas a la vez.',
+        late: 'El Crescendo es la teamfight: un aturdimiento en línea sobre cinco rivales es la victoria. Guárdalo, no lo malgastes en el primero que veas.'
+      },
+      tips: [
+        'Claridad mantiene tus auras funcionando sin parar: en ARAM el maná es el único límite de Sona.',
+        'Mantente al borde del rango de tus auras: dan efecto a los aliados pero tú sigues fuera del peligro.',
+        'El acorde de la W reduce el daño del rival marcado: úsalo sobre el hipercarry enemigo.',
+        'Destello + Crescendo por el flanco pilla a todo el equipo agrupado: la jugada que gana ARAMs.'
+      ]
+    }
+);
+
+BUILDS.garen.push(
+    {
+      name: 'Top — Actual (Conquistador)',
+      season: 'ACT',
+      modo: 'grieta',
+      role: 'Top',
+      style: 'Juggernaut',
+      difficulty: 'Baja',
+      resumen: 'El Garen moderno cambia Warmog + Atma por Fuerza de Trinidad y Sterak: sigue girando, sigue ejecutando, pero ahora con Conquistador apilando curación en cada intercambio largo. La fantasía es la misma; los números, otro juego.',
+      items: {
+        inicio: [[1054, 'Escudo de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']],
+        core: [[3078, 'Fuerza de trinidad'], [3047, 'Botas blindadas'], [3053, 'Calibrador de Sterak'], [3742, 'Coraza del muerto']],
+        situacionales: [[3065, 'Rostro espiritual'], [3143, 'Presagio de Randuin'], [3075, 'Malla de espinas'], [6333, 'Baile de la muerte']]
+      },
+      runasModernas: {
+        principal: {
+          arbol: 'Precisión', icon: 'perk-images/Styles/7201_Precision.png',
+          runas: [
+            [8010, 'Conquistador', 'perk-images/Styles/Precision/Conqueror/Conqueror.png'],
+            [9111, 'Triunfo', 'perk-images/Styles/Precision/Triumph.png'],
+            [9104, 'Leyenda: Presteza', 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png'],
+            [8014, 'Golpe de gracia', 'perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png']
+          ]
+        },
+        secundario: {
+          arbol: 'Valor', icon: 'perk-images/Styles/7204_Resolve.png',
+          runas: [
+            [8473, 'Revestimiento de huesos', 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'],
+            [8451, 'Sobrecrecimiento', 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png']
+          ]
+        },
+        fragmentos: ['Fuerza adaptativa', 'Fuerza adaptativa', 'Vida escalada']
+      },
+      hechizos: [['SummonerFlash', 'Destello'], ['SummonerTeleport', 'Teleportación']],
+      habilidades: ['E', 'Q', 'W'],
+      plan: {
+        early: 'Conquistador quiere intercambios largos: entra con Q para el silencio, gira con E y deja que las cargas se apilen. Tu pasiva sigue regenerando lo que ellos no pueden.',
+        mid: 'Trinidad completada es tu pico: cada Q procea Brillo. Empuja el lateral y obliga a que manden a dos — con Sterak sobrevives a cualquier 2v1.',
+        late: 'Sigue girando sobre sus carries y ejecutando con R. Golpe de gracia amplifica tu daño contra objetivos bajos: el remate llega antes de lo que creen.'
+      },
+      tips: [
+        'Golpe de gracia hace un 8% más de daño contra rivales por debajo del 40%: se combina perfectamente con la ejecución de tu R.',
+        'Botas blindadas contra composiciones de autoataques: el 12% de reducción es enorme para un juggernaut.',
+        'Sterak evita que te borren en el burst: es tu objeto anti-asesino obligatorio.',
+        'La ejecución de la R sigue siendo daño verdadero: apréndete el umbral en el parche actual, ha cambiado.'
+      ]
+    }
+);
+
+BUILDS.ahri.push(
+    {
+      name: 'Mid — Actual (Cometa arcano)',
+      season: 'ACT',
+      modo: 'grieta',
+      role: 'Mid',
+      style: 'Maga / Asesina',
+      difficulty: 'Media',
+      resumen: 'La Ahri de hoy sustituye la Tenaza por el Eco de Luden y el Cometa arcano: sigue siendo el Encanto lo que decide, pero ahora la movilidad de la ultimate se recarga con asesinatos y el burst llega desde ángulos que en Season 3 no existían.',
+      items: {
+        inicio: [[1056, 'Anillo de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']],
+        core: [[6655, 'Eco de Luden'], [3020, 'Botas de hechicero'], [3089, 'Sombrero mortal de Rabadon']],
+        situacionales: [[3157, 'Reloj de arena de Zhonya'], [3135, 'Bastón del Vacío'], [3165, 'Morellonomicón'], [3116, 'Cetro de cristal de Rylai']]
+      },
+      runasModernas: {
+        principal: {
+          arbol: 'Brujería', icon: 'perk-images/Styles/7202_Sorcery.png',
+          runas: [
+            [8229, 'Cometa arcano', 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png'],
+            [8226, 'Banda de maná', 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png'],
+            [8210, 'Trascendencia', 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'],
+            [8237, 'Piroláser', 'perk-images/Styles/Sorcery/Scorch/Scorch.png']
+          ]
+        },
+        secundario: {
+          arbol: 'Inspiración', icon: 'perk-images/Styles/7203_Whimsy.png',
+          runas: [
+            [8304, 'Calzado mágico', 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'],
+            [8347, 'Perspicacia cósmica', 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png']
+          ]
+        },
+        fragmentos: ['Velocidad de habilidad', 'Fuerza adaptativa', 'Vida escalada']
+      },
+      hechizos: [['SummonerFlash', 'Destello'], ['SummonerDot', 'Ignición']],
+      habilidades: ['Q', 'W', 'E'],
+      plan: {
+        early: 'El Cometa arcano se activa fácil con el Encanto: E acertado significa cometa garantizado y medio combo gratis. Empuja con Q y busca la línea de visión.',
+        mid: 'Eco de Luden marca tu primer pico. Con Encanto + combo completo borras a cualquier objetivo blando; rota a los laterales con la ultimate cargada.',
+        late: 'Tu ultimate recarga cargas al conseguir asesinatos: entra por el flanco, ejecuta al carry y sal con los dashes restantes. Nunca gastes los tres entrando.'
+      },
+      tips: [
+        'Piroláser premia el poke con hechizos: usa la Q sobre el rival aunque solo roce, el daño extra se acumula toda la fase de líneas.',
+        'Banda de maná resuelve el problema de maná de Ahri en el early: aprovecha para pokear sin miedo desde el nivel 3.',
+        'El Encanto sigue siendo tu única iniciación real: sin él disponible, no hay pelea.',
+        'La ultimate resetea cargas con cada asesinato o asistencia: en peleas de equipo puedes atravesar el mapa entero.'
+      ]
+    }
+);
 
 // ---------- Montaje final ----------
 function autoColor(str) {
@@ -1121,15 +1894,41 @@ function autoColor(str) {
   return `hsl(${h}, 45%, 48%)`;
 }
 
+// Una build de la Season 3 vale también para LoL Classic (mismo meta base).
+// Si la build declara `ediciones` explícitamente, se respeta.
+const EDICIONES_POR_SEASON = {
+  S3: ['classic', 's3'],
+  S2: ['s2'],
+  S1: ['s1'],
+  ACT: ['actual']
+};
+
+function normalizarBuild(b) {
+  const season = b.season || 'S3';
+  return Object.assign({}, b, {
+    season,
+    modo: b.modo || 'grieta',
+    ediciones: b.ediciones || EDICIONES_POR_SEASON[season] || ['classic'],
+    parche: b.parche || PATCHES[season] || DD_VER
+  });
+}
+
 const CHAMPIONS = ROSTER.map(([dd, name, title, roles]) => {
   const id = dd.toLowerCase();
   return {
     id, dd, name, title, roles,
     color: COLORS[id] || autoColor(dd),
     lema: LEMAS[id] || '',
-    builds: BUILDS[id] || []
+    builds: (BUILDS[id] || []).map(normalizarBuild)
   };
 });
+
+// Devuelve las builds que encajan con la edición y el modo seleccionados
+function buildsDe(champ, edicion, modo) {
+  return champ.builds.filter(b =>
+    (edicion === 'todas' || b.ediciones.includes(edicion)) &&
+    (modo === 'todos' || b.modo === modo));
+}
 
 // ---------- Metadatos de seasons ----------
 const SEASONS_META = {
