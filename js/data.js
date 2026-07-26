@@ -177,6 +177,145 @@ const LEMAS = {
   ezreal: '«¿Mapas? Los mapas son para los que se pierden.»'
 };
 
+// ---------- Presets de runas clásicas ----------
+// Las páginas de runas de la Season 3 se repetían por arquetipo: estas son las
+// estándar de cada rol. Una build puede usar un preset o declarar las suyas.
+const R = {
+  apMid: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de penetración mágica: los magos clásicos viven de atravesar la RM base del rival.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura contra los asesinos AD y los ganks tempranos.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Poder de Habilidad Progresivo x9', detalle: '+27.7 de AP al nivel 18: escalado puro hacia el mid game.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP planos desde el minuto uno.' }
+  },
+  apMidPlano: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de penetración mágica para que el combo entre sin descuentos.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura.' },
+    glifo: { img: 'b_3_1.png', nombre: 'Glifos de Poder de Habilidad x9', detalle: '+11 de AP plano: tu burst duele desde el nivel 2.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Poder de Habilidad x3', detalle: '+15 de AP.' }
+  },
+  adTop: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Daño de Ataque x9', detalle: '+8.5 de AD: last hits limpios e intercambios que ganas tú.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura, el estándar innegociable del carril superior.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18, preparando el mid game.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Daño de Ataque x3', detalle: '+6.75 de AD.' }
+  },
+  tankTop: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Armadura x9', detalle: '+8.2 de armadura: neutralizan el daño físico del carril superior.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura para ganar la guerra de desgaste.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: pegarte al rival y rotar antes.' }
+  },
+  jungla: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Daño de Ataque x9', detalle: '+8.5 de AD: clear más rápido y ganks que ya duelen al nivel 3.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura, imprescindibles con los campamentos clásicos.' },
+    glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM para invadir sin miedo.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5%: llegar al gank medio segundo antes lo cambia todo.' }
+  },
+  junglaAP: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de penetración mágica: todo tu daño de clear y gank es mágico.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura para sobrevivir al primer clear.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Velocidad de Movimiento x3', detalle: '+4.5% para los ganks desde niebla de guerra.' }
+  },
+  adc: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Daño de Ataque x9', detalle: '+8.5 de AD: cada last hit y cada intercambio del 2v2 dependen de esto.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura para el duelo eterno de la botlane.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18, cuando los magos empiezan a buscarte.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Daño de Ataque x3', detalle: '+6.75 de AD.' }
+  },
+  adcVelocidad: {
+    marca: { img: 'r_3_1.png', nombre: 'Marcas de Velocidad de Ataque x9', detalle: '+15.3% de velocidad de ataque: tu daño está en los autos, no en las habilidades.' },
+    sello: { img: 'y_1_1.png', nombre: 'Sellos de Armadura x9', detalle: '+12.7 de armadura.' },
+    glifo: { img: 'b_4_1.png', nombre: 'Glifos de Resistencia Mágica Progresiva x9', detalle: '+24.3 RM al 18.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Daño de Ataque x3', detalle: '+6.75 de AD.' }
+  },
+  support: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Armadura x9', detalle: '+8.2 de armadura contra los ataques básicos del ADC rival.' },
+    sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18: cuerpo para tanquear lo que va dirigido a tu carry.' },
+    glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano contra el poke mágico.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Oro x3', detalle: '+3 de oro por 10 segundos: la economía clásica del soporte sin farm.' }
+  },
+  supportAP: {
+    marca: { img: 'r_1_1.png', nombre: 'Marcas de Penetración Mágica x9', detalle: '+7.8 de penetración mágica: tu poke de línea escuece de verdad.' },
+    sello: { img: 'y_3_1.png', nombre: 'Sellos de Vida Progresiva x9', detalle: '+175 de vida al 18 para aguantar el foco enemigo.' },
+    glifo: { img: 'b_3_1.png', nombre: 'Glifos de Resistencia Mágica x9', detalle: '+12 de RM plano.' },
+    quinta: { img: 'bl_1_1.png', nombre: 'Quintaesencias de Oro x3', detalle: '+3 de oro por 10 segundos.' }
+  }
+};
+
+// ---------- Presets de maestrías clásicas (30 puntos) ----------
+const M = {
+  ap: {
+    reparto: '21/0/9', clave: 'Ofensa arcana con utilidad',
+    arboles: [
+      { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+      { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Mente Expandida.' }
+    ]
+  },
+  apDef: {
+    reparto: '21/9/0', clave: 'Ofensa arcana con colchón',
+    arboles: [
+      { arbol: 'Ofensa', puntos: 21, detalle: 'Hechicería, Mente Arcana, Conocimiento Arcano, Poder Arcano, Estragos, Verdugo.' },
+      { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' }
+    ]
+  },
+  ad: {
+    reparto: '21/9/0', clave: 'Ofensa física completa',
+    arboles: [
+      { arbol: 'Ofensa', puntos: 21, detalle: 'Furia, Carnicero, Pericia con las Armas, Frenesí, Letalidad, Verdugo.' },
+      { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' }
+    ]
+  },
+  adPen: {
+    reparto: '21/9/0', clave: 'Ofensa física con penetración',
+    arboles: [
+      { arbol: 'Ofensa', puntos: 21, detalle: 'Furia, Carnicero, Pericia con las Armas, Letalidad, Hendidura, Verdugo.' },
+      { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Piel Dura.' }
+    ]
+  },
+  bruiser: {
+    reparto: '9/21/0', clave: 'Aguante con presencia ofensiva',
+    arboles: [
+      { arbol: 'Ofensa', puntos: 9, detalle: 'Fuerza Bruta, Carnicero, Pericia con las Armas.' },
+      { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' }
+    ]
+  },
+  tank: {
+    reparto: '0/21/9', clave: 'Tanque puro con utilidad',
+    arboles: [
+      { arbol: 'Defensa', puntos: 21, detalle: 'Durabilidad, Perseverancia, Dureza, Armadura Afilada, Cicatrices de Veterano, Guardia de Honor.' },
+      { arbol: 'Utilidad', puntos: 9, detalle: 'Perspicacia del Invocador, Meditación, Celeridad.' }
+    ]
+  },
+  support: {
+    reparto: '0/9/21', clave: 'Utilidad total: oro, visión y enfriamientos',
+    arboles: [
+      { arbol: 'Defensa', puntos: 9, detalle: 'Durabilidad, Perseverancia, Dureza.' },
+      { arbol: 'Utilidad', puntos: 21, detalle: 'Perspicacia del Invocador, Meditación, Explorador, Avaricia, Riqueza, Carterista, Cerebro.' }
+    ]
+  }
+};
+
+// Objetos que se repiten en casi todas las builds clásicas
+const START_TOP = [[1054, 'Escudo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']];
+const START_AP = [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']];
+const START_AD = [[1055, 'Espada de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']];
+const START_JG = [[1039, 'Machete del Cazador'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']];
+const START_SUP = [[3301, 'Moneda Antigua'], [2003, 'Poción de Vida'], [2044, 'Guardián Invisible']];
+const START_SUP_T = [[3302, 'Escudo Reliquia'], [2003, 'Poción de Vida'], [2044, 'Guardián Invisible']];
+
+const SS = {
+  flash: ['SummonerFlash', 'Destello'],
+  ignite: ['SummonerDot', 'Ignición'],
+  tp: ['SummonerTeleport', 'Teleportación'],
+  smite: ['SummonerSmite', 'Castigo'],
+  exhaust: ['SummonerExhaust', 'Agotamiento'],
+  heal: ['SummonerHeal', 'Curación'],
+  barrier: ['SummonerBarrier', 'Barrera'],
+  ghost: ['SummonerHaste', 'Fantasmal'],
+  clarity: ['SummonerMana', 'Claridad']
+};
+
 // ---------- Builds detalladas por campeón ----------
 const BUILDS = {
   taric: [
@@ -1179,7 +1318,7 @@ const BUILDS = {
       items: {
         inicio: [[1055, 'Espada de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']],
         core: [[3152, 'Cintomisil hextech'], [3006, 'Grebas de berserker'], [3078, 'Fuerza de trinidad'], [3042, 'Muramana']],
-        situacionales: [[6694, 'Rencor de Serylda'], [3036, 'Recuerdos de lord Dominik'], [3139, 'Cimitarra mercurial'], [3026, 'Ángel de la guarda']]
+        situacionales: [[6694, 'Rencor de Serylda'], [3035, 'Últimas Palabras'], [3139, 'Cimitarra mercurial'], [3026, 'Ángel de la guarda']]
       },
       runasModernas: {
         principal: {
@@ -1887,48 +2026,809 @@ BUILDS.ahri.push(
     }
 );
 
-// ---------- Montaje final ----------
-function autoColor(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 360;
-  return `hsl(${h}, 45%, 48%)`;
-}
+// ---------- Roster completo: carril superior ----------
+Object.assign(BUILDS, {
+  chogath: [{
+    name: 'Top — Acumular pila',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Tanque / Devorador', difficulty: 'Baja',
+    resumen: 'El terror del Vacío crece literalmente: cada Festín devora a un rival o monstruo y suma vida máxima permanente. Con seis pilas y la Vara de las Edades, Cho\'Gath se convierte en una montaña con aturdimiento, silencio y una ejecución de daño verdadero.',
+    items: {
+      inicio: START_TOP,
+      core: [[3027, 'Vara de las Edades'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+      situacionales: [[3065, 'Rostro Espiritual'], [3143, 'Presagio de Randuin'], [3083, 'Armadura de Warmog'], [3157, 'Reloj de Arena de Zhonya']]
+    },
+    runas: R.tankTop, maestrias: M.bruiser,
+    hechizos: [SS.tp, SS.flash], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Farmea con la E (daño en área a los súbditos) y devora con R cada oleada grande: cada pila son 90 de vida permanente que el rival no puede quitarte.',
+      mid: 'Con Vara de las Edades y seis pilas eres un muro con control de masas. Tu Q (pinchos) y W (silencio) encadenan a cualquiera que intente pasar.',
+      late: 'Guarda el Festín para ejecutar al carry: es daño verdadero que ignora toda resistencia. Iniciar con Q sobre su backline es tu jugada de teamfight.'
+    },
+    tips: [
+      'El Festín hace daño verdadero: contra tanques con 4000 de vida sigue siendo la ejecución más fiable del juego.',
+      'Devora súbditos grandes y monstruos de jungla cuando no haya campeones: la vida máxima es la vida máxima.',
+      'La Q eleva por los aires: úsala para cortar dashes y persecuciones, no solo por el daño.',
+      'El silencio de la W dura casi 2 segundos: reserva la habilidad para el mago rival, no para farmear.'
+    ]
+  }],
 
-// Una build de la Season 3 vale también para LoL Classic (mismo meta base).
-// Si la build declara `ediciones` explícitamente, se respeta.
-const EDICIONES_POR_SEASON = {
-  S3: ['classic', 's3'],
-  S2: ['s2'],
-  S1: ['s1'],
-  ACT: ['actual']
-};
+  drmundo: [{
+    name: 'Top — Va donde quiere',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Tanque / Sustain', difficulty: 'Baja',
+    resumen: 'El loco de Zaun paga sus habilidades con vida y las recupera todas con su ultimate. Con Visaje Espiritual amplificando esa regeneración y Warmog encima, Mundo se vuelve un problema imposible de matar que va exactamente donde le da la gana.',
+    items: {
+      inicio: START_TOP,
+      core: [[3111, 'Botas de Mercurio'], [3065, 'Rostro Espiritual'], [3083, 'Armadura de Warmog']],
+      situacionales: [[3068, 'Capa de Fuego Solar'], [3143, 'Presagio de Randuin'], [3075, 'Malla de Espinas'], [3110, 'Corazón de Hielo']]
+    },
+    runas: R.tankTop, maestrias: M.tank,
+    hechizos: [SS.tp, SS.flash], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Acosa con la cuchilla (Q): cuesta un porcentaje de vida actual, así que nunca te mata. Cada impacto ralentiza y te devuelve vida.',
+      mid: 'Visaje Espiritual multiplica la curación de tu ultimate. A partir de aquí ganas casi cualquier 1v1 del carril superior por pura resistencia.',
+      late: 'Eres el iniciador que absorbe todo: entra el primero con la ultimate activa, absorbe el CC y deja que tu equipo limpie mientras te persiguen sin éxito.'
+    },
+    tips: [
+      'La Q cuesta vida ACTUAL, no máxima: nunca te suicidas usándola, por muy bajo que estés.',
+      'Rostro Espiritual antes que Warmog: la sinergia con tu R es enorme y además te da RM.',
+      'Tu W (incinerar) es tu daño de clear y de persecución: mantenla activa mientras persigas.',
+      'La ultimate te da velocidad de movimiento además de la regeneración: es escape Y persecución.'
+    ]
+  }],
 
-function normalizarBuild(b) {
-  const season = b.season || 'S3';
-  return Object.assign({}, b, {
-    season,
-    modo: b.modo || 'grieta',
-    ediciones: b.ediciones || EDICIONES_POR_SEASON[season] || ['classic'],
-    parche: b.parche || PATCHES[season] || DD_VER
-  });
-}
+  gangplank: [{
+    name: 'Top — Parrrley (oro infinito)',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Peleador / Poke', difficulty: 'Media',
+    resumen: 'El azote de los mares farmea a distancia con Parrrley y gana oro extra por cada last hit robado. Con Fuerza de Trinidad procea el Brillo en cada disparo y su Naranjas limpia todo el control de masas del rival: un top laner que nunca se queda quieto ni sin dinero.',
+    items: {
+      inicio: START_AD,
+      core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3031, 'Filo Infinito'], [3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3072, 'La Sanguinaria']]
+    },
+    runas: R.adTop, maestrias: M.ad,
+    hechizos: [SS.tp, SS.flash], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Parrrley (Q) los súbditos a distancia: es oro extra en cada last hit y poke gratis al rival. Nunca te acerques si no hace falta.',
+      mid: 'Con la ventaja de oro de Parrrley llegas a Trinidad antes que nadie. Tu ultimate global asiste a los otros carriles: es ralentización y daño en área en todo el mapa.',
+      late: 'Divide y presiona: tu Q sigue farmeando oro y tu R decide peleas al otro lado del mapa. Con Naranjas eres inmune a la iniciación clave del rival.'
+    },
+    tips: [
+      'Parrrley da oro extra SOLO si mata: acostúmbrate al ritmo de last hit con la Q.',
+      'Las Naranjas (W) limpian TODO el CC además de curar: guárdalas para el aturdimiento importante, no para el poke.',
+      'La ultimate revela y ralentiza en área: úsala para asegurar objetivos y cortar retiradas globalmente.',
+      'La W también cura veneno e igniciones: contra Teemo o un Ignite mal usado, ganas el intercambio gratis.'
+    ]
+  }],
 
-const CHAMPIONS = ROSTER.map(([dd, name, title, roles]) => {
-  const id = dd.toLowerCase();
-  return {
-    id, dd, name, title, roles,
-    color: COLORS[id] || autoColor(dd),
-    lema: LEMAS[id] || '',
-    builds: (BUILDS[id] || []).map(normalizarBuild)
-  };
+  kayle: [{
+    name: 'Top — Híbrida (Nashor)',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Híbrida / Escalado', difficulty: 'Media',
+    resumen: 'La Justiciera escala como pocos: sus autoataques a distancia con el Reproche Divino convierten cada intercambio en una victoria, y su ultimate hace INVULNERABLE a cualquier aliado durante 3 segundos. Con Diente de Nashor, sus autos híbridos derriten todo.',
+    items: {
+      inicio: START_AP,
+      core: [[3115, 'Diente de Nashor'], [3020, 'Botas de Hechicero'], [3100, 'Perdición del Liche']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3026, 'Ángel de la Guarda']]
+    },
+    runas: R.apMid, maestrias: M.apDef,
+    hechizos: [SS.tp, SS.flash], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Con la E activa atacas a distancia y con daño mágico extra: acosa al rival cuerpo a cuerpo sin recibir nada a cambio. Es el intercambio más injusto del top.',
+      mid: 'Nashor completado es tu pico: autos rapidísimos con daño mágico en área. Tu ultimate salva a cualquier aliado de la muerte segura — vale más que cualquier kill.',
+      late: 'Eres una carry a distancia con inmunidad de bolsillo. Usa la ulti sobre el que enfoquen, no sobre ti, y castiga desde detrás con la E siempre activa.'
+    },
+    tips: [
+      'Intervención (R) da invulnerabilidad total: úsala en el aliado clave, incluso si eso significa morir tú.',
+      'Con la E activa tus autos son a distancia: es tu botón de "gano este intercambio" en la fase de líneas.',
+      'La Q reduce armadura y RM: lánzala antes del intercambio largo, no durante.',
+      'Escalas muchísimo: si el early va mal, farmea seguro. Kayle a los 15 es otra campeona.'
+    ]
+  }],
+
+  singed: [{
+    name: 'Top — Veneno y caos',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Tanque / Split push', difficulty: 'Media',
+    resumen: 'El químico loco no juega a lo mismo que tú: corre en círculos dejando veneno, lanza por los aires al que le persiga y convierte cada gank en tres muertes enemigas. Vara de las Edades y Rylai lo hacen imposible de alcanzar e imposible de escapar.',
+    items: {
+      inicio: [[1054, 'Escudo de Doran'], [2003, 'Poción de Vida'], [3340, 'Tótem Guardián']],
+      core: [[3027, 'Vara de las Edades'], [3111, 'Botas de Mercurio'], [3116, 'Cetro de Cristal de Rylai']],
+      situacionales: [[3151, 'Tormento de Liandry'], [3065, 'Rostro Espiritual'], [3143, 'Presagio de Randuin'], [3157, 'Reloj de Arena de Zhonya']]
+    },
+    runas: R.tankTop, maestrias: M.tank,
+    hechizos: [SS.tp, SS.ghost], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Enciende el veneno y camina. Literalmente: farmea pasando por encima de la oleada y castiga cualquier acercamiento con el Lanzamiento (E).',
+      mid: 'Vara de las Edades + Rylai y ya nadie te alcanza. Tu trabajo es empujar un lateral eternamente y sobrevivir a los 2v1 y 3v1 que provoques.',
+      late: 'Eres el mejor split pusher del juego clásico. Con la ultimate activa, corre entre su equipo dejando veneno: el que te persiga acaba lanzado hacia los tuyos.'
+    },
+    tips: [
+      'El Lanzamiento (E) tiene el alcance justo para sorprender: gira en seco a mitad de una huida y lánzalo hacia tu torre.',
+      'La Cola Adhesiva (W) sobre el punto de fuga del rival lo condena: colócala DELANTE de él, no bajo sus pies.',
+      'Tu ultimate da estadísticas masivas: actívala antes de entrar a cualquier pelea o persecución.',
+      'La estrategia del "Singed proxy": farmea entre las torres enemigas para desquiciar al rival. Alto riesgo, alta recompensa.'
+    ]
+  }],
+
+  sion: [{
+    name: 'Top — Hacha acumulada (pre-rework)',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Peleador / Escalado AD', difficulty: 'Baja',
+    resumen: 'El Sion clásico, antes de su reforma: cada asesinato con Enfurecer suma daño de ataque permanente, y su ultimate le devuelve vida con cada golpe. Un juggernaut sencillo y brutal que apila hacha hasta volverse imparable.',
+    items: {
+      inicio: START_TOP,
+      core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+      situacionales: [[3083, 'Armadura de Warmog'], [3005, 'Empalador de Atma'], [3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual']]
+    },
+    runas: R.adTop, maestrias: M.bruiser,
+    hechizos: [SS.tp, SS.flash], habilidades: ['W', 'Q', 'E'],
+    plan: {
+      early: 'Apila con Enfurecer: cada súbdito que mates suma AD permanente. Usa el Golpe Poderoso (Q) para aturdir cuando el rival se acerque a la oleada.',
+      mid: 'Con las pilas acumuladas y Trinidad, tus intercambios son demoledores. Tu ultimate te da chupavidas masivo: entra a los 2v2 sin miedo.',
+      late: 'Eres un peleador de sostenimiento puro: la ulti convierte todo tu daño en curación. Aturde al carry y quédate encima hasta que caiga.'
+    },
+    tips: [
+      'Cada last hit con Enfurecer activo suma AD para el resto de la partida: nunca lo desactives mientras farmeas.',
+      'El escudo (W) explota al terminar haciendo daño en área: úsalo al inicio del intercambio para el escudo Y el daño.',
+      'La ultimate da chupavidas y velocidad de ataque: actívala ANTES del combate, no cuando ya estés bajo.',
+      'Este es el Sion pre-rework de LoL Classic: nada que ver con el tanque moderno que carga con la Q.'
+    ]
+  }],
+
+  teemo: [{
+    name: 'Top — Setas y veneno',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Poke / Trampas', difficulty: 'Baja',
+    resumen: 'El demonio del Yordle: ciega a los AD dejándolos inofensivos, envenena a distancia y siembra el mapa entero de setas invisibles. Con Liandry y Nashor, cada trampa de Teemo hace un daño desproporcionado, y el mapa deja de ser seguro para el rival.',
+    items: {
+      inicio: START_AP,
+      core: [[3115, 'Diente de Nashor'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3116, 'Cetro de Cristal de Rylai'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío']]
+    },
+    runas: R.apMid, maestrias: M.apDef,
+    hechizos: [SS.ignite, SS.flash], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Ciega (Q) al top rival cada vez que intente autoatacarte: si es un AD como Tryndamere o Jax, la línea es tuya gratis.',
+      mid: 'Siembra setas en cada arbusto del río y en las entradas de tu jungla. Con Liandry, cada seta pisada quema un porcentaje de vida enorme.',
+      late: 'No pelees de frente: envenena, siembra y empuja el lateral. Tu mapa minado gana peleas en las que ni siquiera estás presente.'
+    },
+    tips: [
+      'La ceguera anula TODOS los autoataques: contra un ADC en teamfight vale más que cualquier daño.',
+      'Las setas duran 5 minutos: siembra antes de barón y dragón, no cuando ya esté empezando la pelea.',
+      'Liandry se combina con el veneno de tu E: es daño porcentual continuo contra tanques.',
+      'Tu W te da un pico de velocidad al salir de combate: úsala para reposicionarte, no para perseguir.'
+    ]
+  }],
+
+  tryndamere: [{
+    name: 'Top — Furia y crítico',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Duelista / Split push', difficulty: 'Baja',
+    resumen: 'El rey bárbaro no puede morir durante 5 segundos, y en 5 segundos con Filo Infinito puede matar a cualquiera. Un duelista puro que acumula Furia con cada crítico y convierte cualquier 1v1 en un asunto ya resuelto.',
+    items: {
+      inicio: START_AD,
+      core: [[3006, 'Grebas de Berserker'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral']],
+      situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras'], [3143, 'Presagio de Randuin']]
+    },
+    runas: R.adTop, maestrias: M.ad,
+    hechizos: [SS.tp, SS.flash], habilidades: ['E', 'W', 'Q'],
+    plan: {
+      early: 'Acumula Furia con los críticos sobre súbditos: al 100 de Furia tu Q cura muchísimo. Intercambia solo con la barra llena.',
+      mid: 'Filo Infinito y a hacer split push. Tu ultimate te hace invulnerable: puedes torretear bajo torre enemiga y salir vivo con el dash de la E.',
+      late: 'Presiona un lateral eternamente y obliga a que manden dos. Si te encierran, R + E es una fuga que casi nadie puede castigar.'
+    },
+    tips: [
+      'Furia Incontenible (R) evita la muerte 5 segundos, no cura: úsala ANTES del golpe letal, no después.',
+      'La Q cura más cuanta más Furia tengas: gasta la barra solo cuando lo necesites de verdad.',
+      'Tu W reduce el AD del rival y su velocidad de movimiento si mira hacia otro lado: úsala al iniciar cada duelo.',
+      'La E resetea con cada kill: en el caos de una pelea puedes atravesar el mapa entero saltando.'
+    ]
+  }],
+
+  monkeyking: [{
+    name: 'Top — Engaño y ciclón',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Peleador / Burst', difficulty: 'Media',
+    resumen: 'El rey de los monos entra con un clon, aparece por detrás y lanza a todo el equipo enemigo por los aires con el Ciclón. Con Fuerza de Trinidad y La Cuchilla Negra su combo borra a cualquier objetivo blando en dos segundos.',
+    items: {
+      inicio: START_TOP,
+      core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3068, 'Capa de Fuego Solar'], [3072, 'La Sanguinaria']]
+    },
+    runas: R.adTop, maestrias: M.adPen,
+    hechizos: [SS.tp, SS.flash], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Tu pasiva te da armadura y regeneración al lado de enemigos: los intercambios largos te favorecen. Q reduce armadura, así que ábrelos siempre con ella.',
+      mid: 'Con Trinidad, el combo E → Q → auto → R borra a un carry. Usa el clon (W) para engañar en los ganks: el rival siempre persigue al falso.',
+      late: 'Tu Ciclón sobre 3+ rivales agrupados gana la teamfight. Entra por el flanco con la E, ulti y deja que tu equipo recoja.'
+    },
+    tips: [
+      'El clon (W) te hace invisible un instante y él imita tu último ataque: es escape, engaño e iniciación.',
+      'La E ataca a todos los objetivos que atraviesa: salta sobre un súbdito para alcanzar al rival detrás.',
+      'El Ciclón te da velocidad de movimiento mientras gira: puedes perseguir mientras haces el daño.',
+      'Tu pasiva escala con el número de enemigos cerca: en teamfight eres mucho más duro de lo que parece.'
+    ]
+  }],
+
+  nidalee: [{
+    name: 'Top — Lanza y felina',
+    season: 'S3', modo: 'grieta', role: 'Top', style: 'Híbrida / Poke', difficulty: 'Alta',
+    resumen: 'Dos campeonas en una: en forma humana pokea con lanzas que atraviesan media pantalla y cura a sus aliados; en forma de puma salta, muerde y ejecuta. La Nidalee clásica premia la puntería como ninguna otra.',
+    items: {
+      inicio: START_AP,
+      core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3100, 'Perdición del Liche']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+    },
+    runas: R.apMid, maestrias: M.apDef,
+    hechizos: [SS.ignite, SS.flash], habilidades: ['Q', 'W', 'E'],
+    plan: {
+      early: 'Pokea con la lanza desde el máximo alcance y cúrate con la W. La trampa (E) da visión y ralentiza: colócala en el arbusto del río.',
+      mid: 'Athene resuelve tu maná y a partir de ahí es lanza sin parar. Cambia a puma solo para rematar: salto → garra → mordisco es una ejecución.',
+      late: 'Eres artillería con escape: pokea desde fuera de rango, y si alguien salta, cambias a puma y desapareces por los muros.'
+    },
+    tips: [
+      'La lanza hace más daño cuanto más lejos viaje: castiga desde el máximo alcance posible, no de cerca.',
+      'El mordisco de puma hace daño extra según la vida que le falte al rival: es una ejecución pura.',
+      'Cambiar de forma resetea los enfriamientos de la otra forma: alterna para tener siempre algo disponible.',
+      'Tus trampas dan visión permanente: siémbralas en las entradas de tu jungla como wards gratis.'
+    ]
+  }]
 });
 
-// Devuelve las builds que encajan con la edición y el modo seleccionados
-function buildsDe(champ, edicion, modo) {
-  return champ.builds.filter(b =>
-    (edicion === 'todas' || b.ediciones.includes(edicion)) &&
-    (modo === 'todos' || b.modo === modo));
-}
+// ---------- Roster completo: jungla ----------
+Object.assign(BUILDS, {
+  evelynn: [{
+    name: 'Jungla — Acecho invisible',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Asesina / Sigilo', difficulty: 'Media',
+    resumen: 'La Hacedora de Viudas de la era clásica se movía invisible por todo el mapa sin necesidad de ultimate. Con la Tenaza de Muerte Ígnea aparecía detrás del carry rival y lo borraba antes de que la barra de vida terminara de bajar.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3128, 'Tenaza de Muerte Ígnea'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+      situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3026, 'Ángel de la Guarda']]
+    },
+    runas: R.junglaAP, maestrias: M.ap,
+    hechizos: [SS.smite, SS.flash], habilidades: ['Q', 'W', 'E'],
+    plan: {
+      early: 'Tu sigilo permanente es información: merodea por los carriles sin ser vista y castiga cualquier posicionamiento adelantado. Los rivales sin visión juegan a ciegas.',
+      mid: 'Con la Tenaza, tu combo mata a cualquier objetivo blando: Tenaza → R (ralentiza en área) → Q → W → auto. Caza a los que roten solos.',
+      late: 'El late es tu enemigo: los rivales compran visión. Fuerza objetivos y peleas antes de que el mapa se llene de wards rosas.'
+    },
+    tips: [
+      'El sigilo clásico se rompe al atacar: acércate del todo antes de empezar el combo.',
+      'La Tenaza amplifica todo el daño posterior un 20%: ábrela SIEMPRE antes del resto del combo.',
+      'Tu ultimate ralentiza en área y hace daño: sirve para iniciar y para escapar.',
+      'Los wards rosas son tu perdición: acompaña a tu equipo para limpiarlos antes de cada objetivo.'
+    ]
+  }],
+
+  fiddlesticks: [{
+    name: 'Jungla — Tormenta de cuervos',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Mago de área / Emboscada', difficulty: 'Media',
+    resumen: 'El espantapájaros espera en un arbusto y cae sobre el equipo entero con la Tormenta de Cuervos. Con el Espíritu del Gólem Antiguo aguanta la jungla sin despeinarse, y su Terror deja sin jugar al carry rival durante segundos eternos.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3207, 'Espíritu del Gólem Antiguo'], [3020, 'Botas de Hechicero'], [3157, 'Reloj de Arena de Zhonya']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío'], [3165, 'Morellonomicon']]
+    },
+    runas: R.junglaAP, maestrias: M.apDef,
+    hechizos: [SS.smite, SS.flash], habilidades: ['W', 'E', 'Q'],
+    plan: {
+      early: 'Tu clear es lento pero tu Drenaje (W) te mantiene arriba. Gankea con el Terror (Q): dos segundos sin control es una kill garantizada.',
+      mid: 'Escóndete en un arbusto junto al objetivo y espera. La Tormenta de Cuervos sobre un equipo agrupado gana peleas antes de que empiecen.',
+      late: 'Eres el iniciador sorpresa: Destello + R en medio de su formación, y Zhonya inmediatamente después para sobrevivir a la canalización.'
+    },
+    tips: [
+      'El Terror (Q) es el CC más largo del juego clásico: úsalo sobre el que peor te venga, no sobre el más cercano.',
+      'Zhonya justo después de la R te permite seguir haciendo daño mientras eres intocable.',
+      'La Tormenta se canaliza 1.5 segundos y es visible: hazlo desde un arbusto o niebla de guerra.',
+      'Tu Silencio (E) rebota entre objetivos: es tu farmeo de campamentos y tu corte de canalizaciones.'
+    ]
+  }],
+
+  nunu: [{
+    name: 'Jungla — Robaobjetivos',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Tanque / Utilidad', difficulty: 'Baja',
+    resumen: 'El jinete de yetis clásico era el rey de los objetivos: su Devorar hace daño fijo enorme a los monstruos y roba dragones y barones desde el otro lado del muro. Encima acelera a su carry con Hervir Sangre y congela equipos enteros con el Cero Absoluto.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3207, 'Espíritu del Gólem Antiguo'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+      situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3075, 'Malla de Espinas'], [3110, 'Corazón de Hielo']]
+    },
+    runas: R.jungla, maestrias: M.tank,
+    hechizos: [SS.smite, SS.flash], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Devorar (Q) hace daño fijo y te cura: tu clear es rapidísimo y puedes invadir la jungla rival robándole los campamentos.',
+      mid: 'Eres el mejor ladrón de objetivos del juego: Castigo + Devorar roba cualquier dragón. Hervir Sangre sobre tu ADC lo convierte en una ametralladora.',
+      late: 'El Cero Absoluto es una amenaza en sí misma: cánalo desde detrás de un muro. Aunque no complete, ralentiza el 95% y desmonta la formación rival.'
+    },
+    tips: [
+      'Devorar hace 500+ de daño fijo a monstruos: sumado a Castigo, roba objetivos imposibles.',
+      'Hervir Sangre (W) da velocidad de ataque y movimiento a un aliado: es un buff de carry, úsalo siempre en peleas.',
+      'El Cero Absoluto ralentiza desde el primer instante aunque lo canceles: cánalo para desmontar una iniciación.',
+      'Tu bola de nieve (E) es un aturdimiento a distancia... si aciertas. Practica el liderazgo del proyectil.'
+    ]
+  }],
+
+  olaf: [{
+    name: 'Jungla — Ragnarok imparable',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Peleador / Duelista', difficulty: 'Baja',
+    resumen: 'El berserker que se vuelve inmune al control de masas: con Ragnarok activo, ningún aturdimiento, raíz ni supresión lo detiene. Cuanta menos vida tiene, más rápido ataca. Un jungla de early game que simplemente corre hacia ti y no hay forma de pararlo.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3209, 'Espíritu del Lagarto Anciano'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3072, 'La Sanguinaria'], [3153, 'Hoja del Rey Arruinado']]
+    },
+    runas: R.jungla, maestrias: M.adPen,
+    hechizos: [SS.smite, SS.flash], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Tu clear con la E (daño de vida verdadera) es de los más rápidos. Gankea pronto y a menudo: recoger el hacha (Q) reduce su enfriamiento y te acelera.',
+      mid: 'Con el Lagarto Anciano ganas cualquier duelo. Tu Ragnarok te hace inmune al CC: eres el mejor perseguidor y el peor rival para los tanques con control.',
+      late: 'Tu papel es entrar sobre el carry e ignorar todo lo que le tiren. Nadie te puede frenar — literalmente — así que elige objetivo y ve a por él.'
+    },
+    tips: [
+      'Recoger el hacha (Q) tras lanzarla reduce mucho su enfriamiento: apunta a donde vayas a caminar.',
+      'Ragnarok limpia y previene TODO el CC mientras dura, pero baja tu armadura: es ofensivo, no defensivo.',
+      'La E cuesta vida y hace daño verdadero: es tu clear y tu daño contra tanques.',
+      'Tu pasiva te da velocidad de ataque según la vida que te falte: pelear al límite es literalmente tu fantasía.'
+    ]
+  }],
+
+  rammus: [{
+    name: 'Jungla — Bola rodante (anti-AD)',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Tanque / Iniciador', difficulty: 'Baja',
+    resumen: 'OK. El armadurillo rueda desde el otro lado del mapa, aturde, provoca al carry rival y devuelve el daño con Malla de Espinas y su Caparazón Espinoso. Contra composiciones de ataques básicos es directamente injusto.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3207, 'Espíritu del Gólem Antiguo'], [3047, 'Tabi de Ninja'], [3075, 'Malla de Espinas']],
+      situacionales: [[3143, 'Presagio de Randuin'], [3068, 'Capa de Fuego Solar'], [3065, 'Rostro Espiritual'], [3110, 'Corazón de Hielo']]
+    },
+    runas: R.jungla, maestrias: M.tank,
+    hechizos: [SS.smite, SS.flash], habilidades: ['E', 'W', 'Q'],
+    plan: {
+      early: 'Tu Q (Bola Rodante) necesita distancia para acelerar: empieza el gank desde muy atrás y llega a máxima velocidad para el aturdimiento.',
+      mid: 'Con Malla de Espinas y armadura eres inmune al daño físico. Provoca (E) al hipercarry rival y deja que se mate solo pegándote.',
+      late: 'Tu única misión: rodar hasta el ADC enemigo, aturdirlo y provocarlo lejos de su equipo. La Provocación gana peleas por sí sola.'
+    },
+    tips: [
+      'La Bola Rodante acelera con la distancia recorrida: nunca la actives justo al lado del objetivo.',
+      'La Provocación (E) obliga al rival a autoatacarte 3 segundos: úsala sobre el carry, nunca sobre el tanque.',
+      'Tu W devuelve daño y aumenta resistencias: actívala al recibir el foco, no antes.',
+      'Tu pasiva convierte armadura en daño de ataque: comprar armadura te hace más fuerte en todos los sentidos.'
+    ]
+  }],
+
+  shaco: [{
+    name: 'Jungla — Cajas y engaño',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Asesino / Emboscada', difficulty: 'Alta',
+    resumen: 'El bufón siniestro clona su jungla con cajas, aparece invisible detrás del carry y lo apuñala por la espalda con daño crítico garantizado. El Farol Inquieto sostiene su clear y El Embrutecedor convierte cada puñalada en una sentencia.',
+    items: {
+      inicio: START_JG,
+      core: [[3154, 'Farol Inquieto'], [3111, 'Botas de Mercurio'], [3134, 'El Embrutecedor'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3031, 'Filo Infinito'], [3026, 'Ángel de la Guarda'], [3142, 'Filo Fantasmal de Youmuu'], [3072, 'La Sanguinaria']]
+    },
+    runas: R.jungla, maestrias: M.adPen,
+    hechizos: [SS.smite, SS.flash], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Coloca cajas en los campamentos antes de que aparezcan: tu primer clear es el más rápido del juego. Gankea al nivel 3 desde un arbusto con Engaño (Q).',
+      mid: 'Tu daño está en el primer golpe: Q por detrás (crítico garantizado) → E → auto. Si el rival sobrevive, retrocede y espera al siguiente enfriamiento.',
+      late: 'Las cajas defienden objetivos y cortan huidas. Tu clon (R) engaña y hace daño en área al morir: úsalo para escapar o para simular una entrada.'
+    },
+    tips: [
+      'Engaño (Q) desde detrás garantiza crítico: siempre aparece por la espalda del objetivo.',
+      'Las cajas hacen que el rival huya aterrorizado: colócalas en el paso estrecho, no en campo abierto.',
+      'Tu clon imita tus movimientos: úsalo para dividir la atención en las peleas confusas.',
+      'Eres un campeón de snowball: si el early no funciona, tu impacto cae en picado. Prioriza los carriles ganables.'
+    ]
+  }],
+
+  skarner: [{
+    name: 'Jungla — Empalar y arrastrar',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Peleador / Control', difficulty: 'Media',
+    resumen: 'La vanguardia de cristal tiene la ultimate más injusta del juego clásico: suprime a un rival y lo ARRASTRA consigo. Un solo Empalar sobre el carry enemigo lo saca de su equipo y lo mete en el tuyo. No hay contrajugada.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3209, 'Espíritu del Lagarto Anciano'], [3111, 'Botas de Mercurio'], [3025, 'Guantelete de Hielo']],
+      situacionales: [[3068, 'Capa de Fuego Solar'], [3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3110, 'Corazón de Hielo']]
+    },
+    runas: R.jungla, maestrias: M.bruiser,
+    hechizos: [SS.smite, SS.flash], habilidades: ['Q', 'W', 'E'],
+    plan: {
+      early: 'Tu clear con Q es sostenido y rápido gracias a la pasiva de cristal, que te acelera cerca de tu jungla. Gankea con la E (ralentiza) antes del 6.',
+      mid: 'Con el nivel 6 cada gank es una kill: Empalar al rival y arrastrarlo hasta tu torre. Con el Guantelete, nadie escapa de tu ralentización.',
+      late: 'Eres un secuestrador: espera a que el carry rival se posicione un pelo adelantado y llévatelo. La pelea se convierte en 5v4 al instante.'
+    },
+    tips: [
+      'Empalar (R) es supresión: solo la Cimitarra Mercurial o Limpiar lo cancelan.',
+      'Sigue moviéndote durante la ultimate: el rival va contigo hacia donde tú vayas.',
+      'Tu pasiva te da velocidad cerca de los cristales de tu jungla: rota por dentro, no por el río.',
+      'La Q resetea el autoataque y se recarga rápido: alterna Q y auto para el máximo daño sostenido.'
+    ]
+  }],
+
+  warwick: [{
+    name: 'Jungla — Sed de sangre (pre-rework)',
+    season: 'S3', modo: 'grieta', role: 'Jungla', style: 'Tanque / Duelista', difficulty: 'Baja',
+    resumen: 'El Warwick clásico: sustain infinito con Sed de Sangre, un clear que nunca baja de vida y la Represión Infinita, cinco segundos de supresión que sacan a un campeón entero de la pelea. Sencillo, sólido y con la mejor supervivencia de la jungla clásica.',
+    items: {
+      inicio: START_JG,
+      core: [[1080, 'Piedra Espiritual'], [3209, 'Espíritu del Lagarto Anciano'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+      situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3075, 'Malla de Espinas'], [3083, 'Armadura de Warmog']]
+    },
+    runas: R.jungla, maestrias: M.bruiser,
+    hechizos: [SS.smite, SS.flash], habilidades: ['W', 'Q', 'E'],
+    plan: {
+      early: 'Tu clear no pierde vida: la Q te cura un porcentaje y la W te da velocidad de ataque. Puedes farmear la jungla entera sin volver a base.',
+      mid: 'Con el Lagarto Anciano ganas los duelos prolongados. Tu ultimate sobre el carry rival lo saca 5 segundos de la pelea: es una ejecución garantizada.',
+      late: 'Eres un tanque con supresión de bolsillo. Entra sobre el objetivo prioritario, suprímelo y deja que tu equipo haga el resto mientras tú te curas.'
+    },
+    tips: [
+      'La Represión Infinita es supresión pura: solo la Cimitarra Mercurial la limpia.',
+      'Tu pasiva te acelera hacia los rivales con poca vida: eres el mejor perseguidor del juego clásico.',
+      'La W da velocidad de ataque a ti y a los aliados cercanos: es un buff de equipo, no solo tuyo.',
+      'Este es el Warwick pre-rework de LoL Classic: sin el aullido ni el salto largo del actual.'
+    ]
+  }]
+});
+
+// ---------- Roster completo: carril central ----------
+Object.assign(BUILDS, {
+  anivia: [{
+    name: 'Mid — Muro y combo',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Maga / Control', difficulty: 'Alta',
+    resumen: 'La criofénix controla el mapa con un muro que parte peleas por la mitad, aturde con su Ráfaga Glacial y ejecuta con el combo Q-R-E. Y si la matan, renace de su huevo. Con la Vara de las Edades y su maná infinito, Anivia no cede terreno jamás.',
+    items: {
+      inicio: START_AP,
+      core: [[3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+      situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai'], [3151, 'Tormento de Liandry']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Eres lenta y frágil hasta el 6: farmea con la E y guarda la Q. Tu Muro de Hielo (W) es tu salvavidas contra cualquier gank.',
+      mid: 'El combo completo es Q (aturde al detonar) → R (tormenta) → E (daño extra a congelados). Vara de las Edades te da el cuerpo y el maná para repetirlo sin parar.',
+      late: 'Controlas el campo de batalla: parte a su equipo con el muro, congela la zona con la R y ejecuta con la E. Tu huevo te da una vida extra en cada pelea.'
+    },
+    tips: [
+      'La E hace DOBLE daño contra objetivos congelados por tu Q o tu R: ese es todo tu daño.',
+      'El Muro de Hielo puede encerrar a un rival contra la pared o cortar a medio equipo: es la habilidad más decisiva del kit.',
+      'Tu pasiva (huevo) tiene enfriamiento largo: no juegues agresivo solo porque esté disponible.',
+      'La ultimate es un aura permanente: mantenla activa para farmear oleadas y desgastar en asedios.'
+    ]
+  }],
+
+  brand: [{
+    name: 'Mid — Incendio en cadena',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Área', difficulty: 'Media',
+    resumen: 'La venganza ardiente encadena hechizos: cada habilidad aplica Ceniza, y con tres cargas el rival explota aturdido. Su ultimate rebota entre objetivos multiplicando el daño en las peleas agrupadas. Un mago de área que castiga a los equipos que se juntan.',
+    items: {
+      inicio: START_AP,
+      core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+      situacionales: [[3151, 'Tormento de Liandry'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['W', 'Q', 'E'],
+    plan: {
+      early: 'Farmea con la W (Pilar de Llamas) y guarda la Q para cuando el rival esté marcado con Ceniza: así aturde de verdad.',
+      mid: 'Athene resuelve tu maná. El combo de kill es W → E → Q sobre un rival ya con Ceniza: aturdimiento y burst completo.',
+      late: 'Tu ultimate rebota más cuanto más agrupado esté su equipo: espera al choque y lánzala en medio. Puedes hacer daño a los cinco a la vez.'
+    },
+    tips: [
+      'La Q aturde SOLO si el objetivo ya tiene Ceniza: aplica primero con W o E.',
+      'La ultimate rebota más veces si hay más objetivos cerca: nunca la uses contra un rival aislado.',
+      'La W hace daño extra a los objetivos con Ceniza: es tu daño principal de farmeo y de pelea.',
+      'La pasiva explota al matar con Ceniza: farmear oleadas con la E es instantáneo.'
+    ]
+  }],
+
+  gragas: [{
+    name: 'Mid — Barril y empujón',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Peleador', difficulty: 'Media',
+    resumen: 'El camorrista mezcla daño mágico, aguante y desplazamientos: rueda el barril, se lanza en Golpe de Cuerpo y manda a todo un equipo por los aires con el Barril Explosivo. Con Vara de las Edades es un mago que además tanquea.',
+    items: {
+      inicio: START_AP,
+      core: [[3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3116, 'Cetro de Cristal de Rylai']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3151, 'Tormento de Liandry']]
+    },
+    runas: R.apMid, maestrias: M.apDef,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Farmea con el barril (Q) desde lejos y bebe (W) para reducir el daño de los intercambios. Tu sustain de línea es de los mejores del mid clásico.',
+      mid: 'El combo E (embestida) → Q → auto con W activa hace muchísimo daño. Roama a los laterales: tu desplazamiento atraviesa muros.',
+      late: 'El Barril Explosivo desmonta formaciones: úsalo para separar al carry de su equipo o para empujar a los rivales hacia los tuyos.'
+    },
+    tips: [
+      'El barril (Q) hace más daño cuanto más tiempo fermente antes de detonarlo: cuenta hasta dos si puedes.',
+      'La W reduce el daño recibido mientras bebes y potencia tu siguiente ataque: bébela antes de la embestida.',
+      'La R empuja en dirección contraria al centro de la explosión: apunta DETRÁS del rival para traértelo.',
+      'La E atraviesa paredes: es escape, iniciación y rotación por la jungla.'
+    ]
+  }],
+
+  heimerdinger: [{
+    name: 'Mid — Torretas y asedio',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Zonificación', difficulty: 'Media',
+    resumen: 'El inventor venerado no lucha: coloca torretas y deja que el carril se defienda solo. Con tres torretas activas y granadas aturdidoras, la línea de Heimerdinger es un territorio en el que el rival simplemente no puede pisar.',
+    items: {
+      inicio: START_AP,
+      core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+      situacionales: [[3151, 'Tormento de Liandry'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.barrier], habilidades: ['Q', 'W', 'E'],
+    plan: {
+      early: 'Coloca las torretas y farmea sin acercarte. Guarda las cargas para reponerlas: una línea con tres torretas es inatacable.',
+      mid: 'Las torretas defienden tu torre sola mientras rotas. La granada (E) aturde si golpea directo: es tu único CC, no lo malgastes.',
+      late: 'Eres el rey del asedio y de la defensa de objetivos: coloca torretas en el foso del barón y en las entradas. Tu ultimate potencia la habilidad siguiente enormemente.'
+    },
+    tips: [
+      'La ultimate potencia la SIGUIENTE habilidad: R + E es una granada gigante; R + Q es una torreta que hace daño de área masivo.',
+      'Las torretas heredan tu poder de habilidad: cada objeto AP las hace más peligrosas.',
+      'La granada aturde con impacto directo y solo ralentiza si es indirecta: apunta con cuidado.',
+      'Tus torretas dan visión: colócalas en arbustos del río como sistema de alerta temprana.'
+    ]
+  }],
+
+  malzahar: [{
+    name: 'Mid — Supresión y esbirros',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Control', difficulty: 'Baja',
+    resumen: 'El profeta del Vacío borra oleadas con el Enjambre y anula un campeón entero con Reino Aterrador: una supresión de 2.5 segundos que además hace un daño brutal. Simple, seguro y con la mejor herramienta anti-asesino del juego clásico.',
+    items: {
+      inicio: START_AP,
+      core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['W', 'E', 'Q'],
+    plan: {
+      early: 'Farmea con el Enjambre (W) y el Visiones Malignas (E): limpias oleadas enteras sin exponerte y empujas al rival bajo su torre.',
+      mid: 'Tu ultimate es una sentencia sobre cualquier campeón sin Cimitarra: R sobre el asesino que salte a tu equipo lo saca de la pelea entero.',
+      late: 'Eres el seguro anti-hipercarry: guarda la R para el Master Yi, el Tryndamere o el Katarina que entre. Un solo botón desactiva su partida.'
+    },
+    tips: [
+      'Reino Aterrador es supresión: ni la Fajín de Mercurio la limpia, solo la Cimitarra Mercurial.',
+      'La E se propaga al morir el objetivo: colócala en un súbdito para limpiar la oleada en cadena.',
+      'Los Vacíolings de tu pasiva atacan solos: empujan la línea sin que tú estés presente.',
+      'Tu W y E juntos hacen que empujar sea trivial: aprovecha para rotar y ayudar mientras la oleada avanza sola.'
+    ]
+  }],
+
+  ryze: [{
+    name: 'Mid — Cadena de hechizos',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Escalado con maná', difficulty: 'Media',
+    resumen: 'El hechicero rebelde convierte su maná en poder de habilidad: cuanto más maná acumula con la Lágrima y la Vara de las Edades, más pega cada hechizo. Su ciclo Q-W-E-Q sin enfriamientos apreciables lo convierte en una ametralladora mágica.',
+    items: {
+      inicio: START_AP,
+      core: [[3070, 'Lágrima de la Diosa'], [3027, 'Vara de las Edades'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Lágrima al primer retorno y a apilar con cada hechizo. Eres débil hasta tener maná: farmea con la Q y respeta a los asesinos.',
+      mid: 'Con Vara de las Edades y Arcángel empieza tu partida: la cadena Q → W (raíz) → E → Q borra a los objetivos blandos.',
+      late: 'Tu maná es tu daño: con el Arcángel lleno cada Q pega como una ultimate. Encadena hechizos sin parar; el enfriamiento apenas existe.'
+    },
+    tips: [
+      'Cada hechizo reduce el enfriamiento de la Q: el ciclo correcto es Q → W → Q → E → Q.',
+      'La E se propaga entre objetivos cercanos: es tu limpieza de oleadas y tu daño de área en pelea.',
+      'La ultimate te da velocidad de movimiento a ti y a tu equipo: úsala para llegar a peleas o para huir en grupo.',
+      'Cada punto de maná máximo suma AP: los objetos de maná son objetos de daño para ti.'
+    ]
+  }],
+
+  zilean: [{
+    name: 'Mid — Bombas y resurrección',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Mago / Utilidad', difficulty: 'Media',
+    resumen: 'El guardián del tiempo aturde con dos bombas encadenadas, acelera a su equipo o ralentiza al rival, y resucita a un aliado muerto con Deformación Temporal. Su ultimate convierte cada teamfight en un 6v5 efectivo.',
+    items: {
+      inicio: START_AP,
+      core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3116, 'Cetro de Cristal de Rylai']],
+      situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3222, 'Crisol de Mikael']]
+    },
+    runas: R.apMid, maestrias: M.ap,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'El combo de bomba doble (Q → W → Q) aturde: es tu única forma de presionar, pero es muy fuerte al nivel 3.',
+      mid: 'Tu E acelera al aliado o ralentiza al rival: es peel y persecución constante. Con Athene tienes maná infinito para el poke.',
+      late: 'Tu ultimate sobre el carry o el tanque principal decide peleas: ponla ANTES de que muera, con margen. Es una vida extra para tu equipo.'
+    },
+    tips: [
+      'Deformación Temporal (R) se pone antes de morir, no después: anticípate al burst.',
+      'La W reinicia los enfriamientos: es lo que permite el aturdimiento de doble bomba.',
+      'La bomba también acelera a los aliados si se la lanzas a ellos... y detona igual: úsala con cabeza.',
+      'Tu pasiva da experiencia extra a un aliado cercano: quédate junto a tu jungla o carry para adelantarlos de nivel.'
+    ]
+  }],
+
+  pantheon: [{
+    name: 'Mid — Lanza y salto global',
+    season: 'S3', modo: 'grieta', role: 'Mid', style: 'Asesino / Presión global', difficulty: 'Baja',
+    resumen: 'El artesano de la guerra domina el early como pocos: su lanza (Q) es poke gratis, su Golpe Escudo aturde, y sus críticos garantizados contra objetivos heridos rematan. Y desde el 6, su Gran Caída del Cielo amenaza el mapa entero.',
+    items: {
+      inicio: START_AD,
+      core: [[3134, 'El Embrutecedor'], [3047, 'Tabi de Ninja'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3142, 'Filo Fantasmal de Youmuu'], [3026, 'Ángel de la Guarda'], [3072, 'La Sanguinaria'], [3035, 'Últimas Palabras']]
+    },
+    runas: R.adTop, maestrias: M.adPen,
+    hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Domina con la lanza (Q): es gratis en maná relativo y castiga cada last hit del rival. Tu pasiva bloquea un autoataque cada pocos segundos.',
+      mid: 'Con El Embrutecedor tu combo W (aturde) → Q → E mata a la mayoría de magos. Usa la R para aparecer en los ganks de los laterales.',
+      late: 'Tu daño cae: conviértete en el iniciador global. Aterriza detrás de su equipo o corta las retiradas — la amenaza de tu ulti obliga a jugar agrupados.'
+    },
+    tips: [
+      'Tu pasiva bloquea el siguiente autoataque tras 4 hechizos o autos: intercambia sabiendo cuándo está lista.',
+      'La Q hace crítico garantizado contra objetivos por debajo del 15% de vida: es una ejecución a distancia.',
+      'La Gran Caída del Cielo tarda en aterrizar y es visible: úsala sobre rivales ya controlados o para llegar tras una pelea iniciada.',
+      'Tu E (Corazón del Coloso) bloquea daño frontal mientras canaliza: úsala mirando al rival, no de espaldas.'
+    ]
+  }]
+});
+
+// ---------- Roster completo: tiradores y soportes ----------
+Object.assign(BUILDS, {
+  corki: [{
+    name: 'ADC — Bombardeo híbrido',
+    season: 'S3', modo: 'grieta', role: 'ADC', style: 'Tirador híbrido', difficulty: 'Media',
+    resumen: 'El bombardero osado mezcla daño físico y mágico: su pasiva convierte parte de sus autos en daño mágico, y sus misiles teledirigidos pokean desde media pantalla. Con Fuerza de Trinidad, Corki es el tirador más completo de la Season 3.',
+    items: {
+      inicio: START_AD,
+      core: [[3078, 'Fuerza de Trinidad'], [3006, 'Grebas de Berserker'], [3031, 'Filo Infinito']],
+      situacionales: [[3046, 'Bailarín Espectral'], [3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+    },
+    runas: R.adc, maestrias: M.ad,
+    hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Tu pasiva hace que parte de tus autos sea daño mágico: nadie puede contrarrestarte solo con armadura. Pokea con la Q en el 2v2.',
+      mid: 'Trinidad completada y a asediar: tus misiles (R) farmean oleadas lejanas y pokean desde fuera de rango. La Valkiria (W) es escape e iniciación.',
+      late: 'Eres artillería con movilidad. Kitea con la Valkiria y usa los misiles grandes (cada 3 cargas) para el poke de asedio antes de los objetivos.'
+    },
+    tips: [
+      'Cada 3 misiles disparas un Misil Grande que hace mucho más daño: cuenta las cargas antes de la pelea.',
+      'La Valkiria deja un rastro de fuego: úsala para cortar la persecución además de escapar.',
+      'Tu E (Cortina de Gas) reduce la armadura y ralentiza: es la apertura de todos tus intercambios.',
+      'Trinidad es el objeto de Corki por excelencia: procea con todo y le da la movilidad que necesita.'
+    ]
+  }],
+
+  kogmaw: [{
+    name: 'ADC — Hipercarry porcentual',
+    season: 'S3', modo: 'grieta', role: 'ADC', style: 'Tirador / Late game', difficulty: 'Media',
+    resumen: 'La boca del abismo no tiene escapes ni defensas: solo el mayor daño sostenido del juego. Su W le da un alcance absurdo y sus autoataques hacen daño porcentual de vida máxima. Con protección, Kog\'Maw derrite equipos enteros desde una distancia obscena.',
+    items: {
+      inicio: START_AD,
+      core: [[3006, 'Grebas de Berserker'], [3153, 'Hoja del Rey Arruinado'], [3085, 'Huracán de Runaan'], [3031, 'Filo Infinito']],
+      situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3046, 'Bailarín Espectral'], [3035, 'Últimas Palabras']]
+    },
+    runas: R.adcVelocidad, maestrias: M.ad,
+    hechizos: [SS.flash, SS.heal], habilidades: ['W', 'Q', 'E'],
+    plan: {
+      early: 'Eres muy vulnerable: farmea seguro detrás de tu soporte y usa la W solo cuando el intercambio sea claramente tuyo.',
+      mid: 'Con Rey Arruinado y velocidad de ataque, tus autos con W activa hacen daño porcentual: los tanques se derriten igual que los carries.',
+      late: 'Tu alcance con la W supera al de las torres. Quédate detrás de todo tu equipo y dispara: tu pasiva sigue haciendo daño incluso después de morir.'
+    },
+    tips: [
+      'La W hace daño mágico porcentual de vida máxima: contra tanques eres el mejor ADC del juego.',
+      'Tu pasiva te deja explotar tras morir: si vas a caer, camina hacia ellos y llévate a alguien.',
+      'La R es artillería de larga distancia: farmea oleadas lejanas y remata fugitivos con ella.',
+      'No tienes escape: tu posicionamiento y tu soporte son literalmente tu supervivencia.'
+    ]
+  }],
+
+  missfortune: [{
+    name: 'ADC — Lluvia de balas',
+    season: 'S3', modo: 'grieta', role: 'ADC', style: 'Tiradora / Área', difficulty: 'Baja',
+    resumen: 'La cazarrecompensas hace más daño con el primer disparo a cada objetivo nuevo, empuja líneas con la Bala Rebotada y termina peleas enteras con el Tiempo de Bala: una lluvia de balas en cono que borra equipos agrupados.',
+    items: {
+      inicio: START_AD,
+      core: [[3031, 'Filo Infinito'], [3006, 'Grebas de Berserker'], [3087, 'Puñal de Statikk']],
+      situacionales: [[3072, 'La Sanguinaria'], [3046, 'Bailarín Espectral'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+    },
+    runas: R.adc, maestrias: M.ad,
+    hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Tu pasiva (Amor Golpeador) hace daño extra al golpear a un objetivo nuevo: alterna entre súbdito y campeón para el poke gratis del 2v2.',
+      mid: 'La Q rebota y hace más daño en el segundo objetivo: apunta a un súbdito con el rival justo detrás. Statikk acelera tu empuje de líneas.',
+      late: 'El Tiempo de Bala gana teamfights: canalízalo desde detrás de tu frontline sobre el máximo de rivales. La E ralentiza para asegurar que no salgan del cono.'
+    },
+    tips: [
+      'La Q rebota al enemigo DETRÁS del primer objetivo y hace más daño: es tu poke de línea principal.',
+      'Tu ultimate se puede cancelar: úsala solo cuando el rival tenga el CC gastado.',
+      'La E (Lluvia de Balas) ralentiza y desactiva la regeneración: colócala en la zona de escape, no encima de ellos.',
+      'Tu pasiva premia cambiar de objetivo: no te obsesiones con un solo rival en las peleas.'
+    ]
+  }],
+
+  twitch: [{
+    name: 'ADC — Emboscada y veneno',
+    season: 'S3', modo: 'grieta', role: 'ADC', style: 'Tirador / Sigilo', difficulty: 'Media',
+    resumen: 'La rata apestada se acerca invisible, envenena y con Pulverizar y Rezar dispara flechas que atraviesan a todo el equipo enemigo. Un ADC que empieza cada teamfight desde una posición imposible y termina con una tetrakill.',
+    items: {
+      inicio: START_AD,
+      core: [[3031, 'Filo Infinito'], [3006, 'Grebas de Berserker'], [3046, 'Bailarín Espectral']],
+      situacionales: [[3072, 'La Sanguinaria'], [3085, 'Huracán de Runaan'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+    },
+    runas: R.adc, maestrias: M.ad,
+    hechizos: [SS.flash, SS.heal], habilidades: ['E', 'W', 'Q'],
+    plan: {
+      early: 'Tu sigilo (Q) es una amenaza constante: el rival no puede posicionarse tranquilo sabiendo que puedes aparecer detrás con tu soporte.',
+      mid: 'Apila veneno con los autos y detona con la E cuando tenga 5-6 cargas: es un burst enorme. Empieza a merodear por el río.',
+      late: 'Tu ultimate atraviesa a todos en línea: colócate en un flanco desde sigilo y dispara a través de su equipo entero. Un buen ángulo vale la partida.'
+    },
+    tips: [
+      'La E (Expurgar) hace más daño cuantas más cargas de veneno haya: nunca la uses con 1 o 2 pilas.',
+      'Con la R activa tus autos atraviesan a TODOS los rivales en línea: busca el ángulo donde estén alineados.',
+      'La W (Emboscada de Contaminación) ralentiza y revela: úsala para cortar la huida.',
+      'Tu sigilo se rompe al atacar: usa el tiempo invisible para posicionarte, no para llegar más lejos.'
+    ]
+  }],
+
+  urgot: [{
+    name: 'ADC — Misiles teledirigidos (pre-rework)',
+    season: 'S3', modo: 'grieta', role: 'ADC', style: 'Tirador / Poke', difficulty: 'Alta',
+    resumen: 'El Urgot clásico, el de los misiles: su Q se autodirige a los rivales marcados por su E, y su ultimate INTERCAMBIA posiciones con un enemigo, dejando al carry rival en medio de tu equipo. Con Manamune, un poke que nunca se queda sin munición.',
+    items: {
+      inicio: START_AD,
+      core: [[3070, 'Lágrima de la Diosa'], [3004, 'Manamune'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+      situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3035, 'Últimas Palabras'], [3072, 'La Sanguinaria']]
+    },
+    runas: R.adc, maestrias: M.adPen,
+    hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'E', 'W'],
+    plan: {
+      early: 'Marca con la E (granada corrosiva) y luego tu Q se dirige sola al objetivo: es poke garantizado que no se puede esquivar. Dominas la fase de líneas.',
+      mid: 'Con Manamune, tu poke es infinito. La E además reduce el daño del rival marcado: es un debuff ofensivo y defensivo a la vez.',
+      late: 'Tu ultimate cambia posiciones con el objetivo: sácalo de su equipo y mételo en el tuyo. Es una de las jugadas más decisivas del juego clásico.'
+    },
+    tips: [
+      'La Q se autodirige SOLO contra objetivos marcados por tu E: el orden es siempre E primero.',
+      'La ultimate te da resistencias durante el intercambio: puedes sobrevivir al estar en su posición.',
+      'Tu W (escudo) hace que tus autos disparen sin fallar y reduce daño: actívalo en cada intercambio.',
+      'Este es el Urgot pre-rework de LoL Classic: nada que ver con el juggernaut de piernas actuales.'
+    ]
+  }],
+
+  janna: [{
+    name: 'Support — Vientos y escudos',
+    season: 'S3', modo: 'grieta', role: 'Support', style: 'Enchanter / Peel', difficulty: 'Media',
+    resumen: 'La furia de la tormenta es el mejor peel del juego clásico: escuda y da AD a su carry, lanza por los aires a quien se acerque y con el Monzón separa a todo un equipo mientras cura. Contra composiciones de entrada, Janna es la respuesta.',
+    items: {
+      inicio: START_SUP,
+      core: [[2049, 'Piedra de Visión'], [3117, 'Botas de Movilidad'], [3069, 'Emblema de la Ascensión']],
+      situacionales: [[3190, 'Medallón Solari de Hierro'], [3222, 'Crisol de Mikael'], [3174, 'Grial Impuro de Athene'], [3060, 'Estandarte de Mando']]
+    },
+    runas: R.support, maestrias: M.support,
+    hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'E', 'Q'],
+    plan: {
+      early: 'Tu escudo (E) da AD al aliado además de absorber daño: es ofensivo y defensivo. Acosa con la W, que ralentiza y hace buen daño en línea.',
+      mid: 'La pasiva te da velocidad de movimiento a ti y a los cercanos: eres la mejor soporte para rotar. Mantén el río iluminado.',
+      late: 'Eres el seguro de vida del carry: guarda la Q para el asesino que salte y el Monzón para deshacer la iniciación enemiga por completo.'
+    },
+    tips: [
+      'La Q se puede cargar: cuanto más tiempo, más alto y más lejos lanza. Suéltala pronto contra un dash inminente.',
+      'El Monzón (R) empuja a TODOS y cura mientras canalizas: úsalo para separar, no solo para curar.',
+      'El escudo da AD al objetivo: pónselo a tu ADC antes de un intercambio, no solo cuando le peguen.',
+      'Puedes cancelar el Monzón antes de tiempo: no hace falta canalizarlo entero si ya has separado.'
+    ]
+  }],
+
+  lulu: [{
+    name: 'Support — Polimorfia y gigante',
+    season: 'S3', modo: 'grieta', role: 'Support', style: 'Enchanter / Peel', difficulty: 'Media',
+    resumen: 'El hada hechicera convierte al asesino rival en una ardilla indefensa, escuda y acelera a su carry, y con Crecimiento Salvaje lo hace gigante dándole vida extra y un empujón en área. Utilidad pura en cada botón.',
+    items: {
+      inicio: START_SUP,
+      core: [[2049, 'Piedra de Visión'], [3117, 'Botas de Movilidad'], [3190, 'Medallón Solari de Hierro']],
+      situacionales: [[3069, 'Emblema de la Ascensión'], [3222, 'Crisol de Mikael'], [3174, 'Grial Impuro de Athene'], [3050, 'Heraldo de Zeke']]
+    },
+    runas: R.supportAP, maestrias: M.support,
+    hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'Q', 'W'],
+    plan: {
+      early: 'Tu E (Ayúdame, Pix!) sobre tu ADC hace que Pix le dispare: es daño extra en cada auto. Acosa con la Q a través del carril.',
+      mid: 'La W es doble: polimorfia al rival o acelera al aliado. Un polimorfismo sobre el iniciador enemigo desactiva su jugada por completo.',
+      late: 'Crecimiento Salvaje sobre el carry enfocado le da vida máxima y lanza por los aires a los que le rodean: es peel y contrainiciación en un botón.'
+    },
+    tips: [
+      'La polimorfia no permite atacar ni usar habilidades: es el CC más frustrante del juego clásico.',
+      'La ultimate da vida MÁXIMA, así que también cura proporcionalmente: úsala antes del burst, no después.',
+      'Tu E sobre un aliado lo escuda y le da a Pix; sobre un enemigo hace daño: es tu botón más flexible.',
+      'La Q ralentiza a los enemigos y acelera a los aliados que atraviesa: apunta a través de tu propio carry.'
+    ]
+  }]
+});
 
 // ---------- Metadatos de seasons ----------
 const SEASONS_META = {
@@ -1983,8 +2883,54 @@ const TIERLIST = {
 
 // Fuentes generales de meta en vivo (se mantienen actualizadas solas al ser enlaces)
 const FUENTES_META = [
+  ['https://u.gg/lol/champions', 'U.GG — builds y runas del parche actual (aprobada por Riot)'],
   ['https://www.metasrc.com/lol/classic', 'MetaSRC — LoL Classic: stats y tier list en vivo'],
-  ['https://coachless.gg/builds', 'Coachless — builds analíticas actualizadas'],
+  ['https://coachless.gg/builds', 'Coachless — builds analíticas antes de que sean meta'],
+  ['https://probuildstats.com/', 'ProBuildStats — lo que construyen los profesionales, en directo'],
   ['https://mobalytics.gg/lol/classic', 'Mobalytics — guías y tier lists de LoL Classic'],
   ['https://op.gg/lol/classic', 'OP.GG — campeones y objetos de LoL Classic']
 ];
+
+
+// ---------- Montaje final ----------
+function autoColor(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 360;
+  return `hsl(${h}, 45%, 48%)`;
+}
+
+// Una build de la Season 3 vale también para LoL Classic (mismo meta base).
+// Si la build declara `ediciones` explícitamente, se respeta.
+const EDICIONES_POR_SEASON = {
+  S3: ['classic', 's3'],
+  S2: ['s2'],
+  S1: ['s1'],
+  ACT: ['actual']
+};
+
+function normalizarBuild(b) {
+  const season = b.season || 'S3';
+  return Object.assign({}, b, {
+    season,
+    modo: b.modo || 'grieta',
+    ediciones: b.ediciones || EDICIONES_POR_SEASON[season] || ['classic'],
+    parche: b.parche || PATCHES[season] || DD_VER
+  });
+}
+
+const CHAMPIONS = ROSTER.map(([dd, name, title, roles]) => {
+  const id = dd.toLowerCase();
+  return {
+    id, dd, name, title, roles,
+    color: COLORS[id] || autoColor(dd),
+    lema: LEMAS[id] || '',
+    builds: (BUILDS[id] || []).map(normalizarBuild)
+  };
+});
+
+// Devuelve las builds que encajan con la edición y el modo seleccionados
+function buildsDe(champ, edicion, modo) {
+  return champ.builds.filter(b =>
+    (edicion === 'todas' || b.ediciones.includes(edicion)) &&
+    (modo === 'todos' || b.modo === modo));
+}

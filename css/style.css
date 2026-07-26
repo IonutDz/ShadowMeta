@@ -239,11 +239,24 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
   background: linear-gradient(90deg, transparent, var(--champ-color, var(--gold)), transparent);
   opacity: .6;
 }
+/* Halo del color del campeón al pasar el ratón */
+.champ-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(150px 90px at 50% 0%, var(--champ-color, transparent), transparent 75%);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+.champ-card:hover::after { opacity: .85; }
 .champ-card:hover, .champ-card:active {
   transform: translateY(-4px);
   border-color: var(--border-gold);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .6), 0 0 24px var(--gold-glow);
 }
+.champ-card > * { position: relative; z-index: 1; }
 
 /* Marco de icono genérico (campeones, objetos, hechizos, runas) */
 .icon-frame {
@@ -1179,6 +1192,100 @@ main { flex: 1; padding: 26px 24px; max-width: 1200px; margin: 0 auto; width: 10
 .season-build-tags { display: flex; gap: 5px; flex-wrap: wrap; }
 
 .no-builds-sources { margin-top: 14px; align-items: center; }
+
+/* ---------- Refinamientos de diseño ---------- */
+
+/* Entrada suave de las vistas */
+@keyframes smFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.build-content, .tier-row, .season-block, .detail-header, .no-builds {
+  animation: smFadeUp .32s ease both;
+}
+.tier-row:nth-child(2) { animation-delay: .04s; }
+.tier-row:nth-child(3) { animation-delay: .08s; }
+.tier-row:nth-child(4) { animation-delay: .12s; }
+.tier-row:nth-child(5) { animation-delay: .16s; }
+.season-block:nth-child(3) { animation-delay: .05s; }
+.season-block:nth-child(4) { animation-delay: .1s; }
+.season-block:nth-child(5) { animation-delay: .15s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Filigrana dorada en las cabeceras de sección */
+.build-section h3::before {
+  content: '◆';
+  margin-right: 9px;
+  font-size: .62rem;
+  color: var(--border-gold);
+  vertical-align: 1px;
+}
+
+/* Objetos: destello al pasar el ratón */
+.item-pill { position: relative; overflow: hidden; }
+.item-pill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(240, 230, 210, .13), transparent);
+  transition: left .5s ease;
+}
+.item-pill:hover::after { left: 130%; }
+.item-pill:hover .item-icon { border-color: var(--gold); }
+
+/* Núcleo de la build resaltado */
+.item-group:nth-child(2) .item-pill {
+  border-color: var(--border-gold);
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-card));
+}
+.item-group:nth-child(2) .item-icon { box-shadow: 0 0 10px rgba(200, 170, 110, .18); }
+
+/* Cabecera del detalle: brillo del color del campeón */
+.detail-header::after {
+  content: '';
+  position: absolute;
+  right: -40px; top: -60px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--champ-color, transparent), transparent 68%);
+  opacity: .16;
+  pointer-events: none;
+}
+
+/* Pestañas de build más marcadas */
+.build-tab { position: relative; }
+.build-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 1px;
+  background: var(--bg-panel);
+}
+
+/* Tier list: separadores más limpios */
+.tier-row { transition: box-shadow .25s; }
+.tier-row:hover { box-shadow: 0 6px 22px rgba(0, 0, 0, .45); }
+.tier-label { position: relative; text-shadow: 0 1px 2px rgba(0, 0, 0, .25); }
+
+/* Consejos con guía vertical */
+.tips-list { position: relative; }
+.tips-list li { transition: border-color .2s, transform .15s; }
+.tips-list li:hover { border-color: var(--border-gold); transform: translateX(3px); }
+
+/* Plan de partida: numeración de fases */
+.plan-card { position: relative; overflow: hidden; }
+.plan-card::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+  opacity: .5;
+}
 
 /* Footer */
 .footer {
