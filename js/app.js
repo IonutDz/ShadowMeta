@@ -57,6 +57,17 @@ function initials(name) {
 // Builds del campeón dentro del contexto seleccionado
 const visibles = c => buildsDe(c, edicion, modo);
 
+// ---------- Favoritos ----------
+let favoritos = new Set(JSON.parse(localStorage.getItem('sm_favs') || '[]'));
+
+function esFavorito(id) { return favoritos.has(id); }
+
+function alternarFavorito(id) {
+  if (favoritos.has(id)) favoritos.delete(id); else favoritos.add(id);
+  localStorage.setItem('sm_favs', JSON.stringify([...favoritos]));
+  anunciar(favoritos.has(id) ? 'Añadido a favoritos' : 'Quitado de favoritos');
+}
+
 // ---------- Selector de contexto ----------
 function initContextBar() {
   edicionSelect.innerHTML =
@@ -125,10 +136,13 @@ function switchView(view) {
 // ---------- Vista: roster ----------
 function champCard(c) {
   const n = visibles(c).length;
+  const fav = esFavorito(c.id);
   const aria = `${c.name}, ${c.title}. ${c.roles.join(', ')}. ${n ? n + ' builds disponibles' : 'sin builds en este contexto'}`;
   return `
-    <div class="champ-card ${n ? 'has-builds' : ''}" data-id="${c.id}" style="--champ-color:${c.color}"
+    <div class="champ-card ${n ? 'has-builds' : ''} ${fav ? 'es-favorito' : ''}" data-id="${c.id}" style="--champ-color:${c.color}"
          role="button" tabindex="0" aria-label="${aria}">
+      <button class="fav-btn ${fav ? 'on' : ''}" data-fav="${c.id}"
+              aria-label="${fav ? 'Quitar' : 'Añadir'} ${c.name} de favoritos" title="Favorito">${fav ? '★' : '☆'}</button>
       ${n ? `<span class="builds-badge" title="${n} build(s) en este contexto">★ ${n}</span>` : ''}
       <div class="champ-portrait">${iconImg(champIconUrl(c), c.name, 'portrait-img', initials(c.name))}</div>
       <div class="champ-name">${c.name}</div>
@@ -153,8 +167,11 @@ function renderGrid() {
     return matchRole && matchSearch;
   });
 
+  // Favoritos primero, luego los que tienen builds, luego alfabético
   const sorted = [...filtered].sort((a, b) =>
-    (visibles(b).length > 0) - (visibles(a).length > 0) || a.name.localeCompare(b.name, 'es'));
+    (esFavorito(b.id) - esFavorito(a.id)) ||
+    (visibles(b).length > 0) - (visibles(a).length > 0) ||
+    a.name.localeCompare(b.name, 'es'));
 
   let html = sorted.length === 0
     ? '<div class="no-results">Ningún campeón invocado con ese nombre.</div>'
@@ -176,13 +193,28 @@ function renderGrid() {
   grid.querySelectorAll('.champ-card[data-id]').forEach(card => {
     activable(card, () => irACampeon(card.dataset.id));
   });
+  grid.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();            // no abrir la ficha al marcar favorito
+      alternarFavorito(btn.dataset.fav);
+      renderGrid();
+    });
+  });
 }
 
 // ---------- Vista: tier list ----------
 const TIER_ORDER = ['S+', 'S', 'A', 'B', 'C'];
+const ROLES = ['Top', 'Jungla', 'Mid', 'ADC', 'Support'];
+let tierRol = 'all';
 
 function renderTierlist() {
   const mode = TIERLIST[currentTierMode];
+  const enRol = id => {
+    if (tierRol === 'all') return true;
+    const c = CHAMPIONS.find(x => x.id === id);
+    return c && c.roles.includes(tierRol);
+  };
+
   tierlistView.innerHTML = `
     <div class="view-header">
       <h2>Tier List</h2>
@@ -192,9 +224,13 @@ function renderTierlist() {
       </div>
     </div>
     <p class="view-desc">${mode.desc}</p>
+    <div class="tier-role-filter">
+      <button class="role-btn ${tierRol === 'all' ? 'active' : ''}" data-trol="all">Todos</button>
+      ${ROLES.map(r => `<button class="role-btn ${tierRol === r ? 'active' : ''}" data-trol="${r}">${r}</button>`).join('')}
+    </div>
     <div class="tier-rows">
       ${TIER_ORDER.map(tier => {
-        const ids = mode.tiers[tier] || [];
+        const ids = (mode.tiers[tier] || []).filter(enRol);
         if (!ids.length) return '';
         return `
           <div class="tier-row">
@@ -229,6 +265,13 @@ function renderTierlist() {
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
     activable(el, () => irACampeon(el.dataset.id, 0, true));
+  });
+  tierlistView.querySelectorAll('[data-trol]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tierRol = btn.dataset.trol;
+      renderTierlist();
+      anunciar('Tier list filtrada por ' + (tierRol === 'all' ? 'todos los roles' : tierRol));
+    });
   });
 }
 
@@ -778,3 +821,10 @@ window.addEventListener('hashchange', () => {
 initContextBar();
 SEARCH_INDEX = buildSearchIndex();
 if (location.hash) leerRuta(); else renderGrid();
+
+// Uso sin conexión (solo sirve sobre http/https, no con file://)
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* sin conexión offline: la app sigue funcionando */ });
+  });
+}

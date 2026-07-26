@@ -3170,6 +3170,1370 @@ BUILDS.gragas.push(aramBuild({
   ]
 }));
 
+// ---------- ARAM: tanda 2 (tiers S+ y A restantes) ----------
+const ARAM_INICIO_TANK = [[1054, 'Escudo de Doran'], [2003, 'Poción de Vida']];
+const ARAM_INICIO_SUP = [[1056, 'Anillo de Doran'], [2003, 'Poción de Vida']];
+
+BUILDS.ashe.push(aramBuild({
+  name: 'ARAM — Flecha y ralentización', role: 'ADC', style: 'Tiradora / Utility', difficulty: 'Baja',
+  resumen: 'Escarcha ralentiza a todo el que se acerque y la Flecha de Cristal atraviesa el carril entero: en ARAM, Ashe controla quién puede pelear y quién no.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3031, 'Filo Infinito'], [3006, 'Grebas de Berserker'], [3046, 'Bailarín Espectral']],
+    situacionales: [[3072, 'La Sanguinaria'], [3085, 'Huracán de Runaan'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Volea (W) en cono sobre el grupo: pokea a varios a la vez y les deja la ralentización de Escarcha encima.',
+    mid: 'Tu ralentización permanente hace que nadie pueda acercarse a tu equipo. Dispara la flecha por el carril: casi siempre acierta a alguien.',
+    late: 'Kitea detrás de tu frontline. Con Runaan tus autos ralentizan a todo el equipo rival a la vez.'
+  },
+  tips: [
+    'La flecha aturde más cuanto más viaje: en un carril recto son siempre 3+ segundos.',
+    'La W es tu poke principal en ARAM: alcanza a varios en cono y no cuesta casi nada.',
+    'Sin escapes, tu Destello es sagrado: guárdalo para el asesino, no para avanzar.'
+  ]
+}));
+
+BUILDS.kogmaw.push(aramBuild({
+  name: 'ARAM — Alcance obsceno', role: 'ADC', style: 'Tirador / Late game',
+  resumen: 'Con la W activa, Kog\'Maw dispara desde más lejos que nadie y su daño porcentual derrite hasta a los tanques. Si su equipo lo protege, gana la partida solo.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3153, 'Hoja del Rey Arruinado'], [3085, 'Huracán de Runaan'], [3031, 'Filo Infinito']],
+    situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3046, 'Bailarín Espectral'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adcVelocidad, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Pokea con la R (artillería) desde el extremo del carril: es gratis, seguro y desgasta sin parar.',
+    mid: 'Con Rey Arruinado y velocidad de ataque, la W convierte tus autos en daño porcentual: todo se derrite.',
+    late: 'Quédate lo más atrás posible y dispara. Tu pasiva sigue haciendo daño tras morir: camina hacia ellos al caer.'
+  },
+  tips: [
+    'La R apila cargas: cuantas más lances seguidas, más daño hace cada una.',
+    'La W te da más alcance que las torres: úsala para asediar sin recibir nada.',
+    'No tienes escape: en ARAM tu vida depende de estar detrás de todos.'
+  ]
+}));
+
+BUILDS.janna.push(aramBuild({
+  name: 'ARAM — Peel y monzón', role: 'Support', style: 'Enchanter / Peel',
+  resumen: 'Janna escuda, acelera y separa: en un carril donde todos pelean a la vez, su Monzón deshace la iniciación rival entera mientras cura a los cinco.',
+  items: {
+    inicio: ARAM_INICIO_SUP,
+    core: [[3174, 'Grial Impuro de Athene'], [3117, 'Botas de Movilidad'], [3069, 'Emblema de la Ascensión']],
+    situacionales: [[3190, 'Medallón Solari de Hierro'], [3222, 'Crisol de Mikael'], [3116, 'Cetro de Cristal de Rylai'], [3089, 'Gorra Mortal de Rabadon']]
+  },
+  runas: R.supportAP, maestrias: M.support, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'E', 'Q'],
+  plan: {
+    early: 'La W (Ráfaga) pokea en línea recta: en ARAM alcanza a varios. El escudo da AD además de absorber.',
+    mid: 'Tu pasiva acelera a todo el equipo cercano: sois los primeros en llegar a cada choque.',
+    late: 'El Monzón empuja a los cinco y cura mientras canalizas: es el mejor botón defensivo del modo.'
+  },
+  tips: [
+    'La Q cargada lanza más lejos y más alto: suéltala pronto contra un dash entrante.',
+    'El escudo da AD al aliado: pónselo al carry ANTES del choque, no durante.',
+    'Puedes cancelar el Monzón cuando quieras: no hace falta canalizarlo entero.'
+  ]
+}));
+
+BUILDS.taric.push(aramBuild({
+  name: 'ARAM — Aturdir y curar', role: 'Support', style: 'Tanque / Protector', difficulty: 'Baja',
+  resumen: 'Taric cura con la Q, da armadura con la W y aturde con la E. En ARAM su Radiance es un buff de equipo que convierte cada choque en una victoria por desgaste.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3174, 'Grial Impuro de Athene'], [3111, 'Botas de Mercurio'], [3190, 'Medallón Solari de Hierro']],
+    situacionales: [[3110, 'Corazón de Hielo'], [3222, 'Crisol de Mikael'], [3069, 'Emblema de la Ascensión'], [3068, 'Capa de Fuego Solar']]
+  },
+  runas: R.support, maestrias: M.support, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'La Q cura en área a los aliados cercanos: en un carril apretado alcanza a todo el equipo. Es sostenimiento gratis.',
+    mid: 'Vincula la W a tu carry para darle armadura y que tus hechizos salgan también desde él.',
+    late: 'Radiance al empezar el choque: da AD y AP a los cinco. El aturdimiento va sobre el que más daño haga.'
+  },
+  tips: [
+    'La Q cura a todos los aliados cerca, no solo a ti: colócate en medio del grupo.',
+    'La activa de la W destroza armadura en área: úsala en cada choque.',
+    'Radiance es un aura de equipo: ábrela al inicio de la pelea, nunca la guardes.'
+  ]
+}));
+
+BUILDS.amumu.push(aramBuild({
+  name: 'ARAM — Ultimate garantizada', role: 'Jungla', style: 'Tanque / Iniciador AP', difficulty: 'Baja',
+  resumen: 'La Ofrenda al Dolor de Amumu enraíza y desarma a todo el equipo enemigo, y en un carril estrecho es imposible fallarla. Uno de los mejores iniciadores del modo.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3151, 'Tormento de Liandry']],
+    situacionales: [[3001, 'Cetro Abisal'], [3157, 'Reloj de Arena de Zhonya'], [3143, 'Presagio de Randuin'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.junglaAP, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'La E hace daño en área y reduce el físico que recibes: es tu poke y tu defensa a la vez.',
+    mid: 'Con Fuego Solar y Liandry, tu W quema un porcentaje de vida a todo el que esté cerca.',
+    late: 'Destello + R sobre los cinco: enraíza, desarma y tu equipo limpia. Esa es toda tu partida.'
+  },
+  tips: [
+    'La R desarma además de enraizar: los tiradores rivales no pueden ni autoatacar 2 segundos.',
+    'El Vendaje (Q) sobre un súbdito te reposiciona: es tu entrada alternativa si la R está lista.',
+    'Liandry se combina con tu W: daño porcentual continuo a todo el equipo rival.'
+  ]
+}));
+
+BUILDS.nidalee.push(aramBuild({
+  name: 'ARAM — Lanzas a ciegas', role: 'Mid', style: 'Híbrida / Poke', difficulty: 'Alta',
+  resumen: 'Una lanza a máximo alcance en un carril recto es medio kit sin respuesta posible. Nidalee desgasta desde una distancia a la que nadie puede contestarle.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3100, 'Perdición del Liche'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Lanza sin parar desde el fondo del carril: cuanto más viaje, más daño hace. Cúrate con la W entre lanzas.',
+    mid: 'Athene te da maná infinito para el poke. Cambia a puma solo para rematar a alguien muy bajo.',
+    late: 'Eres artillería pura con escape: pokea, y si saltan sobre ti, forma puma y desaparece.'
+  },
+  tips: [
+    'La lanza escala su daño con la distancia recorrida: castiga siempre desde el máximo alcance.',
+    'Cambiar de forma resetea los enfriamientos de la otra: alterna para tener siempre algo listo.',
+    'El mordisco de puma ejecuta a objetivos bajos: es tu remate, no tu apertura.'
+  ]
+}));
+
+BUILDS.twistedfate.push(aramBuild({
+  name: 'ARAM — Carta dorada', role: 'Mid', style: 'Mago / Control',
+  resumen: 'La carta dorada es un aturdimiento a distancia sin coste y sin contrajugada, y en ARAM Twisted Fate la tiene disponible en cada choque. Control puro cada pocos segundos.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3174, 'Grial Impuro de Athene'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3100, 'Perdición del Liche'], [3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'La carta roja hace daño en área sobre la oleada; la azul te devuelve maná. Alterna según lo que necesites.',
+    mid: 'Guarda la dorada para el inicio de cada choque: aturdir al carry rival dos segundos decide la pelea.',
+    late: 'Tu ultimate revela el carril entero y te deja elegir el momento: úsala para reposicionarte y caer por el flanco.'
+  },
+  tips: [
+    'Parar el ciclo de cartas en la dorada requiere ritmo: practícalo, es el 80% de tu valor.',
+    'La Q (tres cartas) es tu poke de área cuando la W está en enfriamiento.',
+    'La carta azul devuelve maná: úsala para sostener el poke sin quedarte seco.'
+  ]
+}));
+
+BUILDS.gangplank.push(aramBuild({
+  name: 'ARAM — Parrrley eterno', role: 'Top', style: 'Peleador / Poke',
+  resumen: 'Parrrley pokea a distancia sin riesgo y da oro extra, y las Naranjas limpian todo el control rival. En ARAM, Gangplank desgasta y nunca queda atrapado.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+    situacionales: [[3031, 'Filo Infinito'], [3026, 'Ángel de la Guarda'], [3072, 'La Sanguinaria'], [3143, 'Presagio de Randuin']]
+  },
+  runas: R.adTop, maestrias: M.ad, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Parrrley al rival cada vez que esté a rango: es poke gratis que además te da oro extra por cada muerte.',
+    mid: 'Con Trinidad cada disparo procea Brillo. Tu ultimate cubre el carril entero de cañonazos.',
+    late: 'La R en el choque es daño y ralentización en área masiva: lánzala justo cuando choquen los dos equipos.'
+  },
+  tips: [
+    'Las Naranjas limpian TODO el CC: guárdalas para el aturdimiento clave, no para el poke.',
+    'Parrrley da oro extra solo si mata: acostúmbrate al ritmo de last hit con la Q.',
+    'Tu R en ARAM es enorme: cubre casi todo el carril con ralentización.'
+  ]
+}));
+
+BUILDS.chogath.push(aramBuild({
+  name: 'ARAM — Festín permanente', role: 'Top', style: 'Tanque / Devorador', difficulty: 'Baja',
+  resumen: 'En ARAM las oleadas son infinitas y Cho\'Gath nunca deja de crecer. Con seis pilas es una montaña con aturdimiento, silencio y una ejecución de daño verdadero.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3027, 'Vara de las Edades'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3065, 'Rostro Espiritual'], [3151, 'Tormento de Liandry'], [3143, 'Presagio de Randuin'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.tankTop, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Devora súbditos con la R en cuanto esté lista: cada pila son 90 de vida permanente. La E limpia la oleada sola.',
+    mid: 'Con seis pilas y Vara de las Edades eres un muro. Tu Q eleva por los aires y tu W silencia: dos controles seguidos.',
+    late: 'Guarda el Festín para ejecutar al carry rival: es daño verdadero que ignora todas sus resistencias.'
+  },
+  tips: [
+    'El Festín hace daño verdadero: contra cualquier vida máxima sigue siendo la mejor ejecución del modo.',
+    'Devora súbditos si no hay campeón a rango: la vida máxima es lo que te hace ganar.',
+    'La Q corta dashes y persecuciones: úsala como control, no solo por el daño.'
+  ]
+}));
+
+// ---------- ARAM: tanda 3 (tier B) ----------
+BUILDS.garen.push(aramBuild({
+  name: 'ARAM — Girar y ejecutar', role: 'Top', style: 'Juggernaut', difficulty: 'Baja',
+  resumen: 'Garen gira en medio del grupo haciendo daño a todos y ejecuta con la R al primero que baje. Su pasiva le permite entrar y salir sin volver a base.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3068, 'Capa de Fuego Solar'], [3111, 'Botas de Mercurio'], [3083, 'Armadura de Warmog'], [3005, 'Empalador de Atma']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3075, 'Malla de Espinas'], [3071, 'La Cuchilla Negra']]
+  },
+  runas: R.adTop, maestrias: M.bruiser, hechizos: [SS.flash, SS.ignite], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Gira (E) sobre la oleada y el rival a la vez: es farmeo y poke sin coste de maná.',
+    mid: 'Con Fuego Solar y Warmog aguantas el choque entero girando en medio de su equipo.',
+    late: 'Busca el remate: la R ejecuta con daño verdadero según la vida que le falte al objetivo.'
+  },
+  tips: [
+    'La Q rompe ralentizaciones y silencia: úsala para llegar al carry o para escapar.',
+    'Girar hace daño máximo a un solo objetivo: pégate al más blando, no al tanque.',
+    'Tu pasiva regenera fuera de combate: retrocede unos segundos entre choques.'
+  ]
+}));
+
+BUILDS.malphite.push(aramBuild({
+  name: 'ARAM — Roca imparable', role: 'Top', style: 'Tanque / Iniciador', difficulty: 'Baja',
+  resumen: 'La Fuerza Imparable en un carril donde los cinco rivales van juntos es la mejor iniciación del modo. Y de paso, Malphite es inmune al daño físico.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3068, 'Capa de Fuego Solar'], [3047, 'Tabi de Ninja'], [3110, 'Corazón de Hielo']],
+    situacionales: [[3001, 'Cetro Abisal'], [3143, 'Presagio de Randuin'], [3075, 'Malla de Espinas'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.tankTop, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'La E reduce la velocidad de ataque de todos los cercanos: en ARAM anula a los tiradores rivales.',
+    mid: 'Tu escudo pasivo se recarga fuera de combate: entra, absorbe y retrocede a recargar.',
+    late: 'R sobre los cinco. No hay más plan y no hace falta: nada la detiene una vez lanzada.'
+  },
+  tips: [
+    'Fuerza Imparable es imparable de verdad: ni aturdimientos ni desplazamientos la cortan.',
+    'Destello + R en el mismo instante no da tiempo de reacción.',
+    'Tu Q roba velocidad de movimiento: úsala para llegar antes al choque.'
+  ]
+}));
+
+BUILDS.leona.push(aramBuild({
+  name: 'ARAM — Cadena de controles', role: 'Support', style: 'Tanque / Control', difficulty: 'Baja',
+  resumen: 'Leona encadena tres controles seguidos y no suelta jamás. En un carril único, su ultimate aturde a medio equipo antes de que empiece la pelea.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3190, 'Medallón Solari de Hierro'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3110, 'Corazón de Hielo'], [3143, 'Presagio de Randuin'], [3075, 'Malla de Espinas'], [3069, 'Emblema de la Ascensión']]
+  },
+  runas: R.support, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Tu escudo (W) te da armadura y RM: aguanta el poke delante de tu equipo mientras ellos responden.',
+    mid: 'El Amanecer Solar (R) tiene alcance enorme: ábrelo desde detrás de tu frontline sobre el grupo rival.',
+    late: 'Encadena R → E → Q sobre el carry enemigo: tres controles seguidos y no vuelve a jugar.'
+  },
+  tips: [
+    'Tu pasiva marca al objetivo y tus aliados le hacen daño extra: avisa a quién marcas.',
+    'El escudo se activa antes de saltar, no después de recibir el golpe.',
+    'La R aturde en área: en ARAM alcanza a todo el equipo con facilidad.'
+  ]
+}));
+
+BUILDS.sivir.push(aramBuild({
+  name: 'ARAM — Bumerán y escudo', role: 'ADC', style: 'Tiradora / Poke', difficulty: 'Baja',
+  resumen: 'El bumerán de Sivir atraviesa el carril entero y su Escudo Mágico anula el gancho o el aturdimiento clave del rival. Poke seguro y contrajugada en un solo kit.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3087, 'Puñal de Statikk'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral']],
+    situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3085, 'Huracán de Runaan'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'El bumerán ida y vuelta pokea a todo el que esté en línea: es tu daño principal del early.',
+    mid: 'La W rebota entre objetivos: en un grupo apretado multiplica tu daño por cinco.',
+    late: 'La ultimate acelera a todo el equipo: úsala para iniciar en bloque o retirarse tras un choque perdido.'
+  },
+  tips: [
+    'El Escudo Mágico absorbe UN hechizo dirigido: acertarlo cambia el resultado del choque.',
+    'El bumerán pierde daño con cada objetivo que atraviesa: apunta a los rivales aislados.',
+    'Tu ultimate es utilidad de equipo, no daño: piensa en ella como una iniciación.'
+  ]
+}));
+
+BUILDS.tristana.push(aramBuild({
+  name: 'ARAM — Alcance y explosión', role: 'ADC', style: 'Tiradora / Hipercarry', difficulty: 'Baja',
+  resumen: 'El alcance de Tristana crece con cada nivel hasta superar al de todos, y su carga explosiva convierte cada oleada en confeti. Salto de Cohete es entrada, escape y remate.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3087, 'Puñal de Statikk'], [3031, 'Filo Infinito'], [3035, 'Últimas Palabras']],
+    situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3046, 'Bailarín Espectral'], [3085, 'Huracán de Runaan']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'La E sobre el rival explota al recibir autoataques: aplícala y pega. Es tu poke y tu remate.',
+    mid: 'Con Statikk limpias oleadas al instante. Tu alcance ya supera al de casi todos: dispara desde fuera.',
+    late: 'El salto resetea con cada asesinato: en el caos del choque puedes encadenar varios. La W empuja al asesino lejos.'
+  },
+  tips: [
+    'El Salto de Cohete se reinicia con cada kill o asistencia: úsalo sin miedo si el remate es seguro.',
+    'Tu W + R es un peel doble: empuja lejos al que salte sobre ti y salta tú en dirección contraria.',
+    'La E explota antes si le pegas: coordina con tu equipo para detonarla rápido.'
+  ]
+}));
+
+BUILDS.corki.push(aramBuild({
+  name: 'ARAM — Misiles sin parar', role: 'ADC', style: 'Tirador híbrido',
+  resumen: 'Los misiles de Corki pokean todo el carril y su daño mixto (físico y mágico) hace que ninguna resistencia lo pare. La Valkiria le da la movilidad que casi nadie tiene en ARAM.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3078, 'Fuerza de Trinidad'], [3006, 'Grebas de Berserker'], [3031, 'Filo Infinito']],
+    situacionales: [[3046, 'Bailarín Espectral'], [3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.flash, SS.heal], habilidades: ['R', 'Q', 'E'],
+  plan: {
+    early: 'Los misiles (R) son poke gratuito de largo alcance: dispáralos en cuanto haya carga disponible.',
+    mid: 'Cada 3 misiles sale el Misil Grande, que pega muchísimo más: cuenta las cargas antes del choque.',
+    late: 'La Valkiria (W) deja un rastro de fuego: úsala para cortar la persecución además de para escapar.'
+  },
+  tips: [
+    'Tu pasiva convierte parte de tus autos en daño mágico: nadie puede pararte solo con armadura.',
+    'La E reduce armadura y ralentiza: es la apertura de cada intercambio.',
+    'Maximiza la R en ARAM: el poke a distancia es más valioso que el daño cuerpo a cuerpo.'
+  ]
+}));
+
+BUILDS.jarvaniv.push(aramBuild({
+  name: 'ARAM — Bandera y jaula', role: 'Jungla', style: 'Peleador / Iniciador',
+  resumen: 'El combo E-Q de Jarvan atraviesa el carril y su Cataclismo encierra al carry rival en una arena de la que no puede salir. Iniciación limpia y sentencia.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3071, 'La Cuchilla Negra']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3026, 'Ángel de la Guarda'], [3083, 'Armadura de Warmog']]
+  },
+  runas: R.jungla, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'El E-Q es tu apertura: bandera por detrás del grupo y salto hacia ella para llegar al carry.',
+    mid: 'Tu Q hace daño porcentual y reduce armadura: eres bueno contra cualquier tanque rival.',
+    late: 'El Cataclismo aísla al objetivo prioritario. Si atrapas al equipo equivocado, reactívalo para abrirlo.'
+  },
+  tips: [
+    'La bandera también sirve de escape: lánzala hacia atrás y salta para huir.',
+    'El Cataclismo se puede cancelar reactivándolo: no te encierres tú con cinco.',
+    'El escudo de la W te da sustain: úsalo cada vez que esté disponible.'
+  ]
+}));
+
+BUILDS.pantheon.push(aramBuild({
+  name: 'ARAM — Lanzas y caída', role: 'Mid', style: 'Asesino / Poke', difficulty: 'Baja',
+  resumen: 'La lanza de Pantheon es poke barato y constante, su pasiva bloquea autoataques enteros, y la Gran Caída del Cielo aterriza en medio del grupo enemigo con daño en área.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3134, 'El Embrutecedor'], [3047, 'Tabi de Ninja'], [3071, 'La Cuchilla Negra']],
+    situacionales: [[3142, 'Filo Fantasmal de Youmuu'], [3026, 'Ángel de la Guarda'], [3072, 'La Sanguinaria'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adTop, maestrias: M.adPen, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Lanza (Q) sin parar: es barata y castiga a todo el que asome. Tu pasiva bloquea un auto cada pocos segundos.',
+    mid: 'El combo W (aturde) → Q → E borra a los magos rivales. Con El Embrutecedor pegas muchísimo.',
+    late: 'La R aterriza en medio del grupo: úsala tras un control aliado o para llegar desde la base tras morir.'
+  },
+  tips: [
+    'La Q hace crítico garantizado contra objetivos por debajo del 15% de vida: es una ejecución a distancia.',
+    'Tu E bloquea el daño frontal mientras canaliza: mira hacia el rival, no de espaldas.',
+    'La R es visible y lenta: lánzala sobre rivales ya controlados.'
+  ]
+}));
+
+BUILDS.alistar.push(aramBuild({
+  name: 'ARAM — Combo W-Q', role: 'Support', style: 'Tanque / Iniciador',
+  resumen: 'El combo W-Q de Alistar lanza al carry rival por los aires en medio de tu equipo, y con la ultimate activa reduce el 70% del daño recibido: entra en el grupo y sale caminando.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3190, 'Medallón Solari de Hierro'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3110, 'Corazón de Hielo'], [3143, 'Presagio de Randuin'], [3069, 'Emblema de la Ascensión'], [3075, 'Malla de Espinas']]
+  },
+  runas: R.support, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'La E cura en área al golpear súbditos: es sostenimiento gratis para ti en un modo sin retorno a base.',
+    mid: 'El combo W → Q casi simultáneo encadena dos controles: practícalo hasta que salga solo.',
+    late: 'Con la R activa entra sobre el carry, empújalo hacia los tuyos y aguanta todo lo que te tiren.'
+  },
+  tips: [
+    'Destello + Q lanza a varios hacia tu equipo: la mejor iniciación del modo.',
+    'La W empuja en la dirección en la que estés: colócate detrás del rival para empujarlo hacia ti.',
+    'La ultimate limpia ralentizaciones y reduce daño: actívala ANTES de entrar.'
+  ]
+}));
+
+BUILDS.blitzcrank.push(aramBuild({
+  name: 'ARAM — Gancho en el carril', role: 'Support', style: 'Tanque / Pick',
+  resumen: 'En un carril recto y estrecho el gancho de Blitzcrank casi no se puede esquivar, y un solo acierto saca al carry rival de su equipo y lo mete en el tuyo.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3190, 'Medallón Solari de Hierro'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3110, 'Corazón de Hielo'], [3143, 'Presagio de Randuin'], [3069, 'Emblema de la Ascensión'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.support, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Amenaza con el gancho desde detrás de tus súbditos: aunque falles, el rival no puede posicionarse tranquilo.',
+    mid: 'Un gancho acertado es un kill: Q → E → tu equipo remata. Tu pasiva te escuda al bajar de vida.',
+    late: 'Elige siempre al carry, nunca al tanque. Tu ultimate silencia en área y rompe escudos como Banshee.'
+  },
+  tips: [
+    'Gancho + Destello en pleno vuelo reposiciona el agarre: la mecánica más letal del soporte clásico.',
+    'La E resetea tu autoataque: gancho → auto → E es daño doble instantáneo.',
+    'La W te acelera para alcanzar al objetivo: úsala antes de lanzar el gancho, no después.'
+  ]
+}));
+
+BUILDS.lulu.push(aramBuild({
+  name: 'ARAM — Polimorfia y escudos', role: 'Support', style: 'Enchanter / Peel',
+  resumen: 'Lulu convierte al asesino rival en una ardilla, escuda a su equipo y con Crecimiento Salvaje da vida máxima al carry y lanza por los aires a quien le rodee.',
+  items: {
+    inicio: ARAM_INICIO_SUP,
+    core: [[3174, 'Grial Impuro de Athene'], [3117, 'Botas de Movilidad'], [3190, 'Medallón Solari de Hierro']],
+    situacionales: [[3069, 'Emblema de la Ascensión'], [3222, 'Crisol de Mikael'], [3089, 'Gorra Mortal de Rabadon'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.supportAP, maestrias: M.support, hechizos: [SS.clarity, SS.flash], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'La Q atraviesa el carril ralentizando a los rivales y acelerando a los tuyos: apúntala a través de tu propio equipo.',
+    mid: 'La polimorfia sobre el iniciador rival desactiva su jugada por completo: es tu botón más valioso.',
+    late: 'Crecimiento Salvaje sobre el aliado enfocado: vida máxima extra y empujón en área a los que le rodeen.'
+  },
+  tips: [
+    'La polimorfia impide atacar y usar habilidades: es el CC más frustrante del juego.',
+    'La ultimate da vida máxima y por tanto cura proporcionalmente: úsala antes del burst.',
+    'Tu E escuda al aliado y le da a Pix, que dispara con él: es daño extra permanente.'
+  ]
+}));
+
+BUILDS.urgot.push(aramBuild({
+  name: 'ARAM — Misiles autodirigidos', role: 'ADC', style: 'Tirador / Poke', difficulty: 'Alta',
+  resumen: 'Marca con la granada y tus misiles se dirigen solos: poke imposible de esquivar en un carril recto. Y la ultimate intercambia posiciones con el carry rival.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3070, 'Lágrima de la Diosa'], [3004, 'Manamune'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3035, 'Últimas Palabras'], [3072, 'La Sanguinaria']]
+  },
+  runas: R.adc, maestrias: M.adPen, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'E (granada) para marcar y luego Q: los misiles se dirigen solos y no se pueden esquivar. Poke garantizado.',
+    mid: 'Con Manamune tu poke es infinito. La E además reduce el daño del rival marcado.',
+    late: 'La R saca al carry de su equipo y lo mete en el tuyo: la jugada más decisiva que tienes.'
+  },
+  tips: [
+    'La Q solo se autodirige contra objetivos marcados por la E: siempre en ese orden.',
+    'La ultimate te da resistencias durante el intercambio: sobrevives a estar en su posición.',
+    'Tu W hace que los autos no fallen y reduce daño: mantenlo activo en cada intercambio.'
+  ]
+}));
+
+BUILDS.twitch.push(aramBuild({
+  name: 'ARAM — Veneno y ultimate', role: 'ADC', style: 'Tirador / Área',
+  resumen: 'Con Pulverizar y Rezar, los autos de Twitch atraviesan a todo el equipo enemigo en línea — y en ARAM siempre están alineados. Una ultimate bien colocada es una tetrakill.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral']],
+    situacionales: [[3072, 'La Sanguinaria'], [3085, 'Huracán de Runaan'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.heal, SS.flash], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'Apila veneno con los autos y detona con la E cuando tenga 5-6 cargas: es un burst enorme y gratuito.',
+    mid: 'Tu sigilo (Q) te permite reposicionarte en el carril y aparecer por un flanco inesperado.',
+    late: 'La R atraviesa a todos en línea: colócate donde estén alineados y dispara. En ARAM eso es siempre.'
+  },
+  tips: [
+    'La E hace más daño cuantas más cargas de veneno haya: nunca la uses con una o dos.',
+    'Con la R activa cada auto pega a todo el equipo: el ángulo lo es todo.',
+    'La W ralentiza en área y revela: úsala para cortar la retirada del grupo.'
+  ]
+}));
+
+BUILDS.nunu.push(aramBuild({
+  name: 'ARAM — Cero absoluto', role: 'Jungla', style: 'Tanque / Utilidad', difficulty: 'Baja',
+  resumen: 'El Cero Absoluto en un carril del que no se puede salir es una amenaza permanente, y Hervir Sangre convierte al carry aliado en una ametralladora.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3083, 'Armadura de Warmog']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3110, 'Corazón de Hielo'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.jungla, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'La bola de nieve (E) aturde a distancia: es tu poke y tu apertura. Devorar te cura si hay súbditos.',
+    mid: 'Hervir Sangre sobre tu ADC en cada choque: velocidad de ataque y movimiento gratis para él.',
+    late: 'Canaliza el Cero Absoluto detrás de tu frontline: aunque lo cancelen, la ralentización del 95% ya ha roto su formación.'
+  },
+  tips: [
+    'El Cero Absoluto ralentiza desde el primer instante: cánalo aunque no vayas a completarlo.',
+    'Devorar hace daño fijo enorme: úsalo sobre súbditos para curarte sin volver a base.',
+    'La E aturde si acierta a distancia: practica el liderazgo del proyectil.'
+  ]
+}));
+
+BUILDS.kayle.push(aramBuild({
+  name: 'ARAM — Invulnerabilidad', role: 'Top', style: 'Híbrida / Escalado',
+  resumen: 'La Intervención de Kayle hace invulnerable a un aliado 3 segundos, lo que en ARAM salva la pelea entera. Y con la E activa ataca a distancia con daño mágico en área.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3115, 'Diente de Nashor'], [3020, 'Botas de Hechicero'], [3100, 'Perdición del Liche']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.apDef, hechizos: [SS.flash, SS.heal], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Con la E activa atacas a distancia y en área: pokea la oleada y al grupo rival a la vez.',
+    mid: 'Nashor te da velocidad de ataque y AP: tus autos híbridos empiezan a derretir a todo el mundo.',
+    late: 'Guarda la R para el aliado que vayan a enfocar: 3 segundos de invulnerabilidad ganan cualquier choque.'
+  },
+  tips: [
+    'La Intervención salva a un aliado de la muerte segura: vale más que cualquier daño que hagas.',
+    'La Q reduce armadura y RM del objetivo: úsala antes del intercambio.',
+    'Escalas mucho: si el early es duro, quédate atrás con la E y espera a Nashor.'
+  ]
+}));
+
+BUILDS.teemo.push(aramBuild({
+  name: 'ARAM — Setas en el carril', role: 'Top', style: 'Poke / Trampas', difficulty: 'Baja',
+  resumen: 'En un carril único, cada seta de Teemo está en el camino obligatorio del rival. Y su ceguera anula al tirador enemigo durante los segundos clave del choque.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3115, 'Diente de Nashor'], [3020, 'Botas de Hechicero'], [3151, 'Tormento de Liandry']],
+    situacionales: [[3089, 'Gorra Mortal de Rabadon'], [3116, 'Cetro de Cristal de Rylai'], [3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Envenena con los autos (E) y ciega al que intente pegarte. El veneno hace daño continuo sin coste.',
+    mid: 'Siembra setas en el punto estrecho del carril: es el único camino, así que las pisan sí o sí.',
+    late: 'Con Liandry, cada seta quema un porcentaje de vida. No pelees de frente: envenena y siembra.'
+  },
+  tips: [
+    'La ceguera anula todos los autoataques: úsala sobre el ADC rival en el choque, no en el poke.',
+    'Las setas duran 5 minutos: siembra sin parar, el carril acaba siendo un campo de minas.',
+    'Tu W te acelera al salir de combate: úsala para reposicionarte, no para perseguir.'
+  ]
+}));
+
+// ---------- ARAM: tanda 4 (tier C — cuerpo a cuerpo y asesinos) ----------
+// En ARAM los campeones que necesitan llegar al carry lo tienen crudo: no hay
+// flancos ni niebla de guerra. Estas builds priorizan aguante y sostenimiento.
+BUILDS.masteryi.push(aramBuild({
+  name: 'ARAM — Limpiar los restos', role: 'Jungla', style: 'Asesino / Late game',
+  resumen: 'Yi lo tiene difícil sin flancos, pero su Alpha Strike esquiva habilidades clave y Highlander encadena asesinatos en cuanto el choque se desordena.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral'], [3072, 'La Sanguinaria']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras'], [3153, 'Hoja del Rey Arruinado'], [3139, 'Cimitarra Mercurial']]
+  },
+  runas: R.adcVelocidad, maestrias: M.ad, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Farmea con la Q sobre la oleada, que además te vuelve inobjetivable un instante. No entres al choque todavía.',
+    mid: 'Meditar (W) reduce muchísimo daño: canalízala para sobrevivir al poke rival y aguantar en el carril.',
+    late: 'Entra el último, cuando ya hayan gastado el CC, y deja que Highlander encadene los reinicios.'
+  },
+  tips: [
+    'Alpha Strike te saca del juego un instante: esquiva la ultimate rival con ella.',
+    'Cimitarra Mercurial es casi obligatoria: sin ella, un solo control te mata.',
+    'Nunca inicies tú: en ARAM el que entra primero cuerpo a cuerpo muere primero.'
+  ]
+}));
+
+BUILDS.leesin.push(aramBuild({
+  name: 'ARAM — Patada al carry', role: 'Jungla', style: 'Peleador / Pick', difficulty: 'Alta',
+  resumen: 'Lee Sin no puede hacer insec sin wards, pero su Q a distancia sigue siendo poke y su patada saca al carry rival de la formación o lo empuja hacia los tuyos.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3153, 'Hoja del Rey Arruinado']]
+  },
+  runas: R.jungla, maestrias: M.adPen, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'La Q a máximo alcance es poke seguro: lánzala, y solo salta si el remate está claro.',
+    mid: 'El escudo de la W te sostiene en el carril. La E revela y ralentiza al grupo entero.',
+    late: 'Tu patada (R) es peel: empuja lejos al que salte sobre tu carry, o mándalo hacia tu equipo.'
+  },
+  tips: [
+    'Sin wards no hay ward-jump: tu movilidad en ARAM depende del Destello y de la W sobre aliados.',
+    'La segunda parte de la Q hace más daño a objetivos bajos: retrásala para rematar.',
+    'La patada sobre alguien lo lanza contra los que tenga detrás, aturdiéndolos: busca el ángulo.'
+  ]
+}));
+
+BUILDS.evelynn.push(aramBuild({
+  name: 'ARAM — Ralentizar y rematar', role: 'Jungla', style: 'Asesina / Área',
+  resumen: 'Sin niebla de guerra, Evelynn juega distinto: su ultimate ralentiza en área a todo el equipo y su combo AP remata a quien haya quedado bajo.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3128, 'Tenaza de Muerte Ígnea'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío'], [3151, 'Tormento de Liandry']]
+  },
+  runas: R.junglaAP, maestrias: M.ap, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Pokea con la Q desde el borde del grupo. No entres: sin sigilo útil eres muy frágil.',
+    mid: 'La R ralentiza en área: úsala para iniciar desde atrás o para escapar de una mala posición.',
+    late: 'Espera a que el choque se desordene y entra con Tenaza + combo sobre el carry ya tocado.'
+  },
+  tips: [
+    'La Tenaza amplifica todo el daño posterior un 20%: siempre primero.',
+    'Tu R ralentiza a los cinco: vale tanto como iniciación que como huida.',
+    'En ARAM tu sigilo apenas sirve: juégala como maga de área, no como asesina.'
+  ]
+}));
+
+BUILDS.shaco.push(aramBuild({
+  name: 'ARAM — Cajas en el paso', role: 'Jungla', style: 'Trampas / Emboscada',
+  resumen: 'Las cajas de Shaco en el único camino del carril aterrorizan al equipo entero, y su clon con daño de área al morir es una bomba disfrazada.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3128, 'Tenaza de Muerte Ígnea'], [3020, 'Botas de Hechicero'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3116, 'Cetro de Cristal de Rylai'], [3135, 'Bastón del Vacío'], [3151, 'Tormento de Liandry']]
+  },
+  runas: R.junglaAP, maestrias: M.ap, hechizos: [SS.flash, SS.ignite], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Siembra cajas en el paso estrecho: el equipo rival tiene que cruzarlas sí o sí.',
+    mid: 'Con AP, cada caja hace un daño enorme al activarse y el terror rompe su formación.',
+    late: 'El clon (R) explota al morir: mándalo al grupo enemigo como una bomba mientras tú pokeas con la E.'
+  },
+  tips: [
+    'Las cajas AP hacen daño real y aterrorizan: colócalas antes del choque, no durante.',
+    'Tu E (puñal) es daño a distancia que ejecuta a objetivos bajos.',
+    'El clon imita tus movimientos: úsalo para dividir el foco enemigo.'
+  ]
+}));
+
+BUILDS.singed.push(aramBuild({
+  name: 'ARAM — Veneno constante', role: 'Top', style: 'Tanque / Desgaste',
+  resumen: 'Singed camina entre los rivales dejando veneno y lanza por los aires a quien intente perseguirle. En un carril estrecho, su rastro cubre todo el paso.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3027, 'Vara de las Edades'], [3111, 'Botas de Mercurio'], [3116, 'Cetro de Cristal de Rylai']],
+    situacionales: [[3151, 'Tormento de Liandry'], [3065, 'Rostro Espiritual'], [3143, 'Presagio de Randuin'], [3157, 'Reloj de Arena de Zhonya']]
+  },
+  runas: R.tankTop, maestrias: M.tank, hechizos: [SS.flash, SS.ghost], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Enciende el veneno y camina por delante de tu equipo: el desgaste es constante y no cuesta nada.',
+    mid: 'Con Rylai, tu veneno ralentiza a todo el que lo pise: el equipo rival no puede avanzar.',
+    late: 'Corre entre ellos con la ultimate activa: el que te persiga acaba lanzado hacia tu equipo.'
+  },
+  tips: [
+    'El Lanzamiento (E) tiene más alcance del que parece: gira en seco y lanza al perseguidor.',
+    'La cola adhesiva (W) delante del rival, no bajo sus pies.',
+    'Tu ultimate da estadísticas masivas: actívala antes de cada choque.'
+  ]
+}));
+
+BUILDS.jax.push(aramBuild({
+  name: 'ARAM — Contraatacar', role: 'Top', style: 'Peleador / Duelista',
+  resumen: 'Contraataque esquiva TODOS los autoataques durante 2 segundos: en un choque de ARAM con cinco tiradores disparando, eso es una barbaridad.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3124, 'Hoja de Furia de Guinsoo']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3153, 'Hoja del Rey Arruinado']]
+  },
+  runas: R.adTop, maestrias: M.ad, hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Salta (Q) sobre un súbdito para pokear al rival detrás y sal. No te quedes en medio.',
+    mid: 'Activa la E cuando te enfoquen: esquivas todos los autos del equipo y aturdes al terminar.',
+    late: 'Con Trinidad y Guinsoo eres un duelista imparable: entra cuando su CC esté gastado.'
+  },
+  tips: [
+    'Contraataque esquiva todos los autoataques: actívalo justo cuando empiecen a dispararte.',
+    'Tu Q salta también a súbditos: es tu forma de acercarte y de escapar.',
+    'Tu ultimate te da armadura y RM al pegar: pelea, no huyas, para mantenerla activa.'
+  ]
+}));
+
+BUILDS.kassadin.push(aramBuild({
+  name: 'ARAM — Riftwalk sin fin', role: 'Mid', style: 'Asesino mágico',
+  resumen: 'La Esfera del Vacío escuda contra magia y su Riftwalk le permite entrar y salir sin parar. En un modo lleno de magos, la resistencia mágica de Kassadin brilla.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3070, 'Lágrima de la Diosa'], [3020, 'Botas de Hechicero'], [3003, 'Bastón del Arcángel'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de Arena de Zhonya'], [3135, 'Bastón del Vacío'], [3001, 'Cetro Abisal'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.ap, hechizos: [SS.clarity, SS.flash], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Farmea con la Q y aprovecha su escudo mágico contra el poke rival: eres el que mejor aguanta a los magos.',
+    mid: 'A partir del 11 con dos puntos en R empiezas a existir: entra, mata a un objetivo y sal.',
+    late: 'Con Arcángel lleno, cada Riftwalk suma daño. Entra por el flanco, borra al mago rival y sal.'
+  },
+  tips: [
+    'Tu pasiva te da RM permanente: eres el counter natural de los magos en ARAM.',
+    'La Q interrumpe canalizaciones: úsala sobre Fiddlesticks o Katarina.',
+    'Cada carga de Riftwalk duplica el coste: gestiona el maná como munición.'
+  ]
+}));
+
+BUILDS.katarina.push(aramBuild({
+  name: 'ARAM — Reseteos en cadena', role: 'Mid', style: 'Asesina / Área',
+  resumen: 'La Muerte de Loto en medio de cinco rivales hace un daño absurdo, y cada asesinato resetea todo su kit. Pero cualquier control la interrumpe: hay que elegir el momento.',
+  items: {
+    inicio: ARAM_INICIO_AP,
+    core: [[3020, 'Botas de Hechicero'], [3157, 'Reloj de Arena de Zhonya'], [3089, 'Gorra Mortal de Rabadon']],
+    situacionales: [[3135, 'Bastón del Vacío'], [3001, 'Cetro Abisal'], [3128, 'Tenaza de Muerte Ígnea'], [3116, 'Cetro de Cristal de Rylai']]
+  },
+  runas: R.apMid, maestrias: M.apDef, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Sin coste de maná, farmea y pokea con la Q sin parar. Es daño gratuito toda la fase inicial.',
+    mid: 'Entra SEGUNDA, nunca primera: espera a que gasten los aturdimientos y luego gira.',
+    late: 'Q → Shunpo → W → R en medio del grupo, y Zhonya en cuanto te miren. Cada kill resetea todo.'
+  },
+  tips: [
+    'Tu ultimate se interrumpe con cualquier CC: cuenta los controles rivales antes de girar.',
+    'Shunpo salta a aliados y súbditos: es tu entrada y tu escape.',
+    'Zhonya justo después de girar te salva y deja que el daño siga aplicándose.'
+  ]
+}));
+
+BUILDS.drmundo.push(aramBuild({
+  name: 'ARAM — Va donde quiere', role: 'Top', style: 'Tanque / Sustain', difficulty: 'Baja',
+  resumen: 'La cuchilla de Mundo cuesta vida actual, así que nunca se queda sin munición, y su ultimate le devuelve toda la vida. En un modo sin retorno a base, es una pesadilla.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3065, 'Rostro Espiritual'], [3083, 'Armadura de Warmog']],
+    situacionales: [[3068, 'Capa de Fuego Solar'], [3143, 'Presagio de Randuin'], [3075, 'Malla de Espinas'], [3110, 'Corazón de Hielo']]
+  },
+  runas: R.tankTop, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Pokea con la cuchilla (Q) sin parar: cuesta vida actual, así que jamás te mata y ralentiza al rival.',
+    mid: 'Visaje Espiritual amplifica la curación de tu ultimate: eres imposible de matar sin daño real concentrado.',
+    late: 'Entra el primero, absorbe todo el CC y regenera con la R mientras tu equipo hace el trabajo.'
+  },
+  tips: [
+    'La Q cuesta vida ACTUAL: nunca te suicidas usándola, por muy bajo que estés.',
+    'Rostro Espiritual antes que nada: la sinergia con tu ultimate es enorme.',
+    'La W (incinerar) es tu daño sostenido: mantenla activa durante todo el choque.'
+  ]
+}));
+
+BUILDS.nasus.push(aramBuild({
+  name: 'ARAM — Apilar como se pueda', role: 'Top', style: 'Juggernaut / Escalado', difficulty: 'Baja',
+  resumen: 'Sin farm tranquilo la Q de Nasus tarda mucho en despegar, pero su E limita zonas y su ultimate lo convierte en un tanque enorme con reducción de armadura en área.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3083, 'Armadura de Warmog']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3025, 'Guantelete de Hielo'], [3075, 'Malla de Espinas']]
+  },
+  runas: R.tankTop, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'Maximiza la E, no la Q: en ARAM el farm es escaso y la E hace daño en área y reduce armadura.',
+    mid: 'Apila la Q en cada súbdito que puedas rematar, pero tu valor está en la W (ralentización brutal) sobre el carry.',
+    late: 'Furia Impía te da vida, alcance y CDR: entra como un tanque enorme y ralentiza a quien más pegue.'
+  },
+  tips: [
+    'En ARAM maximiza la E antes que la Q: el farm no da para apilar como en la Grieta.',
+    'La W ralentiza un 95%: es una sentencia de muerte para cualquier objetivo sin escape.',
+    'La ultimate es supervivencia y CDR: actívala al entrar, no cuando ya estés bajo.'
+  ]
+}));
+
+BUILDS.olaf.push(aramBuild({
+  name: 'ARAM — Inmune al control', role: 'Jungla', style: 'Peleador / Duelista', difficulty: 'Baja',
+  resumen: 'Ragnarok hace a Olaf inmune a todo el control de masas, que es exactamente lo que mata a los cuerpo a cuerpo en ARAM. Elige objetivo y nada puede pararle.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra'], [3072, 'La Sanguinaria']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3153, 'Hoja del Rey Arruinado'], [3065, 'Rostro Espiritual']]
+  },
+  runas: R.jungla, maestrias: M.adPen, hechizos: [SS.flash, SS.ghost], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'El hacha (Q) es poke a distancia: lánzala y recógela para reducir su enfriamiento y acelerarte.',
+    mid: 'La E hace daño verdadero a cambio de vida: es tu daño contra los tanques rivales.',
+    late: 'Ragnarok y a por el carry: ningún aturdimiento, raíz ni supresión te detiene mientras dure.'
+  },
+  tips: [
+    'Ragnarok previene TODO el CC, pero baja tu armadura: es ofensivo, no defensivo.',
+    'Recoger el hacha reduce mucho su enfriamiento: lánzala hacia donde vayas a caminar.',
+    'Tu pasiva te da velocidad de ataque según la vida que te falte: pelear al límite es tu fantasía.'
+  ]
+}));
+
+BUILDS.rammus.push(aramBuild({
+  name: 'ARAM — Provocar y devolver', role: 'Jungla', style: 'Tanque / Anti-AD', difficulty: 'Baja',
+  resumen: 'Contra una composición de tiradores, Rammus provoca al carry y le deja matándose solo contra la Malla de Espinas. Y su bola rodante llega desde el otro extremo del carril.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3047, 'Tabi de Ninja'], [3075, 'Malla de Espinas'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3110, 'Corazón de Hielo'], [3065, 'Rostro Espiritual'], [3083, 'Armadura de Warmog']]
+  },
+  runas: R.jungla, maestrias: M.tank, hechizos: [SS.flash, SS.exhaust], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'La bola rodante necesita distancia para acelerar: arranca desde el fondo del carril.',
+    mid: 'Con Malla de Espinas y armadura, provocar al tirador rival es matarlo con su propio daño.',
+    late: 'Q para llegar y aturdir, E para provocar al carry lejos de los suyos. Tu W devuelve el daño recibido.'
+  },
+  tips: [
+    'La Provocación obliga a autoatacarte 3 segundos: siempre sobre el carry, nunca sobre el tanque.',
+    'Tu pasiva convierte armadura en daño: comprar defensa te hace pegar más.',
+    'La W aumenta resistencias y devuelve daño: actívala cuando te enfoquen.'
+  ]
+}));
+
+BUILDS.sion.push(aramBuild({
+  name: 'ARAM — Escudo y aturdimiento', role: 'Top', style: 'Peleador / Sustain', difficulty: 'Baja',
+  resumen: 'El Sion clásico apila AD con cada muerte y su ultimate le da chupavidas masivo: en el desgaste continuo de ARAM, eso lo mantiene en pie eternamente.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3083, 'Armadura de Warmog'], [3005, 'Empalador de Atma'], [3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual']]
+  },
+  runas: R.adTop, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'El escudo (W) absorbe poke y explota haciendo daño en área: úsalo al principio de cada intercambio.',
+    mid: 'Apila con Enfurecer sobre los súbditos: cada muerte suma AD permanente para el resto de la partida.',
+    late: 'Con la ultimate activa todo tu daño te cura: aturde al carry con la Q y quédate encima.'
+  },
+  tips: [
+    'El escudo explota al caducar: actívalo pronto para aprovechar las dos partes.',
+    'La ultimate da chupavidas y velocidad de ataque: actívala ANTES del choque.',
+    'Este es el Sion pre-rework: nada que ver con el tanque moderno que carga con la Q.'
+  ]
+}));
+
+BUILDS.skarner.push(aramBuild({
+  name: 'ARAM — Secuestrar al carry', role: 'Jungla', style: 'Peleador / Control',
+  resumen: 'Empalar suprime y ARRASTRA al objetivo: en ARAM, sacar al carry rival del grupo y meterlo en el tuyo decide el choque al instante.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3025, 'Guantelete de Hielo'], [3068, 'Capa de Fuego Solar']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3065, 'Rostro Espiritual'], [3110, 'Corazón de Hielo'], [3083, 'Armadura de Warmog']]
+  },
+  runas: R.jungla, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'La Q se recarga rápido y resetea el autoataque: alterna Q y auto para el daño sostenido.',
+    mid: 'La E ralentiza a distancia y prepara el Empalar. Con el Guantelete, nadie escapa de tu zona.',
+    late: 'Espera a que el carry rival se adelante un pelo y llévatelo. Sigue moviéndote durante la ultimate.'
+  },
+  tips: [
+    'Empalar es supresión: solo la Cimitarra Mercurial lo cancela.',
+    'Muévete mientras suprimes: el rival va contigo hacia donde tú vayas.',
+    'Tu pasiva te acelera cerca de los cristales: en ARAM depende de tu propia zona.'
+  ]
+}));
+
+BUILDS.tryndamere.push(aramBuild({
+  name: 'ARAM — Cinco segundos', role: 'Top', style: 'Duelista / Crítico', difficulty: 'Baja',
+  resumen: 'Furia Incontenible impide morir durante 5 segundos, y con Filo Infinito eso es tiempo de sobra para llevarse a alguien por delante en cada choque.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3006, 'Grebas de Berserker'], [3031, 'Filo Infinito'], [3046, 'Bailarín Espectral']],
+    situacionales: [[3072, 'La Sanguinaria'], [3026, 'Ángel de la Guarda'], [3035, 'Últimas Palabras'], [3139, 'Cimitarra Mercurial']]
+  },
+  runas: R.adTop, maestrias: M.ad, hechizos: [SS.flash, SS.ghost], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'Acumula Furia con los críticos sobre la oleada: al 100, tu Q te cura muchísimo.',
+    mid: 'Entra con la E, gasta la Furia curándote y sal. Repite en cada enfriamiento.',
+    late: 'Activa la R antes del golpe letal (no después) y usa esos 5 segundos para matar al carry.'
+  },
+  tips: [
+    'La R evita la muerte 5 segundos pero no cura: actívala ANTES de recibir el golpe.',
+    'La E resetea con cada asesinato: puedes encadenar saltos en el caos del choque.',
+    'Cimitarra Mercurial contra composiciones con mucho control: sin ella te bloquean.'
+  ]
+}));
+
+BUILDS.warwick.push(aramBuild({
+  name: 'ARAM — Suprimir y curar', role: 'Jungla', style: 'Tanque / Duelista', difficulty: 'Baja',
+  resumen: 'Warwick se cura con cada golpe y su Represión Infinita saca 5 segundos al carry rival de la pelea. Sostenimiento puro para un modo sin retorno a base.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3111, 'Botas de Mercurio'], [3068, 'Capa de Fuego Solar'], [3065, 'Rostro Espiritual']],
+    situacionales: [[3143, 'Presagio de Randuin'], [3083, 'Armadura de Warmog'], [3075, 'Malla de Espinas'], [3153, 'Hoja del Rey Arruinado']]
+  },
+  runas: R.jungla, maestrias: M.bruiser, hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Tu Q te cura un porcentaje: en el desgaste del carril, eres el que mejor aguanta.',
+    mid: 'La W da velocidad de ataque a ti y a los aliados cercanos: es un buff de equipo.',
+    late: 'La ultimate sobre el carry lo saca 5 segundos del choque: es una ejecución garantizada.'
+  },
+  tips: [
+    'La Represión Infinita es supresión pura: solo la Cimitarra Mercurial la limpia.',
+    'Tu pasiva te acelera hacia los rivales bajos: eres el mejor perseguidor del modo.',
+    'La Q se cura más cuanta más vida te falte: pelear al límite es rentable.'
+  ]
+}));
+
+BUILDS.monkeyking.push(aramBuild({
+  name: 'ARAM — Ciclón en el grupo', role: 'Top', style: 'Peleador / Área',
+  resumen: 'El Ciclón de Wukong lanza por los aires a todo el equipo rival, y en ARAM siempre están agrupados. Su clon además engaña sobre por dónde va a entrar.',
+  items: {
+    inicio: ARAM_INICIO_TANK,
+    core: [[3078, 'Fuerza de Trinidad'], [3111, 'Botas de Mercurio'], [3071, 'La Cuchilla Negra']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3143, 'Presagio de Randuin'], [3068, 'Capa de Fuego Solar'], [3072, 'La Sanguinaria']]
+  },
+  runas: R.adTop, maestrias: M.adPen, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Tu pasiva te da armadura por cada enemigo cercano: en ARAM siempre está al máximo.',
+    mid: 'La E golpea a todos los que atraviesa: salta sobre un súbdito para alcanzar al grupo.',
+    late: 'E para entrar y R en medio de los cinco: el Ciclón los lanza a todos y tu equipo remata.'
+  },
+  tips: [
+    'El clon (W) te vuelve invisible un instante: úsalo para engañar sobre tu entrada real.',
+    'Tu pasiva escala con el número de enemigos cerca: en ARAM eres mucho más duro de lo normal.',
+    'El Ciclón te acelera mientras giras: puedes perseguir mientras haces el daño.'
+  ]
+}));
+
+BUILDS.vayne.push(aramBuild({
+  name: 'ARAM — Daño verdadero', role: 'ADC', style: 'Tiradora / Anti-tanque', difficulty: 'Alta',
+  resumen: 'Vayne sufre en ARAM por su alcance corto, pero sus Filos de Plata hacen daño verdadero porcentual: es la única forma fiable de matar a los tanques enemigos.',
+  items: {
+    inicio: ARAM_INICIO_AD,
+    core: [[3153, 'Hoja del Rey Arruinado'], [3006, 'Grebas de Berserker'], [3046, 'Bailarín Espectral'], [3031, 'Filo Infinito']],
+    situacionales: [[3026, 'Ángel de la Guarda'], [3072, 'La Sanguinaria'], [3139, 'Cimitarra Mercurial'], [3035, 'Últimas Palabras']]
+  },
+  runas: R.adc, maestrias: M.ad, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Tu alcance es el peor del modo: quédate detrás y pega solo cuando el rival ya esté comprometido.',
+    mid: 'Con Rey Arruinado, los 3 procs de la W hacen daño verdadero porcentual: los tanques caen igual.',
+    late: 'Rueda entre autos para reposicionarte y usa la Condena (E) contra el muro para aturdir al que salte.'
+  },
+  tips: [
+    'La E contra muro aturde 1.5 segundos: es tu anti-asesino, no una herramienta de daño.',
+    'Rodar resetea el temporizador de tu autoataque: auto → Q → auto es tu combo básico.',
+    'Sin frontline no existes: quédate detrás de tus tanques en cada choque.'
+  ]
+}));
+
+// ---------- LoL Actual: presets de runas modernas ----------
+// Los cuatro arquetipos de página que cubren a casi todo el roster clásico
+// en el parche vivo. Iconos en cdn/img/perk-images (sin versión en la URL).
+const P = {
+  // rutas de icono reutilizadas
+  precision: 'perk-images/Styles/7201_Precision.png',
+  dominacion: 'perk-images/Styles/7200_Domination.png',
+  brujeria: 'perk-images/Styles/7202_Sorcery.png',
+  inspiracion: 'perk-images/Styles/7203_Whimsy.png',
+  valor: 'perk-images/Styles/7204_Resolve.png'
+};
+
+const RM = {
+  // Mago de control / poke: Cometa arcano
+  magoCometa: {
+    principal: { arbol: 'Brujería', icon: P.brujeria, runas: [
+      [8229, 'Cometa arcano', 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png'],
+      [8226, 'Banda de maná', 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png'],
+      [8210, 'Trascendencia', 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'],
+      [8237, 'Piroláser', 'perk-images/Styles/Sorcery/Scorch/Scorch.png']]},
+    secundario: { arbol: 'Inspiración', icon: P.inspiracion, runas: [
+      [8304, 'Calzado mágico', 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'],
+      [8347, 'Perspicacia cósmica', 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png']]},
+    fragmentos: ['Velocidad de habilidad', 'Fuerza adaptativa', 'Vida escalada']
+  },
+  // Mago de burst / asesino mágico: Electrocutar
+  magoBurst: {
+    principal: { arbol: 'Dominación', icon: P.dominacion, runas: [
+      [8112, 'Electrocutar', 'perk-images/Styles/Domination/Electrocute/Electrocute.png'],
+      [8143, 'Impacto repentino', 'perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png'],
+      [8138, 'Sabor a sangre', 'perk-images/Styles/Domination/EyeballCollection/EyeballCollection.png'],
+      [8135, 'Cazador de tesoros', 'perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png']]},
+    secundario: { arbol: 'Brujería', icon: P.brujeria, runas: [
+      [8210, 'Trascendencia', 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'],
+      [8237, 'Piroláser', 'perk-images/Styles/Sorcery/Scorch/Scorch.png']]},
+    fragmentos: ['Velocidad de habilidad', 'Fuerza adaptativa', 'Vida escalada']
+  },
+  // Peleador / juggernaut: Conquistador
+  peleador: {
+    principal: { arbol: 'Precisión', icon: P.precision, runas: [
+      [8010, 'Conquistador', 'perk-images/Styles/Precision/Conqueror/Conqueror.png'],
+      [9111, 'Triunfo', 'perk-images/Styles/Precision/Triumph.png'],
+      [9104, 'Leyenda: Presteza', 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png'],
+      [8014, 'Golpe de gracia', 'perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png']]},
+    secundario: { arbol: 'Valor', icon: P.valor, runas: [
+      [8473, 'Revestimiento de huesos', 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'],
+      [8451, 'Sobrecrecimiento', 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png']]},
+    fragmentos: ['Fuerza adaptativa', 'Fuerza adaptativa', 'Vida escalada']
+  },
+  // Tirador de autoataques: Ataque intensificado
+  tirador: {
+    principal: { arbol: 'Precisión', icon: P.precision, runas: [
+      [8005, 'Ataque intensificado', 'perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png'],
+      [9111, 'Triunfo', 'perk-images/Styles/Precision/Triumph.png'],
+      [9104, 'Leyenda: Presteza', 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png'],
+      [8014, 'Golpe de gracia', 'perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png']]},
+    secundario: { arbol: 'Dominación', icon: P.dominacion, runas: [
+      [8143, 'Impacto repentino', 'perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png'],
+      [8135, 'Cazador de tesoros', 'perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png']]},
+    fragmentos: ['Velocidad de ataque', 'Fuerza adaptativa', 'Vida escalada']
+  },
+  // Tanque / iniciador: Garras del inmortal
+  tanque: {
+    principal: { arbol: 'Valor', icon: P.valor, runas: [
+      [8437, 'Garras del inmortal', 'perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png'],
+      [8446, 'Demoler', 'perk-images/Styles/Resolve/Demolish/Demolish.png'],
+      [8473, 'Revestimiento de huesos', 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'],
+      [8451, 'Sobrecrecimiento', 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png']]},
+    secundario: { arbol: 'Precisión', icon: P.precision, runas: [
+      [9111, 'Triunfo', 'perk-images/Styles/Precision/Triumph.png'],
+      [9104, 'Leyenda: Presteza', 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png']]},
+    fragmentos: ['Fuerza adaptativa', 'Vida escalada', 'Vida escalada']
+  },
+  // Soporte protector: Protector
+  soporte: {
+    principal: { arbol: 'Valor', icon: P.valor, runas: [
+      [8465, 'Protector', 'perk-images/Styles/Resolve/Guardian/Guardian.png'],
+      [8463, 'Fuente de vida', 'perk-images/Styles/Resolve/FontOfLife/FontOfLife.png'],
+      [8473, 'Revestimiento de huesos', 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'],
+      [8451, 'Sobrecrecimiento', 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png']]},
+    secundario: { arbol: 'Inspiración', icon: P.inspiracion, runas: [
+      [8304, 'Calzado mágico', 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'],
+      [8347, 'Perspicacia cósmica', 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png']]},
+    fragmentos: ['Velocidad de habilidad', 'Fuerza adaptativa', 'Vida escalada']
+  },
+  // Soporte encantador: Invocar a Aery
+  encantador: {
+    principal: { arbol: 'Brujería', icon: P.brujeria, runas: [
+      [8214, 'Invocar a Aery', 'perk-images/Styles/Sorcery/SummonAery/SummonAery.png'],
+      [8226, 'Banda de maná', 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png'],
+      [8210, 'Trascendencia', 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'],
+      [8237, 'Piroláser', 'perk-images/Styles/Sorcery/Scorch/Scorch.png']]},
+    secundario: { arbol: 'Inspiración', icon: P.inspiracion, runas: [
+      [8304, 'Calzado mágico', 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'],
+      [8347, 'Perspicacia cósmica', 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png']]},
+    fragmentos: ['Velocidad de habilidad', 'Fuerza adaptativa', 'Vida escalada']
+  }
+};
+
+// Inicios y botas del parche actual
+const ACT_AP = [[1056, 'Anillo de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']];
+const ACT_AD = [[1055, 'Espada de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']];
+const ACT_TANK = [[1054, 'Escudo de Doran'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']];
+const ACT_JG = [[1039, 'Espada de granizo'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']];
+const ACT_SUP = [[3865, 'Atlas mundial'], [2003, 'Poción de vida'], [3340, 'Guardián invisible']];
+
+function actBuild(o) {
+  return Object.assign({ season: 'ACT', modo: 'grieta', difficulty: 'Media' }, o);
+}
+
+// ---------- LoL Actual: builds del parche vivo ----------
+BUILDS.lux.push(actBuild({
+  name: 'Mid — Actual (Cometa arcano)', role: 'Mid', style: 'Maga / Poke', difficulty: 'Baja',
+  resumen: 'La Lux moderna sigue siendo artillería pura, pero ahora el Eco de Luden y el Tormento de Liandry convierten cada Chispa Final en una ejecución a media pantalla.',
+  items: { inicio: ACT_AP,
+    core: [[6655, 'Eco de Luden'], [3020, 'Botas de hechicero'], [3089, 'Sombrero mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de arena de Zhonya'], [3135, 'Bastón del Vacío'], [6653, 'Tormento de Liandry'], [3165, 'Morellonomicón']] },
+  runasModernas: RM.magoCometa, hechizos: [SS.flash, SS.barrier], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'El Cometa arcano se activa fácil con la E a máximo alcance: poke garantizado sin exponerte.',
+    mid: 'Con Luden, tu E + auto + Q borra media barra de vida. La Q sigue atrapando a dos en línea.',
+    late: 'Chispa Final con enfriamiento reducido: ejecuta a través del mapa. Nunca camines delante de tu frontline.'
+  },
+  tips: [
+    'Detona la pasiva con un auto tras cada habilidad: sigue siendo un tercio de tu daño.',
+    'Piroláser premia el poke: cada E que roce suma daño acumulado durante toda la fase de líneas.',
+    'La R revela el área: úsala como visión de emergencia sobre objetivos.'
+  ]
+}));
+
+BUILDS.vayne.push(actBuild({
+  name: 'ADC — Actual (Ataque intensificado)', role: 'ADC', style: 'Tiradora / Hipercarry', difficulty: 'Alta',
+  resumen: 'Vayne moderna sigue viviendo del daño verdadero porcentual de sus Filos de Plata. El Verdugo de krakens amplifica ese daño en cada tercer golpe.',
+  items: { inicio: ACT_AD,
+    core: [[6672, 'Verdugo de krakens'], [3006, 'Grebas de berserker'], [3153, 'Hoja del rey arruinado'], [3046, 'Bailarín espectral']],
+    situacionales: [[3026, 'Ángel de la guarda'], [3139, 'Cimitarra mercurial'], [3036, 'Recuerdos de lord Dominik'], [3072, 'Sanguinaria']] },
+  runasModernas: RM.tirador, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Tu fase de líneas sigue siendo dura: roba autos con la Q y guarda la E para clavar al que salte.',
+    mid: 'Verdugo de krakens y Rey Arruinado juntos: cada tercer golpe hace un daño porcentual brutal.',
+    late: 'Rueda entre autos y deja que la W haga el trabajo. El posicionamiento sigue siendo todo tu kit.'
+  },
+  tips: [
+    'La E contra muro aturde: es tu botón anti-asesino, no daño.',
+    'Rodar resetea el temporizador del autoataque: auto → Q → auto.',
+    'Ataque intensificado se apila en 3 golpes y amplifica todo el daño posterior del equipo al objetivo.'
+  ]
+}));
+
+BUILDS.jax.push(actBuild({
+  name: 'Top — Actual (Conquistador)', role: 'Top', style: 'Peleador / Duelista',
+  resumen: 'Jax moderno mantiene su Contraataque y su escalado infinito: Fuerza de Trinidad más objetos de aguante lo convierten en un split pusher que gana cualquier 1v1 del late.',
+  items: { inicio: ACT_TANK,
+    core: [[3078, 'Fuerza de trinidad'], [3111, 'Botas de mercurio'], [3053, 'Calibrador de Sterak'], [3742, 'Coraza del muerto']],
+    situacionales: [[3065, 'Rostro espiritual'], [3143, 'Presagio de Randuin'], [6333, 'Baile de la muerte'], [3161, 'Lanza de Shojin']] },
+  runasModernas: RM.peleador, hechizos: [SS.flash, SS.tp], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'Conquistador quiere intercambios largos: salta con la Q, aguanta con la E y deja que las cargas se apilen.',
+    mid: 'Con Trinidad completada eres un duelista imparable. Empuja el lateral y obliga a que manden dos.',
+    late: 'Tu E esquiva todos los autos del equipo: entra sobre el carry cuando su control esté gastado.'
+  },
+  tips: [
+    'Contraataque esquiva TODOS los ataques básicos 2 segundos: actívalo justo cuando te disparen.',
+    'La Q salta a súbditos y wards: es tu entrada y tu escape.',
+    'Sterak evita que te borren en el burst: es tu objeto anti-asesino obligatorio.'
+  ]
+}));
+
+BUILDS.katarina.push(actBuild({
+  name: 'Mid — Actual (Electrocutar)', role: 'Mid', style: 'Asesina / Área', difficulty: 'Alta',
+  resumen: 'Katarina moderna sigue reseteando todo su kit con cada asesinato. Electrocutar castiga su combo rápido y el Robaalmas de Mejai premia las rachas.',
+  items: { inicio: ACT_AP,
+    core: [[3020, 'Botas de hechicero'], [3157, 'Reloj de arena de Zhonya'], [3089, 'Sombrero mortal de Rabadon']],
+    situacionales: [[3135, 'Bastón del Vacío'], [3041, 'Robaalmas de Mejai'], [6653, 'Tormento de Liandry'], [3165, 'Morellonomicón']] },
+  runasModernas: RM.magoBurst, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Sin coste de maná, pokea con la Q sin parar. Recoge las dagas para el daño extra de Electrocutar.',
+    mid: 'Entra SEGUNDA en las peleas: espera a que gasten el control y luego encadena reseteos.',
+    late: 'Q → Shunpo sobre la daga → W → R en medio, y Zhonya cuando te miren.'
+  },
+  tips: [
+    'Tu ultimate se interrumpe con cualquier control: cuenta los aturdimientos rivales antes de girar.',
+    'Shunpo sobre la daga en el aire es el combo básico: practica el timing.',
+    'Zhonya justo después de girar te salva y el daño sigue aplicándose.'
+  ]
+}));
+
+BUILDS.malphite.push(actBuild({
+  name: 'Top — Actual (Garras del inmortal)', role: 'Top', style: 'Tanque / Iniciador', difficulty: 'Baja',
+  resumen: 'Malphite moderno sigue siendo la mejor iniciación del juego contra composiciones de ataques básicos, con la Égida de fuego solar y el Corazón de hielo como núcleo.',
+  items: { inicio: ACT_TANK,
+    core: [[3068, 'Égida de fuego solar'], [3047, 'Botas blindadas'], [3110, 'Corazón de hielo']],
+    situacionales: [[3075, 'Malla de espinas'], [3143, 'Presagio de Randuin'], [8020, 'Máscara abisal'], [3065, 'Rostro espiritual']] },
+  runasModernas: RM.tanque, hechizos: [SS.flash, SS.tp], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Contra AD, la E les corta la velocidad de ataque. Garras del inmortal te cura y suma vida permanente en cada intercambio.',
+    mid: 'Corazón de hielo más armadura y eres inmune al top físico. Demoler te da presión de torre gratis.',
+    late: 'R sobre dos o más. Ni aturdimientos ni desplazamientos la detienen una vez lanzada.'
+  },
+  tips: [
+    'Destello + R en el mismo instante no da tiempo de reacción.',
+    'Garras del inmortal se activa cada 4 segundos en combate: busca el intercambio corto y repetido.',
+    'Tu Q roba velocidad de movimiento: es anti-kiteo y persecución.'
+  ]
+}));
+
+BUILDS.leesin.push(actBuild({
+  name: 'Jungla — Actual (Conquistador)', role: 'Jungla', style: 'Peleador / Gank', difficulty: 'Alta',
+  resumen: 'Lee Sin moderno sigue siendo el jungla de early game por excelencia: mecánicas infinitas, ward-jump y una patada que decide partidas.',
+  items: { inicio: ACT_JG,
+    core: [[6692, 'Eclipse'], [3111, 'Botas de mercurio'], [3071, 'Cuchilla negra']],
+    situacionales: [[3026, 'Ángel de la guarda'], [3053, 'Calibrador de Sterak'], [6333, 'Baile de la muerte'], [3143, 'Presagio de Randuin']] },
+  runasModernas: RM.peleador, hechizos: [SS.flash, SS.smite], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Tu ventana es el early: visita los tres carriles antes del minuto 10. Cada gank convertido es una línea ganada.',
+    mid: 'Con Eclipse tu burst sigue siendo enorme. Controla la visión de los objetivos y castiga los errores de posición.',
+    late: 'Tu daño decae: conviértete en el iniciador. Un insec limpio sobre el carry vale más que cualquier cifra de daño.'
+  },
+  tips: [
+    'Ward-jump sigue siendo tu herramienta clave: compra siempre un ward de más.',
+    'La segunda Q hace más daño a objetivos bajos: retrásala para rematar.',
+    'El insec: salta detrás del carry y patéalo hacia tu equipo.'
+  ]
+}));
+
+BUILDS.morgana.push(actBuild({
+  name: 'Support — Actual (Aery)', role: 'Support', style: 'Maga / Control', difficulty: 'Baja',
+  resumen: 'El Escudo Negro sigue siendo el mejor botón anti-control del juego, y en el parche actual el Perforaplanos de Zaz\'Zak convierte a Morgana en una fuente de daño además de utilidad.',
+  items: { inicio: ACT_SUP,
+    core: [[3871, "Perforaplanos de Zaz'Zak"], [3020, 'Botas de hechicero'], [6653, 'Tormento de Liandry']],
+    situacionales: [[3157, 'Reloj de arena de Zhonya'], [3116, 'Cetro de cristal de Rylai'], [3135, 'Bastón del Vacío'], [3089, 'Sombrero mortal de Rabadon']] },
+  runasModernas: RM.encantador, hechizos: [SS.flash, SS.ignite], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'El Suelo Atormentado empuja y castiga. Guarda el lazo para el gank de tu jungla o para el que se acerque de más.',
+    mid: 'Escudo Negro sobre el objetivo del enganche rival: si no pueden iniciar, no hay pelea.',
+    late: 'Zhonya + ultimate en medio de su equipo: aturdes a varios y sobrevives a la canalización.'
+  },
+  tips: [
+    'El Escudo Negro bloquea todo el CC mágico mientras aguante: ponlo ANTES, no después.',
+    'El lazo dura 3 segundos al máximo rango: es una eternidad en una pelea.',
+    'La ultimate te cura por rival cercano: entrar es menos suicida de lo que parece.'
+  ]
+}));
+
+BUILDS.ashe.push(actBuild({
+  name: 'ADC — Actual (Ataque intensificado)', role: 'ADC', style: 'Tiradora / Utility', difficulty: 'Baja',
+  resumen: 'Ashe moderna mantiene su identidad: ralentización permanente, visión con el halcón y una flecha global que abre el mapa. El Verdugo de krakens sostiene su daño en el late.',
+  items: { inicio: ACT_AD,
+    core: [[6672, 'Verdugo de krakens'], [3006, 'Grebas de berserker'], [3094, 'Cañón de fuego rápido'], [3085, 'Huracán de Runaan']],
+    situacionales: [[3072, 'Sanguinaria'], [3026, 'Ángel de la guarda'], [3036, 'Recuerdos de lord Dominik'], [3139, 'Cimitarra mercurial']] },
+  runasModernas: RM.tirador, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Farmea con Escarcha activa: nadie puede intercambiar contigo si no te alcanza. Halcón al río antes de cada objetivo.',
+    mid: 'Tu flecha sigue abriendo peleas desde media pantalla. Kitea hacia tu equipo, nunca en línea recta.',
+    late: 'Con Runaan tus autos ralentizan a todo su equipo a la vez: eres peel y daño al mismo tiempo.'
+  },
+  tips: [
+    'La flecha aturde más cuanto más viaje: desde lejos son 3.5 segundos.',
+    'El halcón es visión gratis: úsalo antes de cada dragón o barón.',
+    'Sin escapes, tu Destello es sagrado: guárdalo para el asesino.'
+  ]
+}));
+
+BUILDS.masteryi.push(actBuild({
+  name: 'Jungla — Actual (Conquistador)', role: 'Jungla', style: 'Hipercarry', difficulty: 'Baja',
+  resumen: 'Yi moderno sigue siendo el hipercarry de jungla: farmea hasta tener objetos y luego limpia peleas enteras con los reinicios de Highlander.',
+  items: { inicio: ACT_JG,
+    core: [[6672, 'Verdugo de krakens'], [3006, 'Grebas de berserker'], [3153, 'Hoja del rey arruinado'], [3046, 'Bailarín espectral']],
+    situacionales: [[3139, 'Cimitarra mercurial'], [3026, 'Ángel de la guarda'], [3072, 'Sanguinaria'], [3036, 'Recuerdos de lord Dominik']] },
+  runasModernas: RM.peleador, hechizos: [SS.flash, SS.smite], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Farmea. Tu early no existe: gankea solo carriles ya ganados o con control garantizado.',
+    mid: 'Con Verdugo de krakens y Rey Arruinado empiezas a derretir. Sigue farmeando la jungla rival.',
+    late: 'Entra el último, cuando gasten el control, y deja que Highlander encadene los reinicios.'
+  },
+  tips: [
+    'Alpha Strike te hace inobjetivable un instante: esquiva la ultimate clave con ella.',
+    'Cimitarra Mercurial es casi obligatoria contra composiciones con control.',
+    'Cada asesinato reduce los enfriamientos: piensa en cadena, no en objetivo único.'
+  ]
+}));
+
+BUILDS.garen.push(actBuild({
+  name: 'Top — Actual (Garras del inmortal)', role: 'Top', style: 'Juggernaut / Split', difficulty: 'Baja',
+  resumen: 'Variante de aguante del Garen moderno: Garras del inmortal en vez de Conquistador, para ganar la línea a base de intercambios cortos y presión de torre con Demoler.',
+  items: { inicio: ACT_TANK,
+    core: [[3078, 'Fuerza de trinidad'], [3047, 'Botas blindadas'], [3742, 'Coraza del muerto'], [3053, 'Calibrador de Sterak']],
+    situacionales: [[3065, 'Rostro espiritual'], [3143, 'Presagio de Randuin'], [3075, 'Malla de espinas'], [6333, 'Baile de la muerte']] },
+  runasModernas: RM.tanque, hechizos: [SS.flash, SS.tp], habilidades: ['E', 'Q', 'W'],
+  plan: {
+    early: 'Intercambia corto y repetido: Garras te cura y suma vida permanente cada 4 segundos en combate.',
+    mid: 'Demoler convierte cada línea ganada en una torre caída. Empuja el lateral sin descanso.',
+    late: 'Gira sobre los carries y ejecuta con la R. Tu aguante te permite entrar el primero.'
+  },
+  tips: [
+    'La Q rompe ralentizaciones y silencia: guárdala para escapar o para llegar al carry.',
+    'Demoler se carga junto a la torre: pégate a ella cuando la línea esté empujada.',
+    'Girar hace daño máximo a un solo objetivo: pégate al más blando.'
+  ]
+}));
+
+BUILDS.soraka.push(actBuild({
+  name: 'Support — Actual (Aery)', role: 'Support', style: 'Enchanter / Curación', difficulty: 'Baja',
+  resumen: 'Soraka moderna cambia el maná por curación pura: los Ecos de Helia y la Redención la convierten en la mejor sanadora sostenida del juego actual.',
+  items: { inicio: ACT_SUP,
+    core: [[6620, 'Ecos de Helia'], [3117, 'Botas de movilidad'], [3107, 'Redención']],
+    situacionales: [[3222, 'Bendición de Mikael'], [6616, 'Bastón de aguas fluidas'], [2065, 'Canción de batalla de Shurelya'], [3011, 'Putrificador tecnoquímico']] },
+  runasModernas: RM.encantador, hechizos: [SS.flash, SS.exhaust], habilidades: ['W', 'Q', 'E'],
+  plan: {
+    early: 'La Q te devuelve vida al impactar: pokea antes de curar, siempre en ese orden.',
+    mid: 'Con Ecos de Helia, cada curación además hace daño en área. Mantén al ADC siempre por encima de media vida.',
+    late: 'El Deseo es global: vigila todas las barras del mapa. Redención llega incluso donde tú no estás.'
+  },
+  tips: [
+    'Tu W cuesta vida propia: cúrate con la Q antes de gastarla.',
+    'El silencio de la E corta canalizaciones e iniciaciones.',
+    'La Q ralentiza además de dañar: es peel real, no solo poke.'
+  ]
+}));
+
+BUILDS.blitzcrank.push(actBuild({
+  name: 'Support — Actual (Protector)', role: 'Support', style: 'Tanque / Pick',
+  resumen: 'Blitzcrank moderno sigue definiendo partidas con un solo gancho. Protector le da la contrajugada defensiva que le faltaba cuando falla.',
+  items: { inicio: ACT_SUP,
+    core: [[3869, 'Detracción celestial'], [3111, 'Botas de mercurio'], [3190, 'Medallón de los Solari de Hierro']],
+    situacionales: [[3109, 'Promesa de caballero'], [3050, 'Convergencia de Zeke'], [3075, 'Malla de espinas'], [8020, 'Máscara abisal']] },
+  runasModernas: RM.soporte, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'Amenaza el gancho desde detrás de tus súbditos: aunque falles, el rival no puede farmear tranquilo.',
+    mid: 'Un gancho acertado es un kill: Q → E → tu ADC remata. Protector escuda al aliado que enfoquen.',
+    late: 'Elige siempre al carry, nunca al tanque. Tu ultimate silencia en área y rompe escudos pasivos.'
+  },
+  tips: [
+    'Gancho + Destello en pleno vuelo reposiciona el agarre: sigue siendo la mecánica más letal del rol.',
+    'La E resetea tu autoataque: gancho → auto → E.',
+    'Protector se activa cuando tu aliado recibe daño grave: quédate cerca del carry.'
+  ]
+}));
+
+BUILDS.nasus.push(actBuild({
+  name: 'Top — Actual (Garras del inmortal)', role: 'Top', style: 'Juggernaut / Split', difficulty: 'Baja',
+  resumen: 'Nasus moderno sigue jugando a otro juego: apila la Q hasta que golpee más fuerte que cualquier ultimate, y con Garras del inmortal gana la línea sin arriesgar.',
+  items: { inicio: ACT_TANK,
+    core: [[3111, 'Botas de mercurio'], [3742, 'Coraza del muerto'], [3068, 'Égida de fuego solar']],
+    situacionales: [[3065, 'Rostro espiritual'], [3143, 'Presagio de Randuin'], [3075, 'Malla de espinas'], [3053, 'Calibrador de Sterak']] },
+  runasModernas: RM.tanque, hechizos: [SS.flash, SS.tp], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'No pelees, apila. Garras del inmortal te da el aguante para farmear bajo presión sin morir.',
+    mid: 'Con 200 cargas y aguante, ganas cualquier 1v1. Empieza el split push: nadie derriba torres como tú.',
+    late: 'Furia Impía te da vida, alcance y enfriamientos: entras como un tanque cuya Q pega como una ultimate.'
+  },
+  tips: [
+    'La Q no gasta enfriamiento si mata: nunca falles un last hit con ella disponible.',
+    'La W ralentiza un 95%: es una sentencia sobre cualquier objetivo sin escape.',
+    'Tu debilidad es el minuto 10-20: juega bajo torre sin vergüenza.'
+  ]
+}));
+
+BUILDS.amumu.push(actBuild({
+  name: 'Jungla — Actual (Garras del inmortal)', role: 'Jungla', style: 'Tanque / Iniciador AP', difficulty: 'Baja',
+  resumen: 'La Ofrenda al Dolor sigue siendo una de las mejores iniciaciones del juego, y el Tormento de Liandry hace que su quemadura derrita a los tanques rivales.',
+  items: { inicio: ACT_JG,
+    core: [[3068, 'Égida de fuego solar'], [3111, 'Botas de mercurio'], [6653, 'Tormento de Liandry']],
+    situacionales: [[8020, 'Máscara abisal'], [3157, 'Reloj de arena de Zhonya'], [3143, 'Presagio de Randuin'], [3065, 'Rostro espiritual']] },
+  runasModernas: RM.tanque, hechizos: [SS.flash, SS.smite], habilidades: ['E', 'W', 'Q'],
+  plan: {
+    early: 'La E reduce el daño físico que recibes y limpia campamentos: es clear y defensa a la vez.',
+    mid: 'Con Fuego Solar y Liandry, tu W quema un porcentaje de vida a todos los cercanos.',
+    late: 'Destello + R sobre el máximo de rivales: enraíza, desarma y tu equipo limpia.'
+  },
+  tips: [
+    'La R desarma además de enraizar: los tiradores no pueden ni autoatacar.',
+    'El Vendaje sobre un súbdito te reposiciona si la R está lista.',
+    'Liandry se combina con tu W: daño porcentual continuo a todo el equipo.'
+  ]
+}));
+
+BUILDS.tristana.push(actBuild({
+  name: 'ADC — Actual (Ataque intensificado)', role: 'ADC', style: 'Tiradora / Hipercarry', difficulty: 'Baja',
+  resumen: 'Tristana moderna sigue creciendo en alcance con cada nivel y su salto se reinicia con cada asesinato. El Verdugo de krakens le da el daño sostenido que necesita.',
+  items: { inicio: ACT_AD,
+    core: [[6672, 'Verdugo de krakens'], [3006, 'Grebas de berserker'], [3094, 'Cañón de fuego rápido'], [3032, 'Flechas de los Yun Tal']],
+    situacionales: [[3072, 'Sanguinaria'], [3026, 'Ángel de la guarda'], [3036, 'Recuerdos de lord Dominik'], [3139, 'Cimitarra mercurial']] },
+  runasModernas: RM.tirador, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'E', 'W'],
+  plan: {
+    early: 'La E sobre el rival explota con los autoataques: aplícala y pega. Es tu poke y tu remate.',
+    mid: 'Tu alcance ya supera al de casi todos: asedia torres desde fuera de su rango de respuesta.',
+    late: 'El salto se reinicia con cada asesinato: en peleas caóticas puedes encadenar varios.'
+  },
+  tips: [
+    'La W + R es un peel doble: empuja al asesino y salta en dirección contraria.',
+    'La E explota antes si le pegas: coordina con tu equipo para detonarla.',
+    'Eres la mejor derribadora de torres del juego: aprovecha cada línea ganada.'
+  ]
+}));
+
+BUILDS.veigar.push(actBuild({
+  name: 'Mid — Actual (Cometa arcano)', role: 'Mid', style: 'Mago / Escalado infinito',
+  resumen: 'Veigar moderno conserva su escalado sin techo. Con Vara de las edades y Rabadon, su ultimate ejecuta a cualquier mago rival de un solo botón.',
+  items: { inicio: ACT_AP,
+    core: [[6657, 'Vara de las edades'], [3020, 'Botas de hechicero'], [3089, 'Sombrero mortal de Rabadon']],
+    situacionales: [[3157, 'Reloj de arena de Zhonya'], [3135, 'Bastón del Vacío'], [6653, 'Tormento de Liandry'], [3116, 'Cetro de cristal de Rylai']] },
+  runasModernas: RM.magoCometa, hechizos: [SS.flash, SS.ignite], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'Apila con la Q sobre cada súbdito que remates: 80 cargas al minuto 15 es un buen ritmo.',
+    mid: 'La Jaula atrapa y el combo E → W → Q → R borra a los objetivos blandos.',
+    late: 'Con 800+ de AP eres una torreta de un disparo: colócate detrás y ejecuta a quien se acerque.'
+  },
+  tips: [
+    'La Jaula aturde solo a quien la cruce de dentro hacia fuera: colócala DETRÁS del objetivo.',
+    'La W tarda en caer: úsala sobre rivales ya atrapados.',
+    'Tu ultimate escala con el AP del rival: contra magos es una ejecución garantizada.'
+  ]
+}));
+
+BUILDS.ezreal.push(actBuild({
+  name: 'ADC — Actual (Cometa arcano)', role: 'ADC', style: 'Tirador de habilidades',
+  resumen: 'Variante de poke del Ezreal moderno con Cometa arcano en vez de Primer Golpe: menos oro extra, pero más daño garantizado en cada Q a distancia.',
+  items: { inicio: ACT_AD,
+    core: [[3152, 'Cintomisil hextech'], [3006, 'Grebas de berserker'], [3078, 'Fuerza de trinidad'], [3042, 'Muramana']],
+    situacionales: [[6694, 'Rencor de Serylda'], [3036, 'Recuerdos de lord Dominik'], [3139, 'Cimitarra mercurial'], [3026, 'Ángel de la guarda']] },
+  runasModernas: RM.magoCometa, hechizos: [SS.flash, SS.heal], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'El Cometa se activa con cada Q acertada: poke constante que el rival no puede devolver.',
+    mid: 'Con Cintomisil y Trinidad, cada Q pega como un objeto entero. Asedia desde fuera de rango.',
+    late: 'Muramana convierte tu maná en daño. Nunca entres: castiga desde 1100 y guarda la E como escape.'
+  },
+  tips: [
+    'La Q aplica efectos de objeto: es un autoataque disfrazado de habilidad.',
+    'El Desplazamiento es tu único escape real: no lo gastes por daño.',
+    'La W acelera a un aliado: tírasela al hipercarry antes del choque.'
+  ]
+}));
+
+BUILDS.taric.push(actBuild({
+  name: 'Support — Actual (Aery)', role: 'Support', style: 'Tanque / Protector', difficulty: 'Baja',
+  resumen: 'El Taric moderno (ya reformado como Escudo de Valoran) mantiene la esencia: cura en área, aturde y su ultimate hace invulnerable a todo el equipo durante 2.5 segundos.',
+  items: { inicio: ACT_SUP,
+    core: [[3869, 'Detracción celestial'], [3111, 'Botas de mercurio'], [3190, 'Medallón de los Solari de Hierro']],
+    situacionales: [[3109, 'Promesa de caballero'], [3050, 'Convergencia de Zeke'], [8020, 'Máscara abisal'], [3222, 'Bendición de Mikael']] },
+  runasModernas: RM.soporte, hechizos: [SS.flash, SS.exhaust], habilidades: ['Q', 'W', 'E'],
+  plan: {
+    early: 'La Q cura en área a los aliados cercanos: es sostenimiento de línea sin coste de posición.',
+    mid: 'Vincula la W a tu ADC para que tus hechizos salgan también desde él: duplica tu alcance efectivo.',
+    late: 'La ultimate hace invulnerable a todo el equipo 2.5 segundos: úsala justo antes del burst rival, no después.'
+  },
+  tips: [
+    'La R es invulnerabilidad de equipo: anticípate al daño, no reacciones a él.',
+    'El aturdimiento de la E sale también desde el aliado vinculado con la W.',
+    'Tu Q se carga con autoataques: pega a los súbditos para acelerar la curación.'
+  ]
+}));
+
 // ---------- Metadatos de seasons ----------
 const SEASONS_META = {
   S1: {
